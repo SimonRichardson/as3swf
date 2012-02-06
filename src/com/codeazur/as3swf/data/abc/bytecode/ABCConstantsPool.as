@@ -14,6 +14,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var doublePool:Vector.<Number>;
 		public var stringPool:Vector.<String>;
 		public var namespacePool:Vector.<ABCNamespace>;
+		public var namespaceSetPool:Vector.<ABCNamespaceSet>;
 		
 		public function ABCConstantsPool() {
 			integerPool = new Vector.<int>();
@@ -21,6 +22,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			doublePool = new Vector.<Number>();
 			stringPool = new Vector.<String>();
 			namespacePool = new Vector.<ABCNamespace>();
+			namespaceSetPool = new Vector.<ABCNamespaceSet>();
 		}
 		
 		public function parse(data : SWFData) : void {
@@ -49,7 +51,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 			index = (length > 0) ? --length : 0;
 			while(index--){
 				length = data.readEncodedU32();
-				stringPool.push(data.readUTFBytes(length));
+				const str:String = data.readUTFBytes(length);
+				if (length != str.length) {
+					throw new Error();	
+				}
+				stringPool.push(str);
 			}
 			
 			length = data.readEncodedU32();
@@ -58,6 +64,17 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const nsType:uint = 255 & data.readByte();
 				length = data.readEncodedU32();
 				namespacePool.push(ABCNamespace.create(nsType, stringPool[length]));
+			}
+			
+			length = data.readEncodedU32();
+			index = (length > 0) ? --length : 0;
+			while(index--){
+				length = data.readEncodedU32(); 
+				const nsSet:ABCNamespaceSet = ABCNamespaceSet.create();
+				while(--length > -1){
+					nsSet.namespaces.push(namespacePool[data.readEncodedU32()]);
+				}
+				namespaceSetPool.push(nsSet);
 			}
 		}
 		
@@ -94,6 +111,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 				str += "\n" + StringUtils.repeat(indent + 2) + "NamespacePool:";
 				for(i = 0; i < namespacePool.length; i++) {
 					str += "\n" + namespacePool[i].toString(indent + 4);
+				}
+			}
+			if(namespaceSetPool.length > 0) { 
+				str += "\n" + StringUtils.repeat(indent + 2) + "NamespaceSetPool:";
+				for(i = 0; i < namespaceSetPool.length; i++) {
+					str += "\n" + namespaceSetPool[i].toString(indent + 4);
 				}
 			}
 			return str;
