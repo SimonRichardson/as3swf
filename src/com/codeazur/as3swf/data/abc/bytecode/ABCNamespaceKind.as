@@ -1,12 +1,15 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+
 	import com.codeazur.as3swf.data.abc.ABC;
+
+	import flash.utils.Dictionary;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
 	public class ABCNamespaceKind {
 
-		private static const _types : Object = new Object();
+		private static const _types:Dictionary = new Dictionary();
 		
 		public static const UNKNOWN:ABCNamespaceKind = new ABCNamespaceKind(0x0, UNKNOWN_NAME);
 		public static const NAMESPACE:ABCNamespaceKind = new ABCNamespaceKind(0x08, NAMESPACE_NAME);
@@ -40,7 +43,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function get type():uint { return _type; }
-		public function get name():String { return "ABCNamespaceType"; }
+		public function get name():String { return "ABCNamespaceKind"; }
 		
 		public function toString(indent:uint = 0) : String {
 			return ABC.toStringCommon(name, indent) + 
