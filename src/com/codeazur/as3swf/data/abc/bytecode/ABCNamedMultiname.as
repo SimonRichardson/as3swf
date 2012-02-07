@@ -12,7 +12,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function ABCNamedMultiname() {}
 		
 		override public function get name():String { return "ABCNamedMultiname"; }
-		
+				
 		override public function toString(indent:uint = 0):String {
 			return ABC.toStringCommon(name, indent);
 		}

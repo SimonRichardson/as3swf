@@ -9,6 +9,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 		function get kind():ABCMultinameKind;
 		function set kind(value:ABCMultinameKind):void;
 		
+		function toQualifiedName():ABCQualifiedName;
+		
 		function toString(indent:uint = 0):String;
 	}
 }

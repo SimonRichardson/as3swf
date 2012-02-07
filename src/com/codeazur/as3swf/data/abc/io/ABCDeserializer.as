@@ -25,6 +25,7 @@ package com.codeazur.as3swf.data.abc.io
 			abcData.majorVersion = _bytes.readUI16();
 			
 			abcData.constantPool.parse(_bytes);
+			abcData.methodInfoSet.parse(_bytes);
 		}
 	}
 }

@@ -21,6 +21,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		override public function get name() : String { return "ABCMultiname"; }
 		
+		override public function toQualifiedName():ABCQualifiedName {
+			var result:ABCQualifiedName = super.toQualifiedName();
+			if(namespaces.namespaces.length == 1) {
+				result = ABCQualifiedName.create(name, namespaces.namespaces[0]);
+			}
+			return result;
+		}
+		
 		override public function toString(indent:uint = 0):String {
 			return ABC.toStringCommon(name, indent) + 
 				"Label: " + label + ", " +

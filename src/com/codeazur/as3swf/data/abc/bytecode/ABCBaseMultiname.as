@@ -15,6 +15,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function set kind(value:ABCMultinameKind):void { _kind = value; }
 		public function get name():String { return "ABCMultiname"; }
 		
+		public function toQualifiedName():ABCQualifiedName {
+			return null;
+		}
+		
 		public function toString(indent:uint = 0) : String {
 			return ABC.toStringCommon(name, indent);
 		}

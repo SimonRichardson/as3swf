@@ -84,7 +84,7 @@
 			writeShort(value & 0xffff);
 			writeByte(value >> 16);
 		}
-		
+				
 		public function readUI32():uint {
 			resetBitsPending();
 			return readUnsignedInt();
@@ -175,6 +175,15 @@
 		/////////////////////////////////////////////////////////
 		// Encoded integer
 		/////////////////////////////////////////////////////////
+		
+		public function readEncodedU30():uint {
+			return readEncodedU32() & 0x3fffffff;
+		}
+		
+		public function writeEncodedU30(value:uint):void {
+			// FIXME : we should do a bounds check here
+			writeEncodedU32(value);
+		}
 		
 		public function readEncodedU32():uint {
 			resetBitsPending();
