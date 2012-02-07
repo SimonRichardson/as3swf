@@ -2,6 +2,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -23,9 +24,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		override public function toString(indent:uint = 0) : String {
 			return ABC.toStringCommon(name, indent) + 
-				"Label: " + label + ", " + 
-				"Namespace: " + ns + ", " +
-				"Kind: " + kind.toString();
+				"Label: " + label + ", " +
+				"\n" + StringUtils.repeat(indent + 2) + 
+				"Kind: \n" + kind.toString(indent + 4) + ", " +
+				"\n" + StringUtils.repeat(indent + 2) + 
+				"Namespace: " +
+				"\n" + ns.toString(indent + 4);
 		}
 	}
 }

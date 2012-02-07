@@ -73,49 +73,49 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const nsIndex:uint = data.readEncodedU32(); 
 				while(--nsIndex > 0){
 					const nsPoolIndex:uint = data.readEncodedU32();
-					if(nsPoolIndex >= namespacePool.length){
+					if(nsPoolIndex > namespacePool.length){
 						throw new Error();
 					}
-					nsSet.namespaces.push(namespacePool[nsPoolIndex]);
+					nsSet.namespaces.push(namespacePool[nsPoolIndex - 1]);
 				}
 				
 				namespaceSetPool.push(nsSet);
 			}
-			
+						
 			index = data.readEncodedU32();
 			while(--index > 0) {
 				const kind : uint = 255 & data.readByte();
 				if(kind == 0x07 || kind == 0x0D){
 					ref = data.readEncodedU32();
-					const ns:ABCNamespace = namespacePool[ref];
+					const ns:ABCNamespace = namespacePool[ref - 1];
 					ref = data.readEncodedU32();
-					const name:String = stringPool[ref];
+					const name:String = stringPool[ref - 1];
 					multinamePool.push(ABCQualifiedName.create(name, ns, kind));
 				} else if(kind == 0x0f || kind == 0x10){
 					ref = data.readEncodedU32();
-					const strRQname:String = stringPool[ref];
+					const strRQname:String = stringPool[ref - 1];
 					multinamePool.push(ABCRuntimeQualifiedName.create(strRQname, kind));
 				} else if(kind == 0x11 || kind == 0x12){
 					multinamePool.push(ABCRuntimeQualifiedNameLate.create(kind));
 				} else if(kind == 0x09 || kind == 0x0E){
 					ref = data.readEncodedU32();
-					const strMName:String = stringPool[ref];
+					const strMName:String = stringPool[ref - 1];
 					ref = data.readEncodedU32();
-					const namespaces:ABCNamespaceSet = namespaceSetPool[ref];
+					const namespaces:ABCNamespaceSet = namespaceSetPool[ref - 1];
 					multinamePool.push(ABCMultiname.create(strMName, namespaces, kind));
 				} else if(kind == 0x1B || kind == 0x1C){
 					ref = data.readEncodedU32();
-					const namespacesLate:ABCNamespaceSet = namespaceSetPool[ref];
+					const namespacesLate:ABCNamespaceSet = namespaceSetPool[ref - 1];
 					multinamePool.push(ABCMultinameLate.create(namespacesLate, kind));
 				} else if(kind == 0x1D){
 					ref = data.readEncodedU32();
-					const qname:IABCMultiname = multinamePool[ref];
+					const qname:IABCMultiname = multinamePool[ref - 1];
 					ref = data.readEncodedU32();
 					var paramIndex:int = ref;
 					const params:Vector.<IABCMultiname> = new Vector.<IABCMultiname>();
 					while(--paramIndex > 0){
 						ref = data.readEncodedU32();
-						const param:IABCMultiname = multinamePool[ref];
+						const param:IABCMultiname = multinamePool[ref - 1];
 						params.push(param);
 					}
 					multinamePool.push(ABCMultinameGeneric.create(qname, params));
@@ -164,6 +164,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 					str += "\n" + namespaceSetPool[i].toString(indent + 4);
 				}
 			}
+			
+			if(multinamePool.length > 0) { 
+				str += "\n" + StringUtils.repeat(indent + 2) + "MultinamePool:";
+				for(i = 0; i < multinamePool.length; i++) {
+					str += "\n" + multinamePool[i].toString(indent + 4);
+				}
+			}
+			
 			return str;
 		}
 	}

@@ -45,7 +45,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function get type():uint { return _type; }
 		public function get name():String { return "ABCNamespaceKind"; }
 		
-		public function toString(indent:uint = 0) : String {
+		public function toString(indent:uint = 0):String {
 			return ABC.toStringCommon(name, indent) + 
 				"Type: " + type + ", " + 
 				"Name: " + _name;
