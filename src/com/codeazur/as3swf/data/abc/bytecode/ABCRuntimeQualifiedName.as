@@ -9,10 +9,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function ABCRuntimeQualifiedName() {}
 
-		public static function create(name:String, kind:uint = NaN):ABCQualifiedName {
+		public static function create(name:String, kind:int = -1):ABCQualifiedName {
 			const qname : ABCQualifiedName = new ABCQualifiedName();
 			qname.label = name;
-			qname.kind = isNaN(kind)? ABCMultinameKind.RUNTIME_QNAME : ABCMultinameKind.getType(kind);
+			qname.kind = kind < 0? ABCMultinameKind.RUNTIME_QNAME : ABCMultinameKind.getType(kind);
 			return qname;
 		}
 		

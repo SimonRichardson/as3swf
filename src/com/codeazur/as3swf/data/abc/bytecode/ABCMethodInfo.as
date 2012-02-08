@@ -10,14 +10,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 	{
 
 		public var methodName:String;
-		public var parameters:Vector.<ABCArgument>;
+		public var parameters:Vector.<ABCParameter>;
 		public var returnType:IABCMultiname;
 		public var scopeName:String;
 		public var flags:uint;
 
 		public function ABCMethodInfo() {}
 		
-		public static function create(methodName:String, parameters:Vector.<ABCArgument>, returnType:IABCMultiname, flags:uint):ABCMethodInfo {
+		public static function create(methodName:String, parameters:Vector.<ABCParameter>, returnType:IABCMultiname, flags:uint):ABCMethodInfo {
 			const info:ABCMethodInfo = new ABCMethodInfo();
 			info.methodName = methodName;
 			info.parameters = parameters;
@@ -40,8 +40,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function get name():String { return "ABCMethodInfo"; }
-		public function get hasOptional() : Boolean { 
+		public function get hasOptional():Boolean { 
 			return ABCMethodInfoFlags.isType(flags, ABCMethodInfoFlags.HAS_OPTIONAL); 
+		}
+		public function get hasParamNames():Boolean {
+			return ABCMethodInfoFlags.isType(flags, ABCMethodInfoFlags.HAS_PARAM_NAMES);
 		}
 		
 		public function toString(indent:uint = 0):String {

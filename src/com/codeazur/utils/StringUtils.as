@@ -1,9 +1,13 @@
 ﻿package com.codeazur.utils
 {
-	import flash.events.*;
-	
+
 	public class StringUtils
 	{
+		
+		public static function isEmpty(input:String):Boolean {
+			return null != input && input.length > 0;
+		}
+		
 		public static function trim(input:String):String {
 			return StringUtils.ltrim(StringUtils.rtrim(input));
 		}

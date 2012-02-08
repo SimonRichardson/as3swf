@@ -1,8 +1,8 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -19,15 +19,31 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function ABCConstantsPool() {
 			integerPool = new Vector.<int>();
+			integerPool.push(0);
+			
 			unsignedIntegerPool = new Vector.<uint>();
+			unsignedIntegerPool.push(0);
+			
 			doublePool = new Vector.<Number>();
+			doublePool.push(NaN);
+			
+			const asterisk : ABCNamespace = ABCNamespace.getType(ABCNamespaceType.ASTERISK);
+			
 			stringPool = new Vector.<String>();
+			stringPool.push(asterisk.value);
+			
 			namespacePool = new Vector.<ABCNamespace>();
+			namespacePool.push(asterisk);
+			
 			namespaceSetPool = new Vector.<ABCNamespaceSet>();
+			namespaceSetPool.push(ABCNamespaceSet.create(new <ABCNamespace>[asterisk]));
+			
 			multinamePool = new Vector.<IABCMultiname>();
+			multinamePool.push(ABCQualifiedName.create(asterisk.value, asterisk));
 		}
 		
 		public function parse(data : SWFData) : void {
+			
 			var ref:uint = 0;
 			var index:int = 0;
 						
@@ -63,7 +79,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 				if(strPoolIndex >= stringPool.length){
 					throw new Error();
 				}
-				namespacePool.push(ABCNamespace.create(nsKind, stringPool[strPoolIndex - 1]));
+				const nsName:String = getStringByIndex(strPoolIndex);
+				namespacePool.push(ABCNamespace.create(nsKind, nsName));
 			}
 			
 			index = data.readEncodedU32();
@@ -76,7 +93,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 					if(nsPoolIndex > namespacePool.length){
 						throw new Error();
 					}
-					nsSet.namespaces.push(namespacePool[nsPoolIndex - 1]);
+					nsSet.namespaces.push(getNamespaceByIndex(nsPoolIndex));
 				}
 				
 				namespaceSetPool.push(nsSet);
@@ -87,35 +104,35 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const kind : uint = 255 & data.readByte();
 				if(kind == 0x07 || kind == 0x0D){
 					ref = data.readEncodedU32();
-					const ns:ABCNamespace = namespacePool[ref - 1];
+					const ns:ABCNamespace = getNamespaceByIndex(ref);
 					ref = data.readEncodedU32();
-					const name:String = stringPool[ref - 1];
+					const name:String = getStringByIndex(ref);
 					multinamePool.push(ABCQualifiedName.create(name, ns, kind));
 				} else if(kind == 0x0f || kind == 0x10){
 					ref = data.readEncodedU32();
-					const strRQname:String = stringPool[ref - 1];
+					const strRQname:String = getStringByIndex(ref);
 					multinamePool.push(ABCRuntimeQualifiedName.create(strRQname, kind));
 				} else if(kind == 0x11 || kind == 0x12){
 					multinamePool.push(ABCRuntimeQualifiedNameLate.create(kind));
 				} else if(kind == 0x09 || kind == 0x0E){
 					ref = data.readEncodedU32();
-					const strMName:String = stringPool[ref - 1];
+					const strMName:String = getStringByIndex(ref);
 					ref = data.readEncodedU32();
-					const namespaces:ABCNamespaceSet = namespaceSetPool[ref - 1];
+					const namespaces:ABCNamespaceSet = getNamespaceSetByIndex(ref);
 					multinamePool.push(ABCMultiname.create(strMName, namespaces, kind));
 				} else if(kind == 0x1B || kind == 0x1C){
 					ref = data.readEncodedU32();
-					const namespacesLate:ABCNamespaceSet = namespaceSetPool[ref - 1];
+					const namespacesLate:ABCNamespaceSet = getNamespaceSetByIndex(ref);
 					multinamePool.push(ABCMultinameLate.create(namespacesLate, kind));
 				} else if(kind == 0x1D){
 					ref = data.readEncodedU32();
-					const qname:IABCMultiname = multinamePool[ref - 1];
+					const qname:IABCMultiname = getMultinameByIndex(ref);
 					ref = data.readEncodedU32();
 					var paramIndex:int = ref;
 					const params:Vector.<IABCMultiname> = new Vector.<IABCMultiname>();
 					while(--paramIndex > 0){
 						ref = data.readEncodedU32();
-						const param:IABCMultiname = multinamePool[ref - 1];
+						const param:IABCMultiname = getMultinameByIndex(ref);
 						params.push(param);
 					}
 					multinamePool.push(ABCMultinameGeneric.create(qname, params));
@@ -123,11 +140,40 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function getIntegerByIndex(index:uint):int {
+			return integerPool[index];
+		}
+		
+		public function getUnsignedIntegerByIndex(index:uint):uint {
+			return unsignedIntegerPool[index];
+		}
+		
+		public function getDoubleByIndex(index:uint):Number {
+			return doublePool[index];
+		}
+		
+		public function getStringByIndex(index:uint):String {
+			return stringPool[index];
+		}
+		
+		public function getMultinameByIndex(index:uint):IABCMultiname {
+			return multinamePool[index];
+		}
+		
+		public function getNamespaceByIndex(index:uint):ABCNamespace {
+			return namespacePool[index];
+		}
+		
+		public function getNamespaceSetByIndex(index:uint):ABCNamespaceSet {
+			return namespaceSetPool[index];
+		}
+		
 		public function get name():String { return "ABCConstantsPool"; }
 		
 		public function toString(indent:uint = 0) : String {
 			var i:uint;
 			var str:String = ABC.toStringCommon(name, indent);
+			
 			if(integerPool.length > 0) { 
 				str += "\n" + StringUtils.repeat(indent + 2) + "IntegerPool:";
 				for(i = 0; i < integerPool.length; i++) {

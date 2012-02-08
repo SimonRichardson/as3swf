@@ -12,11 +12,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 
 		public function ABCMultinameGeneric() {}
 
-		public static function create(qname:IABCMultiname, params:Vector.<IABCMultiname>, kind:uint = NaN):ABCMultinameGeneric {
+		public static function create(qname:IABCMultiname, params:Vector.<IABCMultiname>, kind:int = -1):ABCMultinameGeneric {
 			const mname:ABCMultinameGeneric = new ABCMultinameGeneric();
 			mname.qname = qname;
 			mname.params = params;
-			mname.kind = isNaN(kind)? ABCMultinameKind.GENERIC : ABCMultinameKind.getType(kind);
+			mname.kind = kind < 0? ABCMultinameKind.GENERIC : ABCMultinameKind.getType(kind);
 			return mname;
 		}
 

@@ -10,14 +10,20 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var kind : ABCNamespaceKind;
 		public var value : String;
 
-		public function ABCNamespace() {
+		public function ABCNamespace(initKind:ABCNamespaceKind = null, initValue:String = null) {
+			kind = initKind;
+			value = initValue;
 		}
 		
 		public static function create(type:uint, value:String):ABCNamespace {
 			const ns:ABCNamespace = new ABCNamespace();
 			ns.kind = ABCNamespaceKind.getType(type);
-			ns.value = value;
+			ns.value = ns.kind == ABCNamespaceKind.PRIVATE_NAMESPACE ? "private" : value;
 			return ns;
+		}
+		
+		public static function getType(type:ABCNamespaceType):ABCNamespace {
+			return ABCNamespaceType.getType(type);
 		}
 		
 		public function get name():String { return "ABCNamespace"; }
@@ -26,7 +32,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return ABC.toStringCommon(name, indent) +
 				"\n" + StringUtils.repeat(indent + 2) + "Type:" +
 				"\n" + kind.toString(indent + 4) + "" +
-				"\n" + StringUtils.repeat(indent + 2) + "Value: " + 
+				"\n" + StringUtils.repeat(indent + 2) + "Value:" + 
 				" " + value; 
 		}
 	}

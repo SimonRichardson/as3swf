@@ -11,11 +11,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 
 		public function ABCMultiname() {}
 		
-		public static function create(name:String, namespaces:ABCNamespaceSet, kind:uint = NaN):ABCMultiname {
+		public static function create(name:String, namespaces:ABCNamespaceSet, kind:int = -1):ABCMultiname {
 			const mname:ABCMultiname = new ABCMultiname();
 			mname.label = name;
 			mname.namespaces = namespaces;
-			mname.kind = isNaN(kind)? ABCMultinameKind.MULTINAME : ABCMultinameKind.getType(kind);
+			mname.kind = kind < 0? ABCMultinameKind.MULTINAME : ABCMultinameKind.getType(kind);
 			return mname;
 		}
 		

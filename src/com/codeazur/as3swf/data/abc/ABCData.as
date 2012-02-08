@@ -28,7 +28,9 @@ package com.codeazur.as3swf.data.abc
 			 	"Minor Version: " + minorVersion + ", " +
 				"Major Version: " + majorVersion + "" +
 				"\n" + StringUtils.repeat(indent + 2) + "ConstantPool:" +
-				"\n" + constantPool.toString(indent + 4);
+				"\n" + constantPool.toString(indent + 4) + 
+				"\n" + StringUtils.repeat(indent + 2) + "MethodInfoSet:" +
+				"\n" + methodInfoSet.toString(indent + 4);
 		}
 	}
 }

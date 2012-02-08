@@ -12,19 +12,17 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function ABCQualifiedName() {}
 
-		public static function create(name:String, ns:ABCNamespace, kind:uint = NaN):ABCQualifiedName {
+		public static function create(name:String, ns:ABCNamespace, kind:int = -1):ABCQualifiedName {
 			const qname : ABCQualifiedName = new ABCQualifiedName();
 			qname.label = name;
 			qname.ns = ns;
-			qname.kind = isNaN(kind)? ABCMultinameKind.QNAME : ABCMultinameKind.getType(kind);
+			qname.kind = kind < 0 ? ABCMultinameKind.QNAME : ABCMultinameKind.getType(kind);
 			return qname;
 		}
 		
 		override public function get name():String { return "ABCQualifiedName"; }
 		
-		override public function toQualifiedName():ABCQualifiedName {
-			return this;
-		}
+		override public function toQualifiedName():ABCQualifiedName { return this; }
 		
 		override public function toString(indent:uint = 0) : String {
 			return ABC.toStringCommon(name, indent) + 

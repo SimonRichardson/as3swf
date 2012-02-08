@@ -9,9 +9,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function ABCRuntimeQualifiedNameLate(){}
 		
-		public static function create(kind:uint = NaN):ABCRuntimeQualifiedNameLate {
+		public static function create(kind:int = -1):ABCRuntimeQualifiedNameLate {
 			const qname:ABCRuntimeQualifiedNameLate = new ABCRuntimeQualifiedNameLate();
-			qname.kind = isNaN(kind)? ABCMultinameKind.RUNTIME_QNAME_LATE : ABCMultinameKind.getType(kind);
+			qname.kind = kind < 0? ABCMultinameKind.RUNTIME_QNAME_LATE : ABCMultinameKind.getType(kind);
 			return qname; 
 		}
 		
