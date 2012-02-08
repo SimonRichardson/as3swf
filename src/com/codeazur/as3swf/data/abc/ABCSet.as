@@ -5,7 +5,7 @@ package com.codeazur.as3swf.data.abc
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	/**
-	 * @author Simon Richardson - simon@ustwo.co.uk
+	 * @author Simon Richardson - stickupkid@gmail.com
 	 */
 	public class ABCSet
 	{

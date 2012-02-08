@@ -5,7 +5,7 @@ package com.codeazur.as3swf.data.abc.io
 
 	import flash.utils.ByteArray;
 	/**
-	 * @author Simon Richardson - simon@ustwo.co.uk
+	 * @author Simon Richardson - stickupkid@gmail.com
 	 */
 	public class ABCDeserializer {
 		
