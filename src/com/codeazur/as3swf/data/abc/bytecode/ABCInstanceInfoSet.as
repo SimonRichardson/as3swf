@@ -7,9 +7,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
 	 */
-	public class ABCInstanceInfo extends ABCSet {
-
-		public function ABCInstanceInfo(abcData:ABCData) {
+	public class ABCInstanceInfoSet extends ABCSet {
+		
+		
+		public function ABCInstanceInfoSet(abcData:ABCData) {
 			super(abcData);
 		}
 		
@@ -17,7 +18,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 		}
 		
-		override public function get name() : String { return "ABCInstanceInfo"; }
+		override public function get name() : String { return "ABCInstanceInfoSet"; }
 		
 		override public function toString(indent : uint = 0) : String
 		{
