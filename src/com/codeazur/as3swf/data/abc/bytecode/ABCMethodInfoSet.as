@@ -1,25 +1,23 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
 
-	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.SWFData;
-	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.ABCData;
+	import com.codeazur.as3swf.data.abc.ABCSet;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class ABCMethodInfoSet {
-		
-		private var _abcData:ABCData;
+	public class ABCMethodInfoSet extends ABCSet {
 		
 		public var methodInfos:Vector.<ABCMethodInfo>;
 		
 		public function ABCMethodInfoSet(abcData:ABCData){
-			_abcData = abcData;
+			super(abcData);
 			
 			methodInfos = new Vector.<ABCMethodInfo>();
 		}
 		
-		public function parse(data : SWFData) : void {
+		override public function parse(data : SWFData) : void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++) {
 				const paramTotal:uint = data.readEncodedU30();
@@ -118,35 +116,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
-		private function getIntegerByIndex(index:uint):int {
-			return abcData.constantPool.getIntegerByIndex(index);
-		}
-		
-		private function getUnsignedIntegerByIndex(index:uint):uint {
-			return abcData.constantPool.getUnsignedIntegerByIndex(index);
-		}
-		
-		private function getDoubleByIndex(index:uint):Number {
-			return abcData.constantPool.getDoubleByIndex(index);
-		}
-		
-		private function getStringByIndex(index:uint):String {
-			return abcData.constantPool.getStringByIndex(index);
-		}
-		
-		private function getMultinameByIndex(index:uint):IABCMultiname {
-			return abcData.constantPool.getMultinameByIndex(index);
-		}
-		
-		private function getNamespaceByIndex(index:uint):ABCNamespace {
-			return abcData.constantPool.getNamespaceByIndex(index);
-		}
-		
-		public function get abcData():ABCData { return _abcData; }
-		public function get name():String { return "ABCMethodInfoSet"; }
+		override public function get name():String { return "ABCMethodInfoSet"; }
 		
 		public function toString(indent:uint = 0) : String {
-			var str:String = ABC.toStringCommon(name, indent);
+			var str:String = super.toString(indent);
 			
 			if(methodInfos.length > 0) {
 				for(var i:uint=0; i<methodInfos.length; i++) {
