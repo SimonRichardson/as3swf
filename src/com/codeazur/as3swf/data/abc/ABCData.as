@@ -1,10 +1,12 @@
 package com.codeazur.as3swf.data.abc
 {
+
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfoSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCConstantsPool;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfoSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMetadataSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfoSet;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCScriptInfoSet;
 	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
@@ -20,6 +22,7 @@ package com.codeazur.as3swf.data.abc
 		public var metadataSet:ABCMetadataSet;
 		public var instanceInfoSet:ABCInstanceInfoSet;
 		public var classInfoSet:ABCClassInfoSet;
+		public var scriptInfoSet:ABCScriptInfoSet;
 
 		public function ABCData() {
 			constantPool = new ABCConstantsPool();
@@ -28,6 +31,7 @@ package com.codeazur.as3swf.data.abc
 			metadataSet = new ABCMetadataSet(this);
 			instanceInfoSet = new ABCInstanceInfoSet(this);
 			classInfoSet = new ABCClassInfoSet(this);
+			scriptInfoSet = new ABCScriptInfoSet(this);
 		}
 		
 		public function get name():String { return 'ABCData'; }
@@ -46,6 +50,8 @@ package com.codeazur.as3swf.data.abc
 			str += "\n" + instanceInfoSet.toString(indent + 4);
 			str += "\n" + StringUtils.repeat(indent + 2) + "ClassInfoSet:";
 			str += "\n" + classInfoSet.toString(indent + 4);
+			str += "\n" + StringUtils.repeat(indent + 2) + "ScriptInfoSet:";
+			str += "\n" + scriptInfoSet.toString(indent + 4);
 			
 			return str;
 		}
