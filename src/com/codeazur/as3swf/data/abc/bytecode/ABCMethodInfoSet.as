@@ -17,7 +17,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			methodInfos = new Vector.<ABCMethodInfo>();
 		}
 		
-		override public function parse(data : SWFData) : void {
+		override public function parse(data:SWFData):void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++) {
 				const paramTotal:uint = data.readEncodedU30();
@@ -38,82 +38,15 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				const methodFlags:uint = data.readUI8();
 				
-				const info:ABCMethodInfo = ABCMethodInfo.create(methodName, parameters, returnType, methodFlags);
-				
-				if(info.hasOptional) {
-					const optionalTotal:uint = data.readEncodedU30();
-					for(var k:uint=0; k<optionalTotal; k++) {
-						
-						const optionalParamIndex:uint = (paramTotal - optionalTotal) + k;
-						const optionalParam:ABCParameter = parameters[optionalParamIndex];
-						optionalParam.optional = true;
-						
-						const optionalValueIndex:uint = data.readEncodedU30();
-						const optionalValueKind:uint = data.readUI8();
-						
-						const kind:ABCConstantKind = ABCConstantKind.getType(optionalValueKind);
-						optionalParam.optionalKind = kind;
-						
-						switch(kind) {
-							case ABCConstantKind.INT:
-								optionalParam.defaultValue = getIntegerByIndex(optionalValueIndex);
-								break;
-								
-							case ABCConstantKind.UINT:
-								optionalParam.defaultValue = getUnsignedIntegerByIndex(optionalValueIndex);
-								break;
-							
-							case ABCConstantKind.DOUBLE:
-								optionalParam.defaultValue = getDoubleByIndex(optionalValueIndex);
-								break;
-							
-							case ABCConstantKind.UTF8:
-								optionalParam.defaultValue = getStringByIndex(optionalValueIndex);
-								break;
-							
-							case ABCConstantKind.TRUE:
-								optionalParam.defaultValue = true;
-								break;
-							
-							case ABCConstantKind.FALSE:
-								optionalParam.defaultValue = false;
-								break;
-								
-							case ABCConstantKind.NULL:
-								optionalParam.defaultValue = null;
-								break;
-							
-							case ABCConstantKind.UNDEFINED:
-								optionalParam.defaultValue = undefined;
-								break;
-							
-							case ABCConstantKind.EXPLICIT_NAMESPACE:
-							case ABCConstantKind.NAMESPACE:
-							case ABCConstantKind.PACKAGE_NAMESPACE:
-							case ABCConstantKind.PACKAGE_INTERNAL_NAMESPACE:
-							case ABCConstantKind.PRIVATE_NAMESPACE:
-							case ABCConstantKind.PROTECTED_NAMESPACE:
-							case ABCConstantKind.STATIC_PROTECTED_NAMESPACE:
-								optionalParam.defaultValue = getNamespaceByIndex(optionalValueIndex);
-								break;
-							
-							default:
-								throw new Error();
-						}
-					}
-				}
-				
-				if(info.hasParamNames) {
-					for(var l:uint=0; l<paramTotal; l++) {
-						const paramNameIndex:uint = data.readEncodedU30();
-						const paramName:String = getStringByIndex(paramNameIndex);
-						const nameParam:ABCParameter = parameters[l];
-						nameParam.label = paramName;
-					}
-				}
+				const info:ABCMethodInfo = ABCMethodInfo.create(abcData, methodName, parameters, returnType, methodFlags);
+				info.parse(data);
 				
 				methodInfos.push(info);
 			}
+		}
+		
+		public function getAt(index:uint):ABCMethodInfo {
+			return methodInfos[index];
 		}
 		
 		override public function get name():String { return "ABCMethodInfoSet"; }
