@@ -43,6 +43,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 		override public function toString(indent : uint = 0) : String {
 			var str:String = super.toString(indent);
 			
+			if(instanceInfos.length > 0) {
+				for(var i:uint=0; i<instanceInfos.length; i++) {
+					str += "\n" + instanceInfos[i].toString(indent + 4);
+				}
+			}
+			
 			return str;
 		}
 	}

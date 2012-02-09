@@ -3,6 +3,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
+	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -10,8 +11,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public var qname:IABCMultiname;
 		public var superMultiname:IABCMultiname;
-		public var protectedNamespace : ABCNamespace;
-		public var instanceInitialiser : ABCMethodInfo;
+		public var protectedNamespace:ABCNamespace;
+		public var instanceInitialiser:ABCMethodInfo;
 		
 		public var traits:Vector.<ABCTraitInfo>;
 		public var interfaceMultinames:Vector.<IABCMultiname>;
@@ -79,7 +80,33 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		override public function toString(indent : uint = 0) : String {
-			return super.toString(indent);
+			var str:String = super.toString(indent);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "QualifiedName: ";
+			str += "\n" + qname.toString(indent + 4);
+			str += "\n" + StringUtils.repeat(indent + 2) + "SuperMultiname: ";
+			str += "\n" + superMultiname.toString(indent + 4);
+			
+			if(isProtected) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "ProtectedNamespace: ";
+				str += "\n" + protectedNamespace.toString(indent + 4);
+			}
+			
+			if(interfaceMultinames.length > 0) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "InterfaceMultinames: ";
+				for(var i:uint = 0; i<interfaceMultinames.length; i++) {
+					str += "\n" + interfaceMultinames[i].toString(indent + 4);
+				}
+			}
+			
+			if(traits.length > 0) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Traits: ";
+				for(var j:uint = 0; j<traits.length; j++) {
+					str += "\n" + traits[j].toString(indent + 4);
+				}
+			}
+			
+			return str;
 		}
 	}
 }
