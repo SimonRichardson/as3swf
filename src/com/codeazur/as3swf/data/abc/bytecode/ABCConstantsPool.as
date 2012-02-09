@@ -168,6 +168,55 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return namespaceSetPool[index];
 		}
 		
+		public function getPoolItemByKindAtIndex(kind:ABCConstantKind, index:uint):* {
+			var item:*;
+			switch(kind) {
+				case ABCConstantKind.INT:
+					item = getIntegerByIndex(index);
+					break;
+					
+				case ABCConstantKind.UINT:
+					item = getUnsignedIntegerByIndex(index);
+					break;	
+				
+				case ABCConstantKind.DOUBLE:
+					item = getDoubleByIndex(index);
+					break;
+				
+				case ABCConstantKind.UTF8:
+					item = getStringByIndex(index);
+					break;
+				
+				case ABCConstantKind.NAMESPACE:
+				case ABCConstantKind.PACKAGE_NAMESPACE:
+				case ABCConstantKind.PACKAGE_INTERNAL_NAMESPACE:
+				case ABCConstantKind.PROTECTED_NAMESPACE:
+				case ABCConstantKind.EXPLICIT_NAMESPACE:
+				case ABCConstantKind.STATIC_PROTECTED_NAMESPACE:
+				case ABCConstantKind.PRIVATE_NAMESPACE:
+					item = getNamespaceByIndex(index);
+					break;
+				
+				case ABCConstantKind.TRUE:
+					item = true;
+					break;
+				
+				case ABCConstantKind.FALSE:
+					item = false;
+					break;
+				
+				case ABCConstantKind.NULL:
+					item = null;
+					break;
+				
+				case ABCConstantKind.UNDEFINED:
+					item = undefined;
+					break;
+			}
+			
+			return item;
+		}
+		
 		public function get name():String { return "ABCConstantsPool"; }
 		
 		public function toString(indent:uint = 0) : String {

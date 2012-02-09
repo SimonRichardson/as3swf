@@ -50,6 +50,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function getAt(index:uint):ABCMetadata {
+			return metadatas[index];
+		}
+		
 		override public function get name():String { return "ABCMetadataSet"; }
 		
 		override public function toString(indent:uint = 0) : String {

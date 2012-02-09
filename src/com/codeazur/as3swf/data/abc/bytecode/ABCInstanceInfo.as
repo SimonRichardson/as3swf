@@ -39,8 +39,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 				protectedNamespace = getNamespaceByIndex(protectedIndex);
 			}
 			
-			const interfaceTotal:uint = data.readEncodedU30();
-			for(var j:uint=0; j<interfaceTotal; j++) {
+			const total:uint = data.readEncodedU30();
+			for(var i:uint=0; i<total; i++) {
 				const interfaceIndex:uint = data.readEncodedU30();
 				const interfaceMName:IABCMultiname = getMultinameByIndex(interfaceIndex);
 				
@@ -50,7 +50,18 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const initialiserIndex:uint = data.readEncodedU30();
 			instanceInitialiser = getMethodInfoByIndex(initialiserIndex);
 			
-			
+			const traitTotal:uint = data.readEncodedU30();
+			for(var j:uint=0; j<traitTotal; j++) {
+				const traitIndex:uint = data.readEncodedU30();
+				const traitMName:IABCMultiname = getMultinameByIndex(traitIndex);
+				const traitQName:IABCMultiname = traitMName.toQualifiedName();
+				
+				const traitKind:uint = data.readUI8();
+				const trait:ABCTraitInfo = ABCTraitInfoFactory.create(abcData, traitKind, traitQName);
+				trait.parse(data);
+				
+				traits.push(trait); 
+			}
 		}
 		
 		override public function get name() : String { return "ABCInstanceInfo"; }

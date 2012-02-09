@@ -1,8 +1,10 @@
 package com.codeazur.as3swf.data.abc
 {
-
-	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
 	import com.codeazur.as3swf.SWFData;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCConstantKind;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMetadata;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	/**
@@ -48,6 +50,18 @@ package com.codeazur.as3swf.data.abc
 		
 		protected function getMethodInfoByIndex(index:uint):ABCMethodInfo {
 			return abcData.methodInfoSet.getAt(index);
+		}
+		
+		protected function getMetadataByIndex(index:uint):ABCMetadata {
+			return abcData.metadataSet.getAt(index);
+		}
+		
+		protected function getClassInfoByIndex(index:uint):ABCClassInfo {
+			return abcData.classInfoSet.getAt(index);
+		}
+		
+		protected function getConstantPoolItemByKindAtIndex(kind:ABCConstantKind, index:uint):* {
+			return abcData.constantPool.getPoolItemByKindAtIndex(kind, index);
 		}
 		
 		public function get abcData():ABCData { return _abcData; }

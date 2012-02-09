@@ -12,15 +12,29 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function ABCQualifiedName() {}
 
-		public static function create(name:String, ns:ABCNamespace, kind:int = -1):ABCQualifiedName {
+		public static function create(label:String, ns:ABCNamespace, kind:int = -1):ABCQualifiedName {
 			const qname : ABCQualifiedName = new ABCQualifiedName();
-			qname.label = name;
+			qname.label = label;
 			qname.ns = ns;
 			qname.kind = kind < 0 ? ABCMultinameKind.QNAME : ABCMultinameKind.getType(kind);
 			return qname;
 		}
 		
 		override public function get name():String { return "ABCQualifiedName"; }
+		override public function get fullName():String {
+			var result:String;
+			if(label != ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) {
+				if(!StringUtils.isEmpty(ns.value)) {
+					result = ns.value + "." + label;
+				} else {
+					result = label;
+				}
+			} else {
+				result = super.fullName;
+			}
+			
+			return result;
+		}
 		
 		override public function toQualifiedName():ABCQualifiedName { return this; }
 		
