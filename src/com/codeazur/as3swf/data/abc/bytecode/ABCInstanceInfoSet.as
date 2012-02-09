@@ -38,7 +38,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function getAt(index:uint):ABCInstanceInfo {
+			return instanceInfos[index];
+		}
+		
 		override public function get name() : String { return "ABCInstanceInfoSet"; }
+		override public function get length():uint { return instanceInfos.length; }
 		
 		override public function toString(indent : uint = 0) : String {
 			var str:String = super.toString(indent);

@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc
 {
+	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCConstantKind;
@@ -56,6 +57,10 @@ package com.codeazur.as3swf.data.abc
 			return abcData.metadataSet.getAt(index);
 		}
 		
+		protected function getInstanceInfoByIndex(index:uint):ABCInstanceInfo {
+			return abcData.instanceInfoSet.getAt(index);
+		}
+		
 		protected function getClassInfoByIndex(index:uint):ABCClassInfo {
 			return abcData.classInfoSet.getAt(index);
 		}
@@ -66,6 +71,7 @@ package com.codeazur.as3swf.data.abc
 		
 		public function get abcData():ABCData { return _abcData; }
 		public function get name():String { return "ABCSet"; }
+		public function get length():uint { return 0; }
 		
 		public function toString(indent:uint=0):String {
 			return ABC.toStringCommon(name, indent);

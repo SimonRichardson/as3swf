@@ -2,19 +2,19 @@ package com.codeazur.as3swf.data.abc.bytecode
 {
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
-	import com.codeazur.as3swf.data.abc.ABCSet;
+	import com.codeazur.as3swf.data.abc.ABCTraitSet;
 	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class ABCInstanceInfo extends ABCSet {
+	public class ABCInstanceInfo extends ABCTraitSet {
 		
 		public var qname:IABCMultiname;
 		public var superMultiname:IABCMultiname;
 		public var protectedNamespace:ABCNamespace;
 		public var instanceInitialiser:ABCMethodInfo;
+		public var classInfo : ABCClassInfo;
 		
-		public var traits:Vector.<ABCTraitInfo>;
 		public var interfaceMultinames:Vector.<IABCMultiname>;
 
 		public var flags : uint;
@@ -22,7 +22,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function ABCInstanceInfo(abcData:ABCData) {
 			super(abcData);
 			
-			traits = new Vector.<ABCTraitInfo>();	
 			interfaceMultinames = new Vector.<IABCMultiname>();
 		}
 		
@@ -51,18 +50,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const initialiserIndex:uint = data.readEncodedU30();
 			instanceInitialiser = getMethodInfoByIndex(initialiserIndex);
 			
-			const traitTotal:uint = data.readEncodedU30();
-			for(var j:uint=0; j<traitTotal; j++) {
-				const traitIndex:uint = data.readEncodedU30();
-				const traitMName:IABCMultiname = getMultinameByIndex(traitIndex);
-				const traitQName:IABCMultiname = traitMName.toQualifiedName();
-				
-				const traitKind:uint = data.readUI8();
-				const trait:ABCTraitInfo = ABCTraitInfoFactory.create(abcData, traitKind, traitQName);
-				trait.parse(data);
-				
-				traits.push(trait); 
-			}
+			super.parse(data);
 		}
 		
 		override public function get name() : String { return "ABCInstanceInfo"; }

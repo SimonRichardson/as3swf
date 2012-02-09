@@ -44,6 +44,8 @@ package com.codeazur.as3swf.data.abc
 			str += "\n" + methodInfoSet.toString(indent + 4);
 			str += "\n" + StringUtils.repeat(indent + 2) + "InstanceInfoSet:";
 			str += "\n" + instanceInfoSet.toString(indent + 4);
+			str += "\n" + StringUtils.repeat(indent + 2) + "ClassInfoSet:";
+			str += "\n" + classInfoSet.toString(indent + 4);
 			
 			return str;
 		}

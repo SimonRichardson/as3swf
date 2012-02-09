@@ -29,6 +29,7 @@ package com.codeazur.as3swf.data.abc.io
 			abcData.methodInfoSet.parse(_bytes);
 			abcData.metadataSet.parse(_bytes);
 			abcData.instanceInfoSet.parse(_bytes);
+			abcData.classInfoSet.parse(_bytes);
 		}
 	}
 }
