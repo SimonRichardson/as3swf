@@ -30,6 +30,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 		override public function toString(indent : uint = 0) : String {
 			var str:String = super.toString(indent);
 			
+			str += "\n" + StringUtils.repeat(indent + 2) + "QualifiedName: ";
+			str += "\n" + qname.toString(indent + 4);
 			str += "\n" + StringUtils.repeat(indent + 2) + "Number Traits: ";
 			str += traits.length;
 			

@@ -20,11 +20,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			scriptInfo.scriptInitialiser = scriptInitialiser;
 			return scriptInfo;
 		}
-		
-		override public function parse(data:SWFData):void {
-			super.parse(data);
-		}
-		
+				
 		override public function get name():String { return "ABCScriptInfo"; }
 		
 		override public function toString(indent:uint=0):String {
