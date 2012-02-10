@@ -26,15 +26,15 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return trait;
 		}
 		
-		override public function parse(data : SWFData) : void
-		{
+		override public function parse(data : SWFData) : void {
+			super.parse(data);
+			
 			id = data.readEncodedU30();
 			
 			const index:uint = data.readEncodedU30();
+			
 			methodInfo = getMethodInfoByIndex(index);
 			methodInfo.methodName = ABCQualifiedName(qname).label;
-			
-			super.parse(data);
 		}
 
 		override public function get name() : String { return "ABCTraitMethodInfo"; }
@@ -44,8 +44,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "ID: " + id;
 			str += "\n" + StringUtils.repeat(indent + 2) + "Static: " + isStatic;
-			str += "\n" + StringUtils.repeat(indent + 2) + "MethodInfo: ";
-			str += "\n" + methodInfo.toString(indent + 4);
+			
+			if(methodInfo) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "MethodInfo: ";
+				str += "\n" + methodInfo.toString(indent + 4);
+			}
 			
 			return str;
 		}

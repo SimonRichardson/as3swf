@@ -13,7 +13,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var superMultiname:IABCMultiname;
 		public var protectedNamespace:ABCNamespace;
 		public var instanceInitialiser:ABCMethodInfo;
-		public var classInfo : ABCClassInfo;
+		public var classInfo:ABCClassInfo;
 		
 		public var interfaceMultinames:Vector.<IABCMultiname>;
 
@@ -49,7 +49,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			const initialiserIndex:uint = data.readEncodedU30();
 			instanceInitialiser = getMethodInfoByIndex(initialiserIndex);
-			
+						
 			super.parse(data);
 		}
 		
@@ -78,6 +78,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 			if(isProtected) {
 				str += "\n" + StringUtils.repeat(indent + 2) + "ProtectedNamespace: ";
 				str += "\n" + protectedNamespace.toString(indent + 4);
+			}
+			
+			if(instanceInitialiser) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "InstanceInitialiser: ";
+				str += "\n" + instanceInitialiser.toString(indent + 4);
 			}
 			
 			if(interfaceMultinames.length > 0) {

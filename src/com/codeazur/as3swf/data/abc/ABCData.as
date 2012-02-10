@@ -46,6 +46,8 @@ package com.codeazur.as3swf.data.abc
 			str += "\n" + constantPool.toString(indent + 4);
 			str += "\n" + StringUtils.repeat(indent + 2) + "MethodInfoSet:";
 			str += "\n" + methodInfoSet.toString(indent + 4);
+			str += "\n" + StringUtils.repeat(indent + 2) + "MetadataSet:";
+			str += "\n" + metadataSet.toString(indent + 4);
 			str += "\n" + StringUtils.repeat(indent + 2) + "InstanceInfoSet:";
 			str += "\n" + instanceInfoSet.toString(indent + 4);
 			str += "\n" + StringUtils.repeat(indent + 2) + "ClassInfoSet:";

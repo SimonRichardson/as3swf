@@ -152,16 +152,57 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return doublePool[index];
 		}
 		
+		public function addString(string:String):void {
+			if(stringPool.indexOf(string) < 0) {
+				stringPool.push(string);
+			}
+		}
+		
 		public function getStringByIndex(index:uint):String {
 			return stringPool[index];
+		}
+		
+		public function addMultiname(multiname:IABCMultiname):void {
+			if(multiname is ABCNamedMultiname) {
+				const nmname:ABCNamedMultiname = ABCNamedMultiname(multiname);
+				addString(nmname.label);
+			}
+			
+			if(multiname is ABCQualifiedName) {
+				const qname:ABCQualifiedName = multiname.toQualifiedName();
+				addNamespace(qname.ns);
+			}
+			
+			if(multiname is ABCMultinameGeneric) {
+				const gmname:ABCMultinameGeneric = ABCMultinameGeneric(multiname);
+				addMultiname(gmname.qname);
+				
+				const total:uint = gmname.params.length;
+				for(var i:uint=0; i<total; i++) {
+					const qnameParam:ABCQualifiedName = gmname.params[i].toQualifiedName();
+					addMultiname(qnameParam);
+				}
+			}
 		}
 		
 		public function getMultinameByIndex(index:uint):IABCMultiname {
 			return multinamePool[index];
 		}
 		
+		public function addNamespace(ns:ABCNamespace):void {
+			if(namespacePool.indexOf(ns) < 0) {
+				namespacePool.push(ns);
+			}
+		}
+		
 		public function getNamespaceByIndex(index:uint):ABCNamespace {
 			return namespacePool[index];
+		}
+		
+		public function addNamespaceSet(ns:ABCNamespaceSet):void {
+			if(namespaceSetPool.indexOf(ns) < 0) {
+				namespaceSetPool.push(ns);
+			}
 		}
 		
 		public function getNamespaceSetByIndex(index:uint):ABCNamespaceSet {

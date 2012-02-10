@@ -21,13 +21,15 @@ package com.codeazur.as3swf.data.abc
 
 		override public function parse(data : SWFData) : void
 		{
-			const traitTotal:uint = data.readEncodedU30();
-			for(var j:uint=0; j<traitTotal; j++) {
-				const traitIndex:uint = data.readEncodedU30();
-				const traitMName:IABCMultiname = getMultinameByIndex(traitIndex);
+			const total:uint = data.readEncodedU30();
+			for(var i:uint=0; i<total; i++) {
+				const index:uint = data.readEncodedU30();
+
+				const traitMName:IABCMultiname = getMultinameByIndex(index);
 				const traitQName:IABCMultiname = traitMName.toQualifiedName();
 				
 				const traitKind:uint = data.readUI8();
+				
 				const trait:ABCTraitInfo = ABCTraitInfoFactory.create(abcData, traitKind, traitQName, isStatic);
 				trait.parse(data);
 				

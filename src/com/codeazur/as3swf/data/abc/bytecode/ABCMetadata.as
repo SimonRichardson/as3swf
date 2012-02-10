@@ -25,10 +25,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function toString(indent:uint = 0) : String {
 			var str:String = ABC.toStringCommon(name, indent);
 			
-			str += " Label: " + label + "\nProperties: ";
+			str += " Label: " + label;
+			str += "\n" + StringUtils.repeat(indent + 4) + "Properties: ";
 			
 			for(var key:Object in properties) {
-				str += "\n" + StringUtils.repeat(indent + 4) + "Key: ";
+				str += "\n" + StringUtils.repeat(indent + 6) + "Key: ";
 				str += key + ", Value: " + properties[key]; 
 			}
 			

@@ -32,17 +32,29 @@ package com.codeazur.as3swf.data.abc
 		protected function getUnsignedIntegerByIndex(index:uint):uint {
 			return abcData.constantPool.getUnsignedIntegerByIndex(index);
 		}
-		
+				
 		protected function getDoubleByIndex(index:uint):Number {
 			return abcData.constantPool.getDoubleByIndex(index);
+		}
+		
+		protected function addString(string:String):void {
+			abcData.constantPool.addString(string);
 		}
 		
 		protected function getStringByIndex(index:uint):String {
 			return abcData.constantPool.getStringByIndex(index);
 		}
 		
+		protected function addMultiname(multiname:IABCMultiname):void {
+			abcData.constantPool.addMultiname(multiname);
+		}
+		
 		protected function getMultinameByIndex(index:uint):IABCMultiname {
 			return abcData.constantPool.getMultinameByIndex(index);
+		}
+		
+		protected function addNamespace(ns:ABCNamespace):void {
+			abcData.constantPool.addNamespace(ns);
 		}
 		
 		protected function getNamespaceByIndex(index:uint):ABCNamespace {

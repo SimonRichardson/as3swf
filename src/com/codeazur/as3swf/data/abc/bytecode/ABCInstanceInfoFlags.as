@@ -18,7 +18,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public static function isType(flag:uint, type:ABCInstanceInfoFlags):Boolean {
-			return ((flag & type._type) != 0); 
+			return (type._type & flag) != 0; 
 		}
 		
 	}

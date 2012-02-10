@@ -32,6 +32,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		override public function parse(data : SWFData) : void {
+			super.parse(data);
+			
 			id = data.readEncodedU30();
 			
 			const typeIndex:uint = data.readEncodedU30();
@@ -43,8 +45,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 				valueKind = ABCConstantKind.getType(kind);
 				defaultValue = getConstantPoolItemByKindAtIndex(valueKind, valueIndex);
 			}
-			
-			super.parse(data);
 		}
 		
 		override public function get name():String { return "ABCTraitSlotInfo"; }
@@ -53,8 +53,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 			var str:String = super.toString(indent);
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "ID: " + id;
-			str += "\n" + StringUtils.repeat(indent + 2) + "TypeMultiname: ";
-			str += "\n" + typeMultiname.toString(indent + 4);
+			
+			if(typeMultiname) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "TypeMultiname: ";
+				str += "\n" + typeMultiname.toString(indent + 4);
+			}
+			
 			str += "\n" + StringUtils.repeat(indent + 2) + "Static: " + isStatic;
 			
 			if(valueIndex > 0) {

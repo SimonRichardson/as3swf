@@ -11,6 +11,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public var qname:IABCMultiname;
 		public var kind:ABCTraitInfoKind;
+		public var data:uint;
 		
 		public var metadatas:Vector.<ABCMetadata>;
 		
@@ -21,6 +22,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		override public function parse(data : SWFData) : void {
+			this.data = data.readUI8();
+			
 			if(hasMetadata) {
 				const total:uint = data.readEncodedU30();
 				for(var i:uint = 0; i<total; i++) {
@@ -34,13 +37,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 
 		override public function get name():String { return "ABCTraitInfo"; }
 		public function get isFinal():Boolean {
-			return ABCTraitInfoFlags.isType(kind.type >> 4, ABCTraitInfoFlags.FINAL);
+			return ABCTraitInfoFlags.isType(kind.type, ABCTraitInfoFlags.FINAL);
 		}
 		public function get isOverride():Boolean {
-			return ABCTraitInfoFlags.isType(kind.type >> 4, ABCTraitInfoFlags.OVERRIDE);
+			return ABCTraitInfoFlags.isType(kind.type, ABCTraitInfoFlags.OVERRIDE);
 		}
 		public function get hasMetadata():Boolean {
-			return ABCTraitInfoFlags.isType(kind.type >> 4, ABCTraitInfoFlags.METADATA);
+			return ABCTraitInfoFlags.isType(kind.type, ABCTraitInfoFlags.METADATA);
 		}
 		
 		override public function toString(indent:uint = 0):String {

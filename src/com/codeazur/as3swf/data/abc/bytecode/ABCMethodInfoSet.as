@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
 
+	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
@@ -30,6 +31,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 					const paramIndex:uint = data.readEncodedU30();
 					const mname:IABCMultiname = getMultinameByIndex(paramIndex);
 					const qname:IABCMultiname = mname.toQualifiedName();
+					
 					parameters.push(ABCParameter.create(qname));
 				}
 				
@@ -54,6 +56,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		override public function toString(indent:uint = 0) : String {
 			var str:String = super.toString(indent);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "Number MethodInfo: ";
+			str += methodInfos.length;
 			
 			if(methodInfos.length > 0) {
 				for(var i:uint=0; i<methodInfos.length; i++) {
