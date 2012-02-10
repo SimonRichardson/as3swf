@@ -32,9 +32,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			id = data.readEncodedU30();
 			
 			const index:uint = data.readEncodedU30();
-			
 			methodInfo = getMethodInfoByIndex(index);
-			methodInfo.methodName = ABCQualifiedName(qname).label;
 		}
 
 		override public function get name() : String { return "ABCTraitMethodInfo"; }
