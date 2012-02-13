@@ -17,9 +17,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			instanceInfos = new Vector.<ABCInstanceInfo>();
 		}
 		
-		override public function parse(data : SWFData) : void {
+		override public function parse(data:SWFData, scanner:ABCScanner):void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++) {
+				data.position = scanner.getInstanceInfoAtIndex(i);
 				
 				const mnameIndex:uint = data.readEncodedU30();
 				const mname:IABCMultiname = getMultinameByIndex(mnameIndex);
@@ -32,7 +33,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const flags:uint = data.readUI8();
 				
 				const instanceInfo:ABCInstanceInfo = ABCInstanceInfo.create(abcData, instanceQName, superMName, flags);
-				instanceInfo.parse(data);
+				instanceInfo.parse(data, scanner);
 				
 				instanceInfos.push(instanceInfo);
 			}

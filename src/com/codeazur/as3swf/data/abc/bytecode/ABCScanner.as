@@ -57,43 +57,47 @@ package com.codeazur.as3swf.data.abc.bytecode
 			input.position = position;
 		}
 		
-		public function getConstantIntegerAtIndex(index:uint):uint
-		{
+		public function getConstantIntegerAtIndex(index:uint):uint {
 			return constantIntPool[index];
 		}
 
-		public function getConstantUnsignedIntegerAtIndex(index:uint):uint
-		{
+		public function getConstantUnsignedIntegerAtIndex(index:uint):uint {
 			return constantUIntPool[index];
 		}
 
-		public function getConstantDoubleAtIndex(index:uint):uint
-		{
+		public function getConstantDoubleAtIndex(index:uint):uint {
 			return constantDoublePool[index];
 		}
 
-		public function getConstantStringAtIndex(index:uint):uint
-		{
+		public function getConstantStringAtIndex(index:uint):uint {
 			return constantStringPool[index];
 		}
 
-		public function getConstantNamespaceAtIndex(index:uint):uint
-		{
+		public function getConstantNamespaceAtIndex(index:uint):uint {
 			return constantNamespacePool[index];
 		}
 
-		public function getConstantNamespaceSetAtIndex(index:uint):uint
-		{
+		public function getConstantNamespaceSetAtIndex(index:uint):uint	{
 			return constantNamespaceSetPool[index];
 		}
 
-		public function getConstantMultinameAtIndex(index:uint):uint
-		{
+		public function getConstantMultinameAtIndex(index:uint):uint {
 			return constantMultinamePool[index];
 		}
+		
+		public function getMethodInfoAtIndex(index:uint):uint {
+			return methodInfo[index];
+		}
+		
+		public function getMetadataInfoAtIndex(index:uint):uint {
+			return metadataInfo[index];
+		}
+		
+		public function getInstanceInfoAtIndex(index:uint):uint {
+			return instanceInfo[index];
+		}
 
-		private function scanMinorVersion(input:SWFData) : uint
-		{
+		private function scanMinorVersion(input:SWFData) : uint	{
         	const position:uint = input.position;
         	input.skipEntries(2);
         	return position;

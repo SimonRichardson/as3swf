@@ -41,7 +41,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return result;
 		}
 		
-		override public function parse(data:SWFData):void {
+		override public function parse(data:SWFData, scanner:ABCScanner):void {
 			const paramTotal:uint = parameters.length;
 			
 			if(hasOptional) {

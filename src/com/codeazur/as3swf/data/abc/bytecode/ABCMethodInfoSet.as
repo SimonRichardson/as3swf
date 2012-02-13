@@ -18,9 +18,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 			methodInfos = new Vector.<ABCMethodInfo>();
 		}
 		
-		override public function parse(data:SWFData):void {
+		override public function parse(data:SWFData, scanner:ABCScanner):void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++) {
+				data.position = scanner.getMethodInfoAtIndex(i);
+				
 				const paramTotal:uint = data.readEncodedU30();
 				
 				const returnIndex:uint = data.readEncodedU30();
@@ -41,7 +43,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const methodFlags:uint = data.readUI8();
 				
 				const info:ABCMethodInfo = ABCMethodInfo.create(abcData, methodName, parameters, returnType, methodFlags);
-				info.parse(data);
+				info.parse(data, scanner);
 				
 				methodInfos.push(info);
 			}

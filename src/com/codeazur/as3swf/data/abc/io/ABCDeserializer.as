@@ -26,19 +26,18 @@ package com.codeazur.as3swf.data.abc.io
 		}
 		
 		public function parse(abcData : ABCData) : void {
-			_scanner.scan(_bytes);
+			scanner.scan(_bytes);
 			
-			_bytes.position = _scanner.minorVersion;
+			_bytes.position = scanner.minorVersion;
 			abcData.minorVersion = _bytes.readUI16();
 			
-			_bytes.position = _scanner.majorVersion;
+			_bytes.position = scanner.majorVersion;
 			abcData.majorVersion = _bytes.readUI16();
 						
-			abcData.constantPool.parse(_bytes, _scanner);
-			
-//			abcData.methodInfoSet.parse(_bytes);
-//			abcData.metadataSet.parse(_bytes);
-//			abcData.instanceInfoSet.parse(_bytes);
+			abcData.constantPool.parse(_bytes, scanner);
+			abcData.methodInfoSet.parse(_bytes, scanner);
+			abcData.metadataSet.parse(_bytes, scanner);
+			abcData.instanceInfoSet.parse(_bytes, scanner);
 //			abcData.classInfoSet.parse(_bytes);
 //			abcData.scriptInfoSet.parse(_bytes);
 		}

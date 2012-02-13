@@ -33,7 +33,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return instance;
 		}
 		
-		override public function parse(data:SWFData):void {
+		override public function parse(data:SWFData, scanner:ABCScanner):void {
 			if(isProtected) {
 				const protectedIndex:uint = data.readEncodedU30();
 				protectedNamespace = getNamespaceByIndex(protectedIndex);
@@ -50,7 +50,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const initialiserIndex:uint = data.readEncodedU30();
 			instanceInitialiser = getMethodInfoByIndex(initialiserIndex);
 			
-			super.parse(data);
+			super.parse(data, scanner);
 		}
 		
 		override public function get name() : String { return "ABCInstanceInfo"; }

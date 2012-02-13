@@ -1,12 +1,13 @@
 package com.codeazur.as3swf.data.abc
 {
-	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
 	import com.codeazur.as3swf.SWFData;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCConstantKind;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMetadata;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCScanner;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
@@ -21,7 +22,7 @@ package com.codeazur.as3swf.data.abc
 			_abcData = abcData;
 		}
 		
-		public function parse(data : SWFData) : void {
+		public function parse(data : SWFData, scanner:ABCScanner) : void {
 			throw new Error();
 		}
 		

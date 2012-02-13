@@ -31,8 +31,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return slot;
 		}
 		
-		override public function parse(data : SWFData) : void {
-			super.parse(data);
+		override public function parse(data : SWFData, scanner:ABCScanner) : void {
+			super.parse(data, scanner);
 			
 			id = data.readEncodedU30();
 			

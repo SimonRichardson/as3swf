@@ -17,8 +17,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			classInfos = new Vector.<ABCClassInfo>();
 		}
 		
-		override public function parse(data : SWFData) : void
-		{
+		override public function parse(data:SWFData, scanner:ABCScanner):void {
 			const total:uint = abcData.instanceInfoSet.length;
 			for(var i:uint=0; i<total; i++) {
 				
@@ -30,7 +29,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const staticInitialiser:ABCMethodInfo = getMethodInfoByIndex(staticIndex);
 				
 				const classInfo:ABCClassInfo = ABCClassInfo.create(abcData, classQName, staticInitialiser);
-				classInfo.parse(data);
+				classInfo.parse(data, scanner);
 				
 				instanceInfo.classInfo = classInfo;
 				classInfos.push(classInfo);
