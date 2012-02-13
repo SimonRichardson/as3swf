@@ -29,7 +29,6 @@ package com.codeazur.as3swf.data.abc
 				const traitQName:IABCMultiname = traitMName.toQualifiedName();
 				
 				const traitKind:uint = data.readUI8();
-				
 				const trait:ABCTraitInfo = ABCTraitInfoFactory.create(abcData, traitKind, traitQName, isStatic);
 				trait.parse(data, scanner);
 				

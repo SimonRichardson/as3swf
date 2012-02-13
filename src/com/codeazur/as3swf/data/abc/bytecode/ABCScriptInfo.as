@@ -28,6 +28,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 			str += "\n" + StringUtils.repeat(indent + 2) + "ScriptInitialiser:";
 			str += "\n" + scriptInitialiser.toString(indent + 4);
 			
+			if(traits.length > 0) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Traits: ";
+				for(var j:uint = 0; j<traits.length; j++) {
+					str += "\n" + traits[j].toString(indent + 4);
+				}
+			}
+			
 			return str;
 		}
 

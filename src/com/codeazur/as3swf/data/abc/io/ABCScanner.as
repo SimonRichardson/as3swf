@@ -99,6 +99,14 @@ package com.codeazur.as3swf.data.abc.io
 		public function getInstanceInfoAtIndex(index:uint):uint {
 			return _instanceInfo[index];
 		}
+		
+		public function getClassInfoByIndex(index:uint):uint {
+			return _classInfo[index];
+		}
+		
+		public function getScriptInfoAtIndex(index:uint):uint {
+			return _scriptInfo[index];
+		}
 
 		private function scanMinorVersion(input:SWFData) : uint	{
         	const position:uint = input.position;
@@ -296,6 +304,7 @@ package com.codeazur.as3swf.data.abc.io
 	            const interfaceCount:uint = input.readEncodedU32();
 	            input.skipEntries(interfaceCount);
 	            input.readEncodedU32();
+				
 	            scanTraits(input);
 	        }
 	

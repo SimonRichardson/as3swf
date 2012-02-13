@@ -21,6 +21,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 		override public function parse(data:SWFData, scanner:ABCScanner):void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++){
+				data.position = scanner.getScriptInfoAtIndex(i);
+				
 				const scriptIndex:uint = data.readEncodedU30();
 				const scriptInitialiser:ABCMethodInfo = getMethodInfoByIndex(scriptIndex);
 				
