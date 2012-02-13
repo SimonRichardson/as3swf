@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.io
 {
+	import com.codeazur.as3swf.data.abc.bytecode.ABCScanner;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 
@@ -9,7 +10,9 @@ package com.codeazur.as3swf.data.abc.io
 	 */
 	public class ABCDeserializer {
 		
-		private var _bytes : SWFData;
+		private var _bytes:SWFData;
+		
+		private var _scanner:ABCScanner;
 		
 		public function ABCDeserializer(bytes : ByteArray) {
 			if(bytes is SWFData) _bytes = SWFData(bytes);
@@ -18,9 +21,14 @@ package com.codeazur.as3swf.data.abc.io
 				_bytes.writeBytes(bytes, 0, bytes.length);
 				_bytes.position = 0;
 			}
+			
+			_scanner = new ABCScanner();
 		}
 		
 		public function parse(abcData : ABCData) : void {
+			// use the scanner to blitz through to identify any issues.
+			_scanner.scan(_bytes);
+			
 			abcData.minorVersion = _bytes.readUI16();
 			abcData.majorVersion = _bytes.readUI16();
 			
@@ -28,9 +36,13 @@ package com.codeazur.as3swf.data.abc.io
 			
 			abcData.methodInfoSet.parse(_bytes);
 			abcData.metadataSet.parse(_bytes);
-			abcData.instanceInfoSet.parse(_bytes);
-			abcData.classInfoSet.parse(_bytes);
+//			abcData.instanceInfoSet.parse(_bytes);
+//			abcData.classInfoSet.parse(_bytes);
 //			abcData.scriptInfoSet.parse(_bytes);
+		}
+		
+		public function get scanner():ABCScanner {
+			return _scanner;
 		}
 	}
 }

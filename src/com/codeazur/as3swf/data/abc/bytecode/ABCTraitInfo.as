@@ -11,7 +11,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public var qname:IABCMultiname;
 		public var kind:ABCTraitInfoKind;
-		public var data:uint;
 		
 		public var metadatas:Vector.<ABCMetadata>;
 		
@@ -22,8 +21,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		override public function parse(data : SWFData) : void {
-			this.data = data.readUI8();
-			
 			if(hasMetadata) {
 				const total:uint = data.readEncodedU30();
 				for(var i:uint = 0; i<total; i++) {

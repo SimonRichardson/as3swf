@@ -38,7 +38,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const protectedIndex:uint = data.readEncodedU30();
 				protectedNamespace = getNamespaceByIndex(protectedIndex);
 			}
-			
+
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++) {
 				const interfaceIndex:uint = data.readEncodedU30();
@@ -49,7 +49,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			const initialiserIndex:uint = data.readEncodedU30();
 			instanceInitialiser = getMethodInfoByIndex(initialiserIndex);
-						
+			
 			super.parse(data);
 		}
 		

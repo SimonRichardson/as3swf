@@ -20,7 +20,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public static function isType(flag:uint, type:ABCTraitInfoFlags):Boolean {
-			return ((type._type << 4) & flag) != 0; 
+			return ((flag >> 4) & type._type) != 0; 
 		}
 	}
 }

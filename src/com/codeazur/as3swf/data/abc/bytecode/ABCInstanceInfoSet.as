@@ -34,21 +34,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const instanceInfo:ABCInstanceInfo = ABCInstanceInfo.create(abcData, instanceQName, superMName, flags);
 				instanceInfo.parse(data);
 				
-				// Fill the constant pool
-				addMultiname(instanceQName);
-				
-				const interfaceTotal:uint = instanceInfo.interfaceMultinames.length;
-				for(var j:uint=0; j<interfaceTotal; j++) {
-					const interfaceMName:IABCMultiname = instanceInfo.interfaceMultinames[j];
-					addMultiname(interfaceMName);
-				}
-				
-				if(instanceInfo.isProtected) {
-					addNamespace(instanceInfo.protectedNamespace);
-				}
-				
-				addMultiname(instanceInfo.superMultiname);
-				
 				instanceInfos.push(instanceInfo);
 			}
 		}

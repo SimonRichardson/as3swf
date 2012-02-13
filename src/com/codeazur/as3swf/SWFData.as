@@ -805,6 +805,12 @@
 			position += length;
 		}
 		
+		public function skipEntries(length:uint):void {
+			for(var i:uint=0; i<length; i++) {
+				readEncodedU32();
+			}
+		}
+		
 		public function dump(length:uint, offset:int = 0):void {
 			var pos:uint = position;
 			position += offset;
