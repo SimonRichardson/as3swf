@@ -117,6 +117,18 @@ package com.codeazur.as3swf.data.abc.io
 			return _scriptInfo[index];
 		}
 		
+		public function getInstanceTraitInfoAtIndex(index:uint):Vector.<uint> {
+			return _instanceTraitInfo[index];
+		}
+		
+		public function getClassTraitInfoAtIndex(index:uint):Vector.<uint> {
+			return _classTraitInfo[index];
+		}
+		
+		public function getScriptTraitInfoAtIndex(index:uint):Vector.<uint> {
+			return _scriptTraitInfo[index];
+		}
+		
 		public function getInstanceTraitInfoAt(instanceIndex:uint, index:uint):uint {
 			return _instanceTraitInfo[instanceIndex][index];
 		}

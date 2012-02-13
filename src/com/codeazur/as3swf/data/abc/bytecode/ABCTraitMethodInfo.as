@@ -3,7 +3,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
-	import com.codeazur.utils.HexUtils;
 	import com.codeazur.utils.StringUtils;
 
 	/**
@@ -32,8 +31,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			id = data.readEncodedU30();
 			
 			const index:uint = data.readEncodedU30();
-			// FIXME: For some reason we can't get the method info here!?
-			//methodInfo = getMethodInfoByIndex(index);
+			methodInfo = getMethodInfoByIndex(index);
 			
 			super.parse(data, scanner);
 		}

@@ -17,12 +17,14 @@ package com.codeazur.as3swf.data.abc
 			super(abcData);
 			
 			isStatic = false;
-			traits = new Vector.<ABCTraitInfo>();	
+			traits = new Vector.<ABCTraitInfo>();
 		}
 
-		override public function parse(data : SWFData, scanner:ABCScanner) : void {
+		public function parse(data : SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>) : void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++) {
+				data.position = traitPositions[i];
+				
 				const index:uint = data.readEncodedU30();
 
 				const traitMName:IABCMultiname = getMultinameByIndex(index);

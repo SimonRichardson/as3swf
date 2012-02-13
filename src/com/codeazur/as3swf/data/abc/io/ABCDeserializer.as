@@ -34,8 +34,10 @@ package com.codeazur.as3swf.data.abc.io
 			abcData.majorVersion = _bytes.readUI16();
 						
 			abcData.constantPool.parse(_bytes, scanner);
+			
 			abcData.methodInfoSet.parse(_bytes, scanner);
 			abcData.metadataSet.parse(_bytes, scanner);
+			
 			abcData.instanceInfoSet.parse(_bytes, scanner);
 			abcData.classInfoSet.parse(_bytes, scanner);
 			abcData.scriptInfoSet.parse(_bytes, scanner);

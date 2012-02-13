@@ -21,7 +21,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			metadatas = new Vector.<ABCMetadata>();
 		}
 		
-		override public function parse(data:SWFData, scanner:ABCScanner):void {
+		public function parse(data:SWFData, scanner:ABCScanner):void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++) {
 				data.position = scanner.getMetadataInfoAtIndex(i);

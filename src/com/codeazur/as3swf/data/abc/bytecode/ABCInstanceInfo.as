@@ -18,7 +18,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public var interfaceMultinames:Vector.<IABCMultiname>;
 
-		public var flags : uint;
+		public var flags:uint;
+		
+		public var instanceIndex:uint;
 
 		public function ABCInstanceInfo(abcData:ABCData) {
 			super(abcData);
@@ -34,7 +36,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return instance;
 		}
 		
-		override public function parse(data:SWFData, scanner:ABCScanner):void {
+		override public function parse(data:SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>):void {
 			if(isProtected) {
 				const protectedIndex:uint = data.readEncodedU30();
 				protectedNamespace = getNamespaceByIndex(protectedIndex);
@@ -51,7 +53,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const initialiserIndex:uint = data.readEncodedU30();
 			instanceInitialiser = getMethodInfoByIndex(initialiserIndex);
 			
-			super.parse(data, scanner);
+			super.parse(data, scanner, traitPositions);
 		}
 		
 		override public function get name() : String { return "ABCInstanceInfo"; }
