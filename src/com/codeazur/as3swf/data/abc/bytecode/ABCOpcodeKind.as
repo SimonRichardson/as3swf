@@ -193,7 +193,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function toString(indent:uint = 0):String {
 			return ABC.toStringCommon(name, indent) + 
-				"Type: " + type + ", " + 
+				"Type: " + type.toString(16) + ", " + 
 				"Name: " + _name;
 		}
 	}

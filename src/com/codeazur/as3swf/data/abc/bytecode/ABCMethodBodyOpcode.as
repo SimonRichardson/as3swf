@@ -25,6 +25,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			for(var i:uint=0; i<total; i++) {
 				const opcodeKind:uint = data.readUI8();
 				const opcode:ABCOpcode = ABCOpcodeFactory.create(abcData, opcodeKind);
+				
+				trace(opcode);
 			}
 		}
 		
