@@ -1,6 +1,8 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
 	import com.codeazur.as3swf.SWFData;
+	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -340,6 +342,33 @@ package com.codeazur.as3swf.data.abc.bytecode
 	                input.skipEntries(metadata);
 	            }
 	        }		
+		}
+		
+		public function get name():String { return "ABCScanner"; }
+		
+		public function toString(indent:uint=0) : String {
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "MinorVersion: " + minorVersion;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MajorVersion: " + majorVersion;
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "Constant Pool:";
+			str += "\n" + StringUtils.repeat(indent + 4) + "Integer: " + constantIntPool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "UnsignedInteger: " + constantUIntPool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "Double: " + constantDoublePool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "String: " + constantStringPool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "Namespace: " + constantNamespacePool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "NamespaceSet: " + constantNamespaceSetPool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "Multiname: " + constantMultinamePool;
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "MethodInfo: " + methodInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MetadataInfo: " + metadataInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "InstanceInfo: " + instanceInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "ClassInfo: " + classInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "ScriptInfo: " + scriptInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MethodBodyInfo: " + methodBodyInfo;
+			
+			return str;
 		}
 	}
 }

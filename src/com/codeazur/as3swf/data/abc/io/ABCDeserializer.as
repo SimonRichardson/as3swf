@@ -28,6 +28,7 @@ package com.codeazur.as3swf.data.abc.io
 		public function parse(abcData : ABCData) : void {
 			// use the scanner to blitz through to identify any issues.
 			_scanner.scan(_bytes);
+			trace(_scanner);
 			
 			abcData.minorVersion = _bytes.readUI16();
 			abcData.majorVersion = _bytes.readUI16();
