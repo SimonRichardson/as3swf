@@ -117,6 +117,10 @@ package com.codeazur.as3swf.data.abc.io
 			return _scriptInfo[index];
 		}
 		
+		public function getMethodBodyInfoAtIndex(index:uint):uint {
+			return _methodBodyInfo[index];
+		}
+		
 		public function getInstanceTraitInfoAtIndex(index:uint):Vector.<uint> {
 			return _instanceTraitInfo[index];
 		}
@@ -127,6 +131,10 @@ package com.codeazur.as3swf.data.abc.io
 		
 		public function getScriptTraitInfoAtIndex(index:uint):Vector.<uint> {
 			return _scriptTraitInfo[index];
+		}
+		
+		public function getMethodBodyTraitInfoAtIndex(index:uint):Vector.<uint> {
+			return _methodBodyTraitInfo[index];
 		}
 
 		private function scanMinorVersion(input:SWFData):void	{
@@ -382,6 +390,7 @@ package com.codeazur.as3swf.data.abc.io
 			const positions:Vector.<uint> = new Vector.<uint>();
 	        for(var i:uint = 0; i < count; i++) {
 				positions.push(input.position);
+				
 	            input.readEncodedU32();
 	            const kind:uint = input.readUI8();
 	            const tag:uint = kind & 0xf;

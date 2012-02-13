@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc
 {
 
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBodySet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfoSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCConstantsPool;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfoSet;
@@ -23,6 +24,7 @@ package com.codeazur.as3swf.data.abc
 		public var instanceInfoSet:ABCInstanceInfoSet;
 		public var classInfoSet:ABCClassInfoSet;
 		public var scriptInfoSet:ABCScriptInfoSet;
+		public var methodBodySet:ABCMethodBodySet;
 
 		public function ABCData() {
 			constantPool = new ABCConstantsPool();
@@ -32,6 +34,7 @@ package com.codeazur.as3swf.data.abc
 			instanceInfoSet = new ABCInstanceInfoSet(this);
 			classInfoSet = new ABCClassInfoSet(this);
 			scriptInfoSet = new ABCScriptInfoSet(this);
+			methodBodySet = new ABCMethodBodySet(this);
 		}
 		
 		public function get name():String { return 'ABCData'; }

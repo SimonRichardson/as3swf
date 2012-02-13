@@ -41,6 +41,7 @@ package com.codeazur.as3swf.data.abc.io
 			abcData.instanceInfoSet.parse(_bytes, scanner);
 			abcData.classInfoSet.parse(_bytes, scanner);
 			abcData.scriptInfoSet.parse(_bytes, scanner);
+			abcData.methodBodySet.parse(_bytes, scanner);
 		}
 		
 		public function get scanner():ABCScanner {
