@@ -2,9 +2,8 @@ package com.codeazur.as3swf.data.abc.io
 {
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCScanner;
-
 	import flash.utils.ByteArray;
+
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
 	 */

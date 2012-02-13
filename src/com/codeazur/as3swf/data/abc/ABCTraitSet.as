@@ -1,10 +1,10 @@
 package com.codeazur.as3swf.data.abc
 {
 	import com.codeazur.as3swf.SWFData;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCScanner;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfoFactory;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.io.ABCScanner;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */

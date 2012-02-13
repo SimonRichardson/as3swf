@@ -1,4 +1,4 @@
-package com.codeazur.as3swf.data.abc.bytecode
+package com.codeazur.as3swf.data.abc.io
 {
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABC;
@@ -8,23 +8,23 @@ package com.codeazur.as3swf.data.abc.bytecode
 	 */
 	public class ABCScanner {
 
-		public var minorVersion:uint;
-		public var majorVersion:uint;
+		private var _minorVersion:uint;
+		private var _majorVersion:uint;
 		
-		public var constantIntPool:Vector.<uint>;
-		public var constantUIntPool:Vector.<uint>;
-		public var constantDoublePool:Vector.<uint>;
-		public var constantStringPool:Vector.<uint>;
-		public var constantNamespacePool:Vector.<uint>;
-		public var constantNamespaceSetPool:Vector.<uint>;
-		public var constantMultinamePool : Vector.<uint>;
+		private var _constantIntPool:Vector.<uint>;
+		private var _constantUIntPool:Vector.<uint>;
+		private var _constantDoublePool:Vector.<uint>;
+		private var _constantStringPool:Vector.<uint>;
+		private var _constantNamespacePool:Vector.<uint>;
+		private var _constantNamespaceSetPool:Vector.<uint>;
+		private var _constantMultinamePool : Vector.<uint>;
 
-		public var methodInfo : Vector.<uint>;
-		public var metadataInfo : Vector.<uint>;
-		public var instanceInfo : Vector.<uint>;
-		public var classInfo : Vector.<uint>;
-		public var scriptInfo : Vector.<uint>;
-		public var methodBodyInfo : Vector.<uint>;
+		private var _methodInfo : Vector.<uint>;
+		private var _metadataInfo : Vector.<uint>;
+		private var _instanceInfo : Vector.<uint>;
+		private var _classInfo : Vector.<uint>;
+		private var _scriptInfo : Vector.<uint>;
+		private var _methodBodyInfo : Vector.<uint>;
 		
 		public function ABCScanner() {
 		}
@@ -33,68 +33,71 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const position:uint = input.position;
 			input.position = 0;
 			
-			minorVersion = scanMinorVersion(input);
-			majorVersion = scanMajorVersion(input);
+			_minorVersion = scanMinorVersion(input);
+			_majorVersion = scanMajorVersion(input);
 			
-			constantIntPool = scanIntConstants(input);
-			constantUIntPool = scanUIntConstants(input);
-			constantDoublePool = scanDoubleConstants(input);
-			constantStringPool = scanStringConstants(input);
-			constantNamespacePool = scanNamespaceConstants(input);
-			constantNamespaceSetPool = scanNamespaceSetConstants(input);
-			constantMultinamePool = scanMultinameConstants(input);
+			_constantIntPool = scanIntConstants(input);
+			_constantUIntPool = scanUIntConstants(input);
+			_constantDoublePool = scanDoubleConstants(input);
+			_constantStringPool = scanStringConstants(input);
+			_constantNamespacePool = scanNamespaceConstants(input);
+			_constantNamespaceSetPool = scanNamespaceSetConstants(input);
+			_constantMultinamePool = scanMultinameConstants(input);
 			
-			methodInfo = scanMethods(input);
-			metadataInfo = scanMetadata(input);
+			_methodInfo = scanMethods(input);
+			_metadataInfo = scanMetadata(input);
 			
 			const size:uint = input.readEncodedU32();
-			instanceInfo = scanInstances(input, size);
-			classInfo = scanClasses(input, size);
+			_instanceInfo = scanInstances(input, size);
+			_classInfo = scanClasses(input, size);
 			
-			scriptInfo = scanScripts(input);
-			methodBodyInfo = scanMethodBodies(input);
+			_scriptInfo = scanScripts(input);
+			_methodBodyInfo = scanMethodBodies(input);
 			
 			input.position = position;
 		}
 		
+		public function get minorVersion():uint { return _minorVersion; }
+		public function get majorVersion():uint { return _majorVersion; }
+		
 		public function getConstantIntegerAtIndex(index:uint):uint {
-			return constantIntPool[index];
+			return _constantIntPool[index];
 		}
 
 		public function getConstantUnsignedIntegerAtIndex(index:uint):uint {
-			return constantUIntPool[index];
+			return _constantUIntPool[index];
 		}
 
 		public function getConstantDoubleAtIndex(index:uint):uint {
-			return constantDoublePool[index];
+			return _constantDoublePool[index];
 		}
 
 		public function getConstantStringAtIndex(index:uint):uint {
-			return constantStringPool[index];
+			return _constantStringPool[index];
 		}
 
 		public function getConstantNamespaceAtIndex(index:uint):uint {
-			return constantNamespacePool[index];
+			return _constantNamespacePool[index];
 		}
 
 		public function getConstantNamespaceSetAtIndex(index:uint):uint	{
-			return constantNamespaceSetPool[index];
+			return _constantNamespaceSetPool[index];
 		}
 
 		public function getConstantMultinameAtIndex(index:uint):uint {
-			return constantMultinamePool[index];
+			return _constantMultinamePool[index];
 		}
 		
 		public function getMethodInfoAtIndex(index:uint):uint {
-			return methodInfo[index];
+			return _methodInfo[index];
 		}
 		
 		public function getMetadataInfoAtIndex(index:uint):uint {
-			return metadataInfo[index];
+			return _metadataInfo[index];
 		}
 		
 		public function getInstanceInfoAtIndex(index:uint):uint {
-			return instanceInfo[index];
+			return _instanceInfo[index];
 		}
 
 		private function scanMinorVersion(input:SWFData) : uint	{
@@ -388,24 +391,24 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function toString(indent:uint=0) : String {
 			var str:String = ABC.toStringCommon(name, indent);
 			
-			str += "\n" + StringUtils.repeat(indent + 2) + "MinorVersion: " + minorVersion;
-			str += "\n" + StringUtils.repeat(indent + 2) + "MajorVersion: " + majorVersion;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MinorVersion: " + _minorVersion;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MajorVersion: " + _majorVersion;
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "Constant Pool:";
-			str += "\n" + StringUtils.repeat(indent + 4) + "Integer: " + constantIntPool;
-			str += "\n" + StringUtils.repeat(indent + 4) + "UnsignedInteger: " + constantUIntPool;
-			str += "\n" + StringUtils.repeat(indent + 4) + "Double: " + constantDoublePool;
-			str += "\n" + StringUtils.repeat(indent + 4) + "String: " + constantStringPool;
-			str += "\n" + StringUtils.repeat(indent + 4) + "Namespace: " + constantNamespacePool;
-			str += "\n" + StringUtils.repeat(indent + 4) + "NamespaceSet: " + constantNamespaceSetPool;
-			str += "\n" + StringUtils.repeat(indent + 4) + "Multiname: " + constantMultinamePool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "Integer: " + _constantIntPool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "UnsignedInteger: " + _constantUIntPool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "Double: " + _constantDoublePool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "String: " + _constantStringPool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "Namespace: " + _constantNamespacePool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "NamespaceSet: " + _constantNamespaceSetPool;
+			str += "\n" + StringUtils.repeat(indent + 4) + "Multiname: " + _constantMultinamePool;
 			
-			str += "\n" + StringUtils.repeat(indent + 2) + "MethodInfo: " + methodInfo;
-			str += "\n" + StringUtils.repeat(indent + 2) + "MetadataInfo: " + metadataInfo;
-			str += "\n" + StringUtils.repeat(indent + 2) + "InstanceInfo: " + instanceInfo;
-			str += "\n" + StringUtils.repeat(indent + 2) + "ClassInfo: " + classInfo;
-			str += "\n" + StringUtils.repeat(indent + 2) + "ScriptInfo: " + scriptInfo;
-			str += "\n" + StringUtils.repeat(indent + 2) + "MethodBodyInfo: " + methodBodyInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MethodInfo: " + _methodInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MetadataInfo: " + _metadataInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "InstanceInfo: " + _instanceInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "ClassInfo: " + _classInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "ScriptInfo: " + _scriptInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MethodBodyInfo: " + _methodBodyInfo;
 			
 			return str;
 		}

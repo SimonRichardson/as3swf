@@ -1,9 +1,9 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.SWFData;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.ABCData;
+	import com.codeazur.as3swf.data.abc.io.ABCScanner;
+	import com.codeazur.utils.StringUtils;
 
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
