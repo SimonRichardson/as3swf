@@ -42,28 +42,41 @@ package com.codeazur.as3swf.data.abc.bytecode
 			multinamePool.push(ABCQualifiedName.create(asterisk.value, asterisk));
 		}
 		
-		public function parse(data : SWFData) : void {
+		public function parse(data:SWFData, scanner:ABCScanner) : void {
 			
 			var ref:uint = 0;
 			var index:int = 0;
-						
+			var sIndex:uint = 0;
+			
 			index = data.readEncodedU32();
+			sIndex = 1;
 			while(--index > 0){
+				data.position = scanner.getConstantIntegerAtIndex(sIndex++);
+				
 				integerPool.push(data.readEncodedU32());
 			}
 			
 			index = data.readEncodedU32();
+			sIndex = 1;
 			while(--index > 0){
+				data.position = scanner.getConstantUnsignedIntegerAtIndex(sIndex++);
+				
 				unsignedIntegerPool.push(data.readEncodedU32());	
 			}
 			
 			index = data.readEncodedU32();
+			sIndex = 1;
 			while(--index > 0){
+				data.position = scanner.getConstantDoubleAtIndex(sIndex++);
+				
 				doublePool.push(data.readDouble());
 			}
 			
 			index = data.readEncodedU32();
+			sIndex = 1;
 			while(--index > 0){
+				data.position = scanner.getConstantStringAtIndex(sIndex++);
+				
 				const strLength:uint = data.readEncodedU32();
 				const str:String = data.readUTFBytes(strLength);
 				if (strLength != str.length) {
@@ -73,7 +86,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			
 			index = data.readEncodedU32();
+			sIndex = 1;
 			while(--index > 0){
+				data.position = scanner.getConstantNamespaceAtIndex(sIndex++); 
+				
 				const nsKind:uint = 255 & data.readByte();
 				const strPoolIndex:uint = data.readEncodedU32();
 				if(strPoolIndex >= stringPool.length){
@@ -84,7 +100,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			
 			index = data.readEncodedU32();
+			sIndex = 1;
 			while(--index > 0){
+				data.position = scanner.getConstantNamespaceSetAtIndex(sIndex++); 
+				
 				const nsSet:ABCNamespaceSet = ABCNamespaceSet.create();
 				
 				const nsIndex:uint = data.readEncodedU32(); 
@@ -100,7 +119,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 						
 			index = data.readEncodedU32();
+			sIndex = 1;
 			while(--index > 0) {
+				data.position = scanner.getConstantMultinameAtIndex(sIndex++); 
+				
 				const kind : uint = 255 & data.readByte();
 				if(kind == 0x07 || kind == 0x0D){
 					ref = data.readEncodedU32();

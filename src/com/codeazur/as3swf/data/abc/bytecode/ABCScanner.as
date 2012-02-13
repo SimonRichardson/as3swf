@@ -56,21 +56,56 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			input.position = position;
 		}
+		
+		public function getConstantIntegerAtIndex(index:uint):uint
+		{
+			return constantIntPool[index];
+		}
 
-		public function scanMinorVersion(input:SWFData) : uint
+		public function getConstantUnsignedIntegerAtIndex(index:uint):uint
+		{
+			return constantUIntPool[index];
+		}
+
+		public function getConstantDoubleAtIndex(index:uint):uint
+		{
+			return constantDoublePool[index];
+		}
+
+		public function getConstantStringAtIndex(index:uint):uint
+		{
+			return constantStringPool[index];
+		}
+
+		public function getConstantNamespaceAtIndex(index:uint):uint
+		{
+			return constantNamespacePool[index];
+		}
+
+		public function getConstantNamespaceSetAtIndex(index:uint):uint
+		{
+			return constantNamespaceSetPool[index];
+		}
+
+		public function getConstantMultinameAtIndex(index:uint):uint
+		{
+			return constantMultinamePool[index];
+		}
+
+		private function scanMinorVersion(input:SWFData) : uint
 		{
         	const position:uint = input.position;
         	input.skipEntries(2);
         	return position;
     	}
 
-	    public function scanMajorVersion(input:SWFData):uint {
+	    private function scanMajorVersion(input:SWFData):uint {
 	        const position:uint = input.position;
 	        input.skipBytes(2);
 	        return position;
 	    }
 	
-	    public function scanIntConstants(input:SWFData):Vector.<uint> {
+	    private function scanIntConstants(input:SWFData):Vector.<uint> {
 	        const size:uint = input.readEncodedU32();
 	        const positions:Vector.<uint> = new Vector.<uint>();
 			positions.push(0);
@@ -82,7 +117,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanUIntConstants(input:SWFData):Vector.<uint> {
+	    private function scanUIntConstants(input:SWFData):Vector.<uint> {
 	        const size:uint = input.readEncodedU32();
 	        const positions:Vector.<uint> = new Vector.<uint>();
 			positions.push(0);
@@ -94,7 +129,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanDoubleConstants(input:SWFData):Vector.<uint> {
+	    private function scanDoubleConstants(input:SWFData):Vector.<uint> {
 	        const size:uint = input.readEncodedU32();
 	        const positions:Vector.<uint> = new Vector.<uint>();
 			positions.push(0);
@@ -106,7 +141,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanStringConstants(input:SWFData):Vector.<uint> {
+	    private function scanStringConstants(input:SWFData):Vector.<uint> {
 	        const size:uint = input.readEncodedU32();
 	        const positions:Vector.<uint> = new Vector.<uint>();
 			positions.push(0);
@@ -119,7 +154,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanNamespaceConstants(input:SWFData):Vector.<uint> {
+	    private function scanNamespaceConstants(input:SWFData):Vector.<uint> {
 	        const size:uint = input.readEncodedU32();
 	        const positions:Vector.<uint> = new Vector.<uint>();
 			positions.push(0);
@@ -132,7 +167,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanNamespaceSetConstants(input:SWFData):Vector.<uint> {
+	    private function scanNamespaceSetConstants(input:SWFData):Vector.<uint> {
 	        const size:uint = input.readEncodedU32();
 	        const positions:Vector.<uint> = new Vector.<uint>();
 			positions.push(0);
@@ -145,7 +180,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanMultinameConstants(input:SWFData):Vector.<uint> {
+	    private function scanMultinameConstants(input:SWFData):Vector.<uint> {
 	        const size:uint = input.readEncodedU32();
 	        const positions:Vector.<uint> = new Vector.<uint>();
 			positions.push(0);
@@ -205,7 +240,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanMethods(input:SWFData):Vector.<uint> {
+	    private function scanMethods(input:SWFData):Vector.<uint> {
 	        const size:uint = input.readEncodedU32();
 	        const positions:Vector.<uint> = new Vector.<uint>();
 	        for(var i:uint = 0; i < size; i++) {
@@ -230,7 +265,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanMetadata(input:SWFData):Vector.<uint> {
+	    private function scanMetadata(input:SWFData):Vector.<uint> {
 	        const size:uint = input.readEncodedU32();
 	        const positions:Vector.<uint> = new Vector.<uint>();
 	        for(var i:uint = 0; i < size; i++) {
@@ -243,7 +278,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanInstances(input:SWFData, size:uint):Vector.<uint> {
+	    private function scanInstances(input:SWFData, size:uint):Vector.<uint> {
 	        const positions:Vector.<uint> = new Vector.<uint>();
 	        for(var i:uint = 0; i < size; i++) {
 	            positions.push(input.position);
@@ -260,7 +295,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanClasses(input:SWFData, size:uint):Vector.<uint> {
+	    private function scanClasses(input:SWFData, size:uint):Vector.<uint> {
 	        const positions:Vector.<uint> = new Vector.<uint>();
 	        for(var i:uint = 0; i < size; i++) {
 	            positions.push(input.position);
@@ -271,7 +306,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanScripts(input:SWFData):Vector.<uint> {
+	    private function scanScripts(input:SWFData):Vector.<uint> {
 	        const size:uint = input.readEncodedU32();
 	        const positions:Vector.<uint> = new Vector.<uint>();
 	        for(var i:uint = 0; i < size; i++) {
@@ -283,7 +318,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	        return positions;
 	    }
 	
-	    public function scanMethodBodies(input:SWFData):Vector.<uint> {
+	    private function scanMethodBodies(input:SWFData):Vector.<uint> {
 	        const size:uint = input.readEncodedU32();
 	        const positions:Vector.<uint> = new Vector.<uint>();
 	        for(var i:uint = 0; i < size; i++) {

@@ -1,8 +1,8 @@
 package com.codeazur.as3swf.data.abc.io
 {
-	import com.codeazur.as3swf.data.abc.bytecode.ABCScanner;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCScanner;
 
 	import flash.utils.ByteArray;
 	/**
@@ -26,17 +26,18 @@ package com.codeazur.as3swf.data.abc.io
 		}
 		
 		public function parse(abcData : ABCData) : void {
-			// use the scanner to blitz through to identify any issues.
 			_scanner.scan(_bytes);
-			trace(_scanner);
 			
+			_bytes.position = _scanner.minorVersion;
 			abcData.minorVersion = _bytes.readUI16();
+			
+			_bytes.position = _scanner.majorVersion;
 			abcData.majorVersion = _bytes.readUI16();
+						
+			abcData.constantPool.parse(_bytes, _scanner);
 			
-			abcData.constantPool.parse(_bytes);
-			
-			abcData.methodInfoSet.parse(_bytes);
-			abcData.metadataSet.parse(_bytes);
+//			abcData.methodInfoSet.parse(_bytes);
+//			abcData.metadataSet.parse(_bytes);
 //			abcData.instanceInfoSet.parse(_bytes);
 //			abcData.classInfoSet.parse(_bytes);
 //			abcData.scriptInfoSet.parse(_bytes);
