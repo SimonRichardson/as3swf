@@ -128,18 +128,6 @@ package com.codeazur.as3swf.data.abc.io
 		public function getScriptTraitInfoAtIndex(index:uint):Vector.<uint> {
 			return _scriptTraitInfo[index];
 		}
-		
-		public function getInstanceTraitInfoAt(instanceIndex:uint, index:uint):uint {
-			return _instanceTraitInfo[instanceIndex][index];
-		}
-		
-		public function getClassTraitInfoAt(classIndex:uint, index:uint):uint {
-			return _classTraitInfo[classIndex][index];
-		}
-		
-		public function getScriptTraitInfoAt(scriptIndex:uint, index:uint):uint {
-			return _scriptTraitInfo[scriptIndex][index];
-		}
 
 		private function scanMinorVersion(input:SWFData):void	{
         	_minorVersion = input.position;
