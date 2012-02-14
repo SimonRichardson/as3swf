@@ -39,6 +39,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			opcode = ABCOpcodeSet.create(abcData);
 			opcode.parse(data);
 			
+			trace(opcode);
+			
 			exceptionInfo = ABCExceptionInfoSet.create(abcData);
 			exceptionInfo.parse(data, scanner);
 			

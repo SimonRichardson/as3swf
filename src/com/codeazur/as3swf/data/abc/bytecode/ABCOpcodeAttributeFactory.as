@@ -1,15 +1,16 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeLookupSwitchAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDoubleAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeUnsignedIntegerAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeIntegerAttribute;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDebugAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDoubleAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeIntAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeIntegerAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeLookupSwitchAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeUnsignedIntegerAttribute;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -77,6 +78,16 @@ package com.codeazur.as3swf.data.abc.bytecode
 				case ABCOpcodeKind.SETPROPERTY:
 				case ABCOpcodeKind.SETSUPER:
 					attribute = ABCOpcodeMultinameAttribute.create(abcData);
+					break;
+				
+				case ABCOpcodeKind.CALLINTERFACE:
+				case ABCOpcodeKind.CALLPROPERTY:
+				case ABCOpcodeKind.CALLPROPLEX:
+				case ABCOpcodeKind.CALLPROPVOID:
+				case ABCOpcodeKind.CALLSUPER:
+				case ABCOpcodeKind.CALLSUPERVOID:
+				case ABCOpcodeKind.CONSTRUCTPROP:
+					attribute = ABCOpcodeMultinameUIntAttribute.create(abcData);
 					break;
 					
 				case ABCOpcodeKind.DEBUGFILE:
