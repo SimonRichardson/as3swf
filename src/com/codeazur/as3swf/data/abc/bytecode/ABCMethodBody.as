@@ -4,6 +4,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
+	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -15,6 +16,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var maxScopeDepth:uint;
 		
 		public var opcode:ABCOpcodeSet;
+		public var exceptionInfo:ABCExceptionInfoSet;
 		
 		public function ABCMethodBody(abcData:ABCData) {
 			super(abcData);
@@ -38,13 +40,27 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			opcode = ABCOpcodeSet.create(abcData);
 			opcode.parse(data);
+			
+			exceptionInfo = ABCExceptionInfoSet.create(abcData);
+			exceptionInfo.parse(data, scanner);
 		}
 		
 		override public function get name():String { return "ABCMethodBody"; }
 		
 		override public function toString(indent:uint = 0) : String {
 			var str:String = super.toString(indent);
-						
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "MaxStack: " + maxStack;
+			str += "\n" + StringUtils.repeat(indent + 2) + "LocalCount: " + localCount;
+			str += "\n" + StringUtils.repeat(indent + 2) + "InitScopeDepth: " + initScopeDepth;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MaxScopeDepth: " + maxScopeDepth;
+
+			str += "\n" + StringUtils.repeat(indent + 2) + "ABCOpcodeSet: ";
+			str += "\n" + opcode.toString(indent + 4);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "ABCExceptionInfoSet: ";
+			str += "\n" + exceptionInfo.toString(indent + 4);
+												
 			return str;
 		}
 

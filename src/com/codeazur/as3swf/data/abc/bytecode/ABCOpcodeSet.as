@@ -5,6 +5,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	import com.codeazur.as3swf.data.abc.ABCSet;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeIntAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeLookupSwitchAttribute;
+	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.Dictionary;
 	/**
@@ -33,8 +34,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			const jumpTargets:Vector.<ABCOpcodeJumpTarget> = new Vector.<ABCOpcodeJumpTarget>();
 			
-			const total:uint = data.readEncodedU30();
-			for(var i:uint=0; i<total; i++) {
+			const codeLength:uint = data.readEncodedU30();
+			const total:uint = data.position + codeLength;
+			while(data.position < total) {
 				opcodeStartPosition = data.position;
 				
 				const opcodeKind:uint = data.readUI8();
@@ -42,7 +44,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				opcode.parse(data);
 				
 				const startLocation:uint = opcodeOffsetPosition;
-				opcodeOffsetPosition += data.position - opcodeOffsetPosition;
+				opcodeOffsetPosition += data.position - opcodeStartPosition;
 				const finishLocation:uint = opcodeOffsetPosition;
 				
 				const opcodePosition:ABCOpcodeJumpTargetPosition = ABCOpcodeJumpTargetPosition.create(startLocation, finishLocation);
@@ -52,8 +54,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 				if(ABCOpcodeJumpTargetKind.isKind(opcode)) {
 					jumpTargets.push(ABCOpcodeJumpTarget.create(opcode));
 				}
-				
-				trace(opcode);
 				
 				opcodes.push(opcode);
 			}
@@ -128,7 +128,16 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		override public function toString(indent:uint = 0) : String {
 			var str:String = super.toString(indent);
-						
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "Number Opcode: ";
+			str += opcodes.length;
+			
+			if(opcodes.length > 0) {
+				for(var i:uint=0; i<opcodes.length; i++) {
+					str += "\n" + opcodes[i].toString(indent + 4);
+				}
+			}
+			
 			return str;
 		}
 	}
