@@ -14,7 +14,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var initScopeDepth:uint;
 		public var maxScopeDepth:uint;
 		
-		public var opcode:ABCMethodBodyOpcode;
+		public var opcode:ABCOpcodeSet;
 		
 		public function ABCMethodBody(abcData:ABCData) {
 			super(abcData);
@@ -36,7 +36,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			initScopeDepth = data.readEncodedU30();
 			maxScopeDepth = data.readEncodedU30();
 			
-			opcode = ABCMethodBodyOpcode.create(abcData);
+			opcode = ABCOpcodeSet.create(abcData);
 			opcode.parse(data);
 		}
 		

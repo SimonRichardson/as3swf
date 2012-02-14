@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeLookupSwitchAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDoubleAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeUnsignedIntegerAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeIntegerAttribute;
@@ -53,6 +54,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 				case ABCOpcodeKind.BKPTLINE:
 				case ABCOpcodeKind.PUSHINT:
 					attribute = ABCOpcodeIntegerAttribute.create(abcData);
+					break;
+					
+				case ABCOpcodeKind.LOOKUPSWITCH:
+					attribute = ABCOpcodeLookupSwitchAttribute.create(abcData);
 					break;
 				
 				case ABCOpcodeKind.ASTYPE:

@@ -41,7 +41,21 @@
 			resetBitsPending();
 			writeShort(value);
 		}
-
+		
+		public function readSI24():int {
+			resetBitsPending();
+			var value:int = readUnsignedByte();
+			value |= (readUnsignedByte() << 8 | readByte() << 16);
+			return value;
+		}
+		
+		public function writeSI24(value:int):void {
+			resetBitsPending();
+			writeByte(value & 0xff);
+			writeByte((value >> 8) & 0xff);
+			writeByte((value >> 16) & 0xff);
+		}
+		
 		public function readSI32():int {
 			resetBitsPending();
 			return readInt();

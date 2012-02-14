@@ -5,6 +5,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.utils.getClassFromInstance;
 	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -39,7 +40,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				str += "\n" + kind.toString(indent + 4);
 			}
 			
-			if(attribute) {
+			if(attribute && getClassFromInstance(attribute) != ABCOpcodeAttribute) {
 				str += "\n" + StringUtils.repeat(indent + 2) + "Attribute:";
 				str += "\n" + attribute.toString(indent + 4);
 			}
