@@ -129,7 +129,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public static const NEWARRAY:ABCOpcodeKind = new ABCOpcodeKind(0x56, "newarray");
 		public static const NEWCATCH:ABCOpcodeKind = new ABCOpcodeKind(0x5a, "newcatch");
 		public static const NEWCLASS:ABCOpcodeKind = new ABCOpcodeKind(0x58, "newclass");
-		public static const NEWFUNCTION:ABCOpcodeKind = new ABCOpcodeKind(0x40, "newfunction"); // u30 - methodInfo
+		public static const NEWFUNCTION:ABCOpcodeKind = new ABCOpcodeKind(0x40, "newfunction");
 		public static const NEWOBJECT:ABCOpcodeKind = new ABCOpcodeKind(0x55, "newobject");
 		public static const NEXTNAME:ABCOpcodeKind = new ABCOpcodeKind(0x1e, "nextname");
 		public static const NEXTVALUE:ABCOpcodeKind = new ABCOpcodeKind(0x23, "nextvalue");
