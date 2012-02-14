@@ -25,7 +25,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function parse(data:SWFData, scanner:ABCScanner):void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++){
-				const exception:ABCExceptionInfo = new ABCExceptionInfo.create(abcData);
+				const exception:ABCExceptionInfo = ABCExceptionInfo.create(abcData);
 				exception.parse(data, scanner);
 				
 				exceptions.push(exception);

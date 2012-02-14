@@ -24,7 +24,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 				data.position = scanner.getMethodBodyInfoAtIndex(i);
 				
 				const methodBody:ABCMethodBody = ABCMethodBody.create(abcData);
-				methodBody.parse(data, scanner);
+				const methodBodyTraitPositions:Vector.<uint> = scanner.getMethodBodyTraitInfoAtIndex(i);
+				methodBody.parse(data, scanner, methodBodyTraitPositions);
 				
 				methodBodies.push(methodBody);
 			}

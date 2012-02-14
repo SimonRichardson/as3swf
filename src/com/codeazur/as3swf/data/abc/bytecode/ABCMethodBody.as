@@ -2,13 +2,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 {
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
-	import com.codeazur.as3swf.data.abc.ABCSet;
+	import com.codeazur.as3swf.data.abc.ABCTraitSet;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
 	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class ABCMethodBody extends ABCSet {
+	public class ABCMethodBody extends ABCTraitSet {
 		
 		public var maxStack:uint;
 		public var localCount:uint;
@@ -23,12 +23,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public static function create(abcData:ABCData):ABCMethodBody {
-			const methodBody:ABCMethodBody = new ABCMethodBody(abcData);
-			
-			return methodBody;
+			return new ABCMethodBody(abcData);
 		}
 		
-		public function parse(data:SWFData, scanner:ABCScanner):void {
+		override public function parse(data:SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>):void {
 			const methodIndex:uint = data.readEncodedU30();
 			const method:ABCMethodInfo = getMethodInfoByIndex(methodIndex);
 			method.methodBody = this;
@@ -43,6 +41,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			exceptionInfo = ABCExceptionInfoSet.create(abcData);
 			exceptionInfo.parse(data, scanner);
+			
+			super.parse(data, scanner, traitPositions);
 		}
 		
 		override public function get name():String { return "ABCMethodBody"; }
