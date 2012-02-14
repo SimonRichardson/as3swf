@@ -19,16 +19,21 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function parse(data:SWFData, scanner:ABCScanner):void {
+			const position:uint = scanner.getMethodBodyInfo();
+			if(data.position != position) {
+				throw new Error('Invalid position (Expected: ' + data.position + ', Recieved: ' + position + ')');
+			}
+			
+			data.position = position;
+			
 			const total:uint = data.readEncodedU30();
-			trace(">>>", total);
+			
 			for(var i:uint=0; i<total; i++) {
 				data.position = scanner.getMethodBodyInfoAtIndex(i);
 				
 				const methodBody:ABCMethodBody = ABCMethodBody.create(abcData);
 				const methodBodyTraitPositions:Vector.<uint> = scanner.getMethodBodyTraitInfoAtIndex(i);
 				methodBody.parse(data, scanner, methodBodyTraitPositions);
-				
-				trace('-------------------------------------');
 				
 				methodBodies.push(methodBody);
 			}

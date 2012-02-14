@@ -21,15 +21,23 @@ package com.codeazur.as3swf.data.abc.io
 
 		private var _methodInfo:Vector.<uint>;
 		private var _metadataInfo:Vector.<uint>;
-		private var _instanceInfo:Vector.<uint>;
-		private var _classInfo:Vector.<uint>;
-		private var _scriptInfo:Vector.<uint>;
-		private var _methodBodyInfo:Vector.<uint>;
 		
+		private var _instanceInfo:uint;
+		private var _instanceInfos:Vector.<uint>;
 		private var _instanceTraitInfo:Vector.<Vector.<uint>>;
+		
+		private var _classInfo:uint;
+		private var _classInfos:Vector.<uint>;
 		private var _classTraitInfo:Vector.<Vector.<uint>>;
+		
+		private var _scriptInfo:uint;
+		private var _scriptInfos:Vector.<uint>;
 		private var _scriptTraitInfo:Vector.<Vector.<uint>>;
+		
+		private var _methodBodyInfo:uint;
+		private var _methodBodyInfos:Vector.<uint>;
 		private var _methodBodyTraitInfo:Vector.<Vector.<uint>>;
+		
 		
 		public function ABCScanner() {
 			_instanceTraitInfo = new Vector.<Vector.<uint>>();
@@ -56,9 +64,8 @@ package com.codeazur.as3swf.data.abc.io
 			scanMethods(input);
 			scanMetadata(input);
 			
-			const size:uint = input.readEncodedU32();
-			scanInstances(input, size);
-			scanClasses(input, size);
+			scanInstances(input);
+			scanClasses(input);
 			
 			scanScripts(input);
 			scanMethodBodies(input);
@@ -105,37 +112,63 @@ package com.codeazur.as3swf.data.abc.io
 			return _metadataInfo[index];
 		}
 		
+		// instance info
+		
+		public function getInstanceInfo():uint {
+			return _instanceInfo;
+		}
+				
 		public function getInstanceInfoAtIndex(index:uint):uint {
-			return _instanceInfo[index];
-		}
-		
-		public function getClassInfoByIndex(index:uint):uint {
-			return _classInfo[index];
-		}
-		
-		public function getScriptInfoAtIndex(index:uint):uint {
-			return _scriptInfo[index];
-		}
-		
-		public function getMethodBodyInfoAtIndex(index:uint):uint {
-			return _methodBodyInfo[index];
+			return _instanceInfos[index];
 		}
 		
 		public function getInstanceTraitInfoAtIndex(index:uint):Vector.<uint> {
 			return _instanceTraitInfo[index];
 		}
 		
+		// class info
+		
+		public function getClassInfo():uint {
+			return _classInfo;
+		}
+		
+		public function getClassInfoByIndex(index:uint):uint {
+			return _classInfos[index];
+		}
+		
 		public function getClassTraitInfoAtIndex(index:uint):Vector.<uint> {
 			return _classTraitInfo[index];
+		}
+		
+		// script info
+		
+		public function getScriptInfo():uint {
+			 return _scriptInfo;
+		}
+		
+		public function getScriptInfoAtIndex(index:uint):uint {
+			return _scriptInfos[index];
 		}
 		
 		public function getScriptTraitInfoAtIndex(index:uint):Vector.<uint> {
 			return _scriptTraitInfo[index];
 		}
 		
+		// method bodies
+		
+		public function getMethodBodyInfo():uint {
+			return _methodBodyInfo;
+		}
+		
+		public function getMethodBodyInfoAtIndex(index:uint):uint {
+			return _methodBodyInfos[index];
+		}
+		
 		public function getMethodBodyTraitInfoAtIndex(index:uint):Vector.<uint> {
 			return _methodBodyTraitInfo[index];
 		}
+		
+		// private		
 
 		private function scanMinorVersion(input:SWFData):void	{
         	_minorVersion = input.position;
@@ -320,11 +353,13 @@ package com.codeazur.as3swf.data.abc.io
 	        }
 	    }
 	
-	    private function scanInstances(input:SWFData, size:uint):void {
-	        _instanceInfo = new Vector.<uint>();
+	    private function scanInstances(input:SWFData):void {
+			_instanceInfo = input.position;
+	        _instanceInfos = new Vector.<uint>();
 			
+			const size:uint = input.readEncodedU32();
 	        for(var i:uint = 0; i < size; i++) {
-	            _instanceInfo.push(input.position);
+	            _instanceInfos.push(input.position);
 				
 	            input.skipEntries(2);
 	            const flags:uint = input.readUI8();
@@ -338,10 +373,12 @@ package com.codeazur.as3swf.data.abc.io
 	        }
 	    }
 	
-	    private function scanClasses(input:SWFData, size:uint):void {
-	        _classInfo = new Vector.<uint>();
-	        for(var i:uint = 0; i < size; i++) {
-	            _classInfo.push(input.position);
+	    private function scanClasses(input:SWFData):void {
+			_classInfo = input.position;
+	        _classInfos = new Vector.<uint>();
+			
+	        for(var i:uint = 0; i < _instanceInfos.length; i++) {
+	            _classInfos.push(input.position);
 				
 	            input.readEncodedU32();
 	            _classTraitInfo.push(scanTraits(input));
@@ -349,11 +386,12 @@ package com.codeazur.as3swf.data.abc.io
 	    }
 	
 	    private function scanScripts(input:SWFData):void {
-	        _scriptInfo = new Vector.<uint>();
+			_scriptInfo = input.position;
+	        _scriptInfos = new Vector.<uint>();
 			
 	        const size:uint = input.readEncodedU32();
 	        for(var i:uint = 0; i < size; i++) {
-	            _scriptInfo.push(input.position);
+	            _scriptInfos.push(input.position);
 	            input.readEncodedU32();
 				
 	            _scriptTraitInfo.push(scanTraits(input));
@@ -361,11 +399,12 @@ package com.codeazur.as3swf.data.abc.io
 	    }
 	
 	    private function scanMethodBodies(input:SWFData):void {
-	        _methodBodyInfo = new Vector.<uint>();
+			_methodBodyInfo = input.position;
+	        _methodBodyInfos = new Vector.<uint>();
 			
 	        const size:uint = input.readEncodedU32();
 	        for(var i:uint = 0; i < size; i++) {
-	            _methodBodyInfo.push(input.position);
+	            _methodBodyInfos.push(input.position);
 				
 	            input.skipEntries(5);
 	            const codeLength:uint = input.readEncodedU32();
@@ -446,10 +485,10 @@ package com.codeazur.as3swf.data.abc.io
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "MethodInfo: " + _methodInfo;
 			str += "\n" + StringUtils.repeat(indent + 2) + "MetadataInfo: " + _metadataInfo;
-			str += "\n" + StringUtils.repeat(indent + 2) + "InstanceInfo: " + _instanceInfo;
-			str += "\n" + StringUtils.repeat(indent + 2) + "ClassInfo: " + _classInfo;
-			str += "\n" + StringUtils.repeat(indent + 2) + "ScriptInfo: " + _scriptInfo;
-			str += "\n" + StringUtils.repeat(indent + 2) + "MethodBodyInfo: " + _methodBodyInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "InstanceInfo: " + _instanceInfos;
+			str += "\n" + StringUtils.repeat(indent + 2) + "ClassInfo: " + _classInfos;
+			str += "\n" + StringUtils.repeat(indent + 2) + "ScriptInfo: " + _scriptInfos;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MethodBodyInfo: " + _methodBodyInfos;
 			
 			return str;
 		}

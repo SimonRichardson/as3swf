@@ -19,6 +19,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function parse(data:SWFData, scanner:ABCScanner):void {
+			const position:uint = scanner.getScriptInfo();
+			if(data.position != position) {
+				throw new Error('Invalid position (Expected: ' + data.position + ', Recieved: ' + position + ')');
+			}
+			
+			data.position = position;
+			
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++){
 				data.position = scanner.getScriptInfoAtIndex(i);
