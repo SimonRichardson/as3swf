@@ -57,6 +57,8 @@ package com.codeazur.as3swf.data.abc
 			str += "\n" + classInfoSet.toString(indent + 4);
 			str += "\n" + StringUtils.repeat(indent + 2) + "ScriptInfoSet:";
 			str += "\n" + scriptInfoSet.toString(indent + 4);
+			str += "\n" + StringUtils.repeat(indent + 2) + "MethodBodySet:";
+			str += "\n" + methodBodySet.toString(indent + 4);
 			
 			return str;
 		}
