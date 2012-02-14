@@ -7,13 +7,13 @@ package com.codeazur.as3swf.data.abc.io
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
 	 */
-	public class ABCDeserializer {
+	public class ABCReader {
 		
 		private var _bytes:SWFData;
 		
 		private var _scanner:ABCScanner;
 		
-		public function ABCDeserializer(bytes : ByteArray) {
+		public function ABCReader(bytes : ByteArray) {
 			if(bytes is SWFData) _bytes = SWFData(bytes);
 			else {
 				_bytes = new SWFData();
