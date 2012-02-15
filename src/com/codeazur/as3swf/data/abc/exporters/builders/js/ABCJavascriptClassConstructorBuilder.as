@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
 
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
@@ -30,7 +31,17 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			
 			ABCJavascriptTokenKind.EQUALS.write(data);
 			ABCJavascriptReservedKind.FUNCTION.write(data);
+			ABCJavascriptTokenKind.LEFT_PARENTHESES.write(data);
 			
+			// TODO:arguments
+			
+			ABCJavascriptTokenKind.RIGHT_PARENTHESES.write(data);
+			ABCJavascriptTokenKind.LEFT_CURLY_BRACKET.write(data);
+			
+			const opcode:IABCMethodOpcodeBuilder = ABCJavascriptMethodOpcodeBuilder.create();
+			opcode.write(data);
+			
+			ABCJavascriptTokenKind.RIGHT_CURLY_BRACKET.write(data);
 			ABCJavascriptTokenKind.SEMI_COLON.write(data);
 		}
 
