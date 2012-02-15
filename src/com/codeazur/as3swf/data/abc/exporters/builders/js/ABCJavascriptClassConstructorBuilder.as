@@ -1,11 +1,12 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
 
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassConstructorBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 
 	import flash.utils.ByteArray;
 	/**
@@ -38,7 +39,11 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			ABCJavascriptTokenKind.RIGHT_PARENTHESES.write(data);
 			ABCJavascriptTokenKind.LEFT_CURLY_BRACKET.write(data);
 			
+			const instanceInitialiser:ABCMethodInfo = instanceInfo.instanceInitialiser;
+			
 			const opcode:IABCMethodOpcodeBuilder = ABCJavascriptMethodOpcodeBuilder.create();
+			opcode.methodBody = instanceInitialiser.methodBody;
+			opcode.returnType = instanceInitialiser.returnType;
 			opcode.write(data);
 			
 			ABCJavascriptTokenKind.RIGHT_CURLY_BRACKET.write(data);

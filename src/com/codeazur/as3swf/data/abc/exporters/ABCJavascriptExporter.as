@@ -22,9 +22,6 @@ package com.codeazur.as3swf.data.abc.exporters
 		}
 		
 		public function write(data:ByteArray) : void {
-			//trace(abcData.scriptInfoSet.scriptInfos[0]);
-			trace(abcData.instanceInfoSet.instanceInfos[0].instanceInitialiser);
-			
 			const total:uint = abcData.classInfoSet.length;
 			for(var i:uint=0; i<total; i++) {
 				const classInfo:ABCClassInfo = abcData.classInfoSet.getAt(i);
