@@ -18,7 +18,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			return new ABCOpcodeUIntAttribute(abcData);
 		}
 		
-		override public function parse(data:SWFData):void {
+		override public function read(data:SWFData):void {
 			uinsignedInteger = data.readEncodedU30();
 		}
 		

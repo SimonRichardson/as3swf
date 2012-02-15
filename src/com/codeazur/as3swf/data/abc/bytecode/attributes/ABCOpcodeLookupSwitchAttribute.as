@@ -21,7 +21,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			return new ABCOpcodeLookupSwitchAttribute(abcData);
 		}
 		
-		override public function parse(data:SWFData):void {
+		override public function read(data:SWFData):void {
 			defaultOffset = data.readSI24();
 			
 			const total:uint = data.readEncodedU30();

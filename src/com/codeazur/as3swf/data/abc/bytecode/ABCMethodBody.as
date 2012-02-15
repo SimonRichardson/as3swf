@@ -26,7 +26,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return new ABCMethodBody(abcData);
 		}
 		
-		override public function parse(data:SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>):void {
+		override public function read(data:SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>):void {
 			const methodIndex:uint = data.readEncodedU30();
 			const method:ABCMethodInfo = getMethodInfoByIndex(methodIndex);
 			method.methodBody = this;
@@ -39,12 +39,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			opcode = ABCOpcodeSet.create(abcData);
 			opcode.parse(data);
 			
-			trace(opcode);
-			
 			exceptionInfo = ABCExceptionInfoSet.create(abcData);
 			exceptionInfo.parse(data, scanner);
 			
-			super.parse(data, scanner, traitPositions);
+			super.read(data, scanner, traitPositions);
 		}
 		
 		override public function get name():String { return "ABCMethodBody"; }

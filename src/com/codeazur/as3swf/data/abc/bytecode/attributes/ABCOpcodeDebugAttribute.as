@@ -20,7 +20,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			return new ABCOpcodeDebugAttribute(abcData);
 		}
 		
-		override public function parse(data:SWFData):void {
+		override public function read(data:SWFData):void {
 			attributes.push(data.readUI8());
 			attributes.push(data.readEncodedU30());
 			attributes.push(data.readUI8());

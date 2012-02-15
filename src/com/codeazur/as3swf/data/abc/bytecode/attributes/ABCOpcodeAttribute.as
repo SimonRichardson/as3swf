@@ -16,7 +16,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			return new ABCOpcodeAttribute(abcData);
 		}
 		
-		public function parse(data:SWFData):void {
+		public function read(data:SWFData):void {
 			
 		}
 		

@@ -21,7 +21,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			metadatas = new Vector.<ABCMetadata>();
 		}
 		
-		public function parse(data:SWFData, scanner:ABCScanner):void {
+		public function read(data:SWFData, scanner:ABCScanner):void {
 			const position:uint = scanner.getMetadataInfo();
 			if(data.position != position) {
 				throw new Error('Invalid position (Expected: ' + data.position + ', Recieved: ' + position + ')');

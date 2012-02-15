@@ -18,7 +18,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			classInfos = new Vector.<ABCClassInfo>();
 		}
 		
-		public function parse(data:SWFData, scanner:ABCScanner):void {
+		public function read(data:SWFData, scanner:ABCScanner):void {
 			const position:uint = scanner.getClassInfo();
 			if(data.position != position) {
 				throw new Error('Invalid position (Expected: ' + data.position + ', Recieved: ' + position + ')');
@@ -39,7 +39,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				const classInfo:ABCClassInfo = ABCClassInfo.create(abcData, classQName, staticInitialiser);
 				const classTraitPositions:Vector.<uint> = scanner.getClassTraitInfoAtIndex(i);
-				classInfo.parse(data, scanner, classTraitPositions);
+				classInfo.read(data, scanner, classTraitPositions);
 				
 				instanceInfo.classInfo = classInfo;
 				classInfos.push(classInfo);

@@ -41,7 +41,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				const opcodeKind:uint = data.readUI8();
 				const opcode:ABCOpcode = ABCOpcodeFactory.create(abcData, opcodeKind);
-				opcode.parse(data);
+				opcode.read(data);
 				
 				const startLocation:uint = opcodeOffsetPosition;
 				opcodeOffsetPosition += data.position - opcodeStartPosition;
@@ -124,7 +124,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
-		override public function get name():String { return "ABCMethodBodyOpcode"; }
+		override public function get name():String { return "ABCOpcodeSet"; }
 		
 		override public function toString(indent:uint = 0) : String {
 			var str:String = super.toString(indent);

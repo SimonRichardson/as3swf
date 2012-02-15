@@ -32,7 +32,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return slot;
 		}
 		
-		override public function parse(data : SWFData, scanner:ABCScanner) : void {
+		override public function read(data : SWFData, scanner:ABCScanner) : void {
 			id = data.readEncodedU30();
 			
 			const typeIndex:uint = data.readEncodedU30();
@@ -45,7 +45,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				defaultValue = getConstantPoolItemByKindAtIndex(valueKind, valueIndex);
 			}
 			
-			super.parse(data, scanner);
+			super.read(data, scanner);
 		}
 		
 		override public function get name():String { return "ABCTraitSlotInfo"; }

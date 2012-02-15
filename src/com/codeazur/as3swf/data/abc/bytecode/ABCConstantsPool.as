@@ -43,7 +43,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			multinamePool.push(ABCQualifiedName.create(asterisk.value, asterisk));
 		}
 		
-		public function parse(data:SWFData, scanner:ABCScanner) : void {
+		public function read(data:SWFData, scanner:ABCScanner) : void {
 			
 			var ref:uint = 0;
 			var index:int = 0;

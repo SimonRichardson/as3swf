@@ -18,7 +18,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			methodBodies = new Vector.<ABCMethodBody>();
 		}
 		
-		public function parse(data:SWFData, scanner:ABCScanner):void {
+		public function read(data:SWFData, scanner:ABCScanner):void {
 			const position:uint = scanner.getMethodBodyInfo();
 			if(data.position != position) {
 				throw new Error('Invalid position (Expected: ' + data.position + ', Recieved: ' + position + ')');
@@ -33,7 +33,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				const methodBody:ABCMethodBody = ABCMethodBody.create(abcData);
 				const methodBodyTraitPositions:Vector.<uint> = scanner.getMethodBodyTraitInfoAtIndex(i);
-				methodBody.parse(data, scanner, methodBodyTraitPositions);
+				methodBody.read(data, scanner, methodBodyTraitPositions);
 				
 				methodBodies.push(methodBody);
 			}

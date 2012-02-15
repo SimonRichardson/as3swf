@@ -24,7 +24,7 @@ package com.codeazur.as3swf.data.abc.io
 			_scanner = new ABCScanner();
 		}
 		
-		public function parse(abcData : ABCData) : void {
+		public function read(abcData : ABCData) : void {
 			scanner.scan(_bytes);
 			
 			_bytes.position = scanner.minorVersion;
@@ -33,15 +33,15 @@ package com.codeazur.as3swf.data.abc.io
 			_bytes.position = scanner.majorVersion;
 			abcData.majorVersion = _bytes.readUI16();
 						
-			abcData.constantPool.parse(_bytes, scanner);
+			abcData.constantPool.read(_bytes, scanner);
 			
-			abcData.methodInfoSet.parse(_bytes, scanner);
-			abcData.metadataSet.parse(_bytes, scanner);
+			abcData.methodInfoSet.read(_bytes, scanner);
+			abcData.metadataSet.read(_bytes, scanner);
 			
-			abcData.instanceInfoSet.parse(_bytes, scanner);
-			abcData.classInfoSet.parse(_bytes, scanner);
-			abcData.scriptInfoSet.parse(_bytes, scanner);
-			abcData.methodBodySet.parse(_bytes, scanner);
+			abcData.instanceInfoSet.read(_bytes, scanner);
+			abcData.classInfoSet.read(_bytes, scanner);
+			abcData.scriptInfoSet.read(_bytes, scanner);
+			abcData.methodBodySet.read(_bytes, scanner);
 		}
 		
 		public function get scanner():ABCScanner {

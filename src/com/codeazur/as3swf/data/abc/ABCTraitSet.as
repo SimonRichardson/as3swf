@@ -20,7 +20,7 @@ package com.codeazur.as3swf.data.abc
 			traits = new Vector.<ABCTraitInfo>();
 		}
 
-		public function parse(data : SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>) : void {
+		public function read(data : SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>) : void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++) {
 				data.position = traitPositions[i];
@@ -32,7 +32,7 @@ package com.codeazur.as3swf.data.abc
 				
 				const traitKind:uint = data.readUI8();
 				const trait:ABCTraitInfo = ABCTraitInfoFactory.create(abcData, traitKind, traitQName, isStatic);
-				trait.parse(data, scanner);
+				trait.read(data, scanner);
 				
 				traits.push(trait); 
 			}

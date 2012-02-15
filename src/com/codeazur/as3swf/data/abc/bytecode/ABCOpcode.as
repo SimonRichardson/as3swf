@@ -26,8 +26,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return opcode;
 		}
 		
-		public function parse(data:SWFData):void {
-			attribute.parse(data);
+		public function read(data:SWFData):void {
+			attribute.read(data);
 		}
 		
 		override public function get name():String { return "ABCOpcode"; }
