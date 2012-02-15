@@ -11,7 +11,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 	public class ABCTraitInfo extends ABCSet {
 		
 		public var qname:IABCMultiname;
-		public var kind:ABCTraitInfoKind;
+		
+		public var kind:uint;
+		public var kindType:ABCTraitInfoKind;
 		
 		public var metadatas:Vector.<ABCMetadata>;
 		
@@ -35,13 +37,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 
 		override public function get name():String { return "ABCTraitInfo"; }
 		public function get isFinal():Boolean {
-			return ABCTraitInfoFlags.isType(kind.type, ABCTraitInfoFlags.FINAL);
+			return ABCTraitInfoFlags.isType(kind, ABCTraitInfoFlags.FINAL);
 		}
 		public function get isOverride():Boolean {
-			return ABCTraitInfoFlags.isType(kind.type, ABCTraitInfoFlags.OVERRIDE);
+			return ABCTraitInfoFlags.isType(kind, ABCTraitInfoFlags.OVERRIDE);
 		}
 		public function get hasMetadata():Boolean {
-			return ABCTraitInfoFlags.isType(kind.type, ABCTraitInfoFlags.METADATA);
+			return ABCTraitInfoFlags.isType(kind, ABCTraitInfoFlags.METADATA);
 		}
 		
 		override public function toString(indent:uint = 0):String {
@@ -50,7 +52,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			str += "\n" + StringUtils.repeat(indent + 2) + "QName: ";
 			str += "\n" + qname.toString(indent + 4);
 			str += "\n" + StringUtils.repeat(indent + 2) + "Kind: ";
-			str += "\n" + kind.toString(indent + 4);
+			str += "\n" + kindType.toString(indent + 4);
 			
 			if(metadatas.length > 0) {
 				str += "\n" + StringUtils.repeat(indent + 2) + "Metadata: ";

@@ -41,7 +41,6 @@ package com.codeazur.as3swf.data.abc.io
 		private var _methodBodyInfos:Vector.<uint>;
 		private var _methodBodyTraitInfo:Vector.<Vector.<uint>>;
 		
-		
 		public function ABCScanner() {
 			_instanceTraitInfo = new Vector.<Vector.<uint>>();
 			_classTraitInfo = new Vector.<Vector.<uint>>();
@@ -280,52 +279,52 @@ package com.codeazur.as3swf.data.abc.io
 				
 	            const kind:uint = input.readUI8();
 	            switch(kind) {
-	            case 7: // '\007'
-	            case 13: // '\r'
-	                input.readEncodedU32();
-	                input.readEncodedU32();
-	                break;
-	
-	            case 15: // '\017'
-	            case 16: // '\020'
-	                input.readEncodedU32();
-	                break;
-	
-	            case 9: // '\t'
-	            case 14: // '\016'
-	                input.readEncodedU32();
-	                input.readEncodedU32();
-	                break;
-	
-	            case 27: // '\033'
-	            case 28: // '\034'
-	                input.readEncodedU32();
-	                break;
-	
-	            case 29: // '\035'
-	                input.readEncodedU32();
-	                const count:uint = input.readEncodedU32();
-	                input.skipEntries(count);
-	                break;
-	
-	            case 8: // '\b'
-	            case 10: // '\n'
-	            case 11: // '\013'
-	            case 12: // '\f'
-	            case 19: // '\023'
-	            case 20: // '\024'
-	            case 21: // '\025'
-	            case 22: // '\026'
-	            case 23: // '\027'
-	            case 24: // '\030'
-	            case 25: // '\031'
-	            case 26: // '\032'
-	            default:
-	                throw new Error("Invalid constant type: " + kind);
-	
-	            case 17: // '\021'
-	            case 18: // '\022'
-	                break;
+		            case 7: // '\007'
+		            case 13: // '\r'
+		                input.readEncodedU32();
+		                input.readEncodedU32();
+		                break;
+		
+		            case 15: // '\017'
+		            case 16: // '\020'
+		                input.readEncodedU32();
+		                break;
+		
+		            case 9: // '\t'
+		            case 14: // '\016'
+		                input.readEncodedU32();
+		                input.readEncodedU32();
+		                break;
+		
+		            case 27: // '\033'
+		            case 28: // '\034'
+		                input.readEncodedU32();
+		                break;
+		
+		            case 29: // '\035'
+		                input.readEncodedU32();
+		                const count:uint = input.readEncodedU32();
+		                input.skipEntries(count);
+		                break;
+		
+		            case 8: // '\b'
+		            case 10: // '\n'
+		            case 11: // '\013'
+		            case 12: // '\f'
+		            case 19: // '\023'
+		            case 20: // '\024'
+		            case 21: // '\025'
+		            case 22: // '\026'
+		            case 23: // '\027'
+		            case 24: // '\030'
+		            case 25: // '\031'
+		            case 26: // '\032'
+		            default:
+		                throw new Error("Invalid constant type: " + kind);
+		
+		            case 17: // '\021'
+		            case 18: // '\022'
+		                break;
 	            }
 	        }
 	    }
@@ -451,28 +450,28 @@ package com.codeazur.as3swf.data.abc.io
 	            const kind:uint = input.readUI8();
 	            const tag:uint = kind & 0xf;
 	            switch(tag) {
-	            case 0: // '\0'
-	            case 6: // '\006'
-	                input.skipEntries(2);
-	                const valueId:uint = input.readEncodedU32();
-	                if(valueId > 0)
-	                    input.readUI8();
-	                break;
-	
-	            case 1: // '\001'
-	            case 2: // '\002'
-	            case 3: // '\003'
-	                input.skipEntries(2);
-	                break;
-	
-	            case 4: // '\004'
-	            case 5: // '\005'
-	                input.skipEntries(2);
-	                break;
-	
-	            default:
-	                throw new Error("invalid trait type: " + tag);
-	                break;
+		            case 0: // '\0'
+		            case 6: // '\006'
+		                input.skipEntries(2);
+		                const valueId:uint = input.readEncodedU32();
+		                if(valueId > 0)
+		                    input.readUI8();
+		                break;
+		
+		            case 1: // '\001'
+		            case 2: // '\002'
+		            case 3: // '\003'
+		                input.skipEntries(2);
+		                break;
+		
+		            case 4: // '\004'
+		            case 5: // '\005'
+		                input.skipEntries(2);
+		                break;
+		
+		            default:
+		                throw new Error("invalid trait type: " + tag);
+		                break;
 	            }
 	            if((kind >> 4 & 4) != 0) {
 	                const metadata:uint = input.readEncodedU32();

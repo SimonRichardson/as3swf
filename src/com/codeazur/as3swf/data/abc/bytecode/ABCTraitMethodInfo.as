@@ -19,10 +19,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 			super(abcData);
 		}
 		
-		public static function create(data:ABCData, qname:IABCMultiname, kind:ABCTraitInfoKind, isStatic:Boolean = false):ABCTraitMethodInfo {
+		public static function create(data:ABCData, qname:IABCMultiname, kind:uint, kindType:ABCTraitInfoKind, isStatic:Boolean = false):ABCTraitMethodInfo {
 			const trait:ABCTraitMethodInfo = new ABCTraitMethodInfo(data);
 			trait.qname = qname;
 			trait.kind = kind;
+			trait.kindType = kindType;
 			trait.isStatic = isStatic;
 			return trait;
 		}

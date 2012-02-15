@@ -11,10 +11,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 			super(abcData);
 		}
 		
-		public static function create(data:ABCData, qname:IABCMultiname, kind:ABCTraitInfoKind, isStatic:Boolean = false):ABCTraitConstInfo {
+		public static function create(data:ABCData, qname:IABCMultiname, kind:uint, kindType:ABCTraitInfoKind, isStatic:Boolean = false):ABCTraitConstInfo {
 			const slot:ABCTraitConstInfo = new ABCTraitConstInfo(data);
 			slot.qname = qname;
 			slot.kind = kind;
+			slot.kindType = kindType;
 			slot.isStatic = isStatic;
 			return slot;
 		}
