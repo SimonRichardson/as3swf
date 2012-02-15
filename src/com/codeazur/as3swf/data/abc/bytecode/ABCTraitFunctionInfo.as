@@ -29,13 +29,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		override public function parse(data:SWFData, scanner:ABCScanner):void {
-			super.parse(data, scanner);
-			
 			id = data.readEncodedU30();
 			
 			const index:uint = data.readEncodedU30();
 			methodInfo = getMethodInfoByIndex(index);
 			methodInfo.methodName = ABCQualifiedName(qname).label;
+			
+			super.parse(data, scanner);
 		}
 
 		override public function get name() : String { return "ABCTraitFunctionInfo"; }

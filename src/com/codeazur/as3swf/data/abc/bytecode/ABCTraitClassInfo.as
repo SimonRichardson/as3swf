@@ -28,12 +28,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		override public function parse(data : SWFData, scanner:ABCScanner) : void {
-			super.parse(data, scanner);
-			
 			id = data.readEncodedU30();
 			index = data.readEncodedU30();
 			
 			classInfo = getClassInfoByIndex(index);
+			
+			super.parse(data, scanner);
 		}
 
 		override public function get name() : String { return "ABCTraitClassInfo"; }
