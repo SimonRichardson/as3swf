@@ -18,9 +18,12 @@ package com.codeazur.as3swf.data.abc.io
 		private var _constantNamespacePool:Vector.<uint>;
 		private var _constantNamespaceSetPool:Vector.<uint>;
 		private var _constantMultinamePool:Vector.<uint>;
-
-		private var _methodInfo:Vector.<uint>;
-		private var _metadataInfo:Vector.<uint>;
+		
+		private var _methodInfo:uint;
+		private var _methodInfos:Vector.<uint>;
+		
+		private var _metadataInfo:uint;
+		private var _metadataInfos:Vector.<uint>;
 		
 		private var _instanceInfo:uint;
 		private var _instanceInfos:Vector.<uint>;
@@ -104,12 +107,24 @@ package com.codeazur.as3swf.data.abc.io
 			return _constantMultinamePool[index];
 		}
 		
+		// method info
+		
+		public function getMethodInfo():uint {
+			return _methodInfo;
+		}
+		
 		public function getMethodInfoAtIndex(index:uint):uint {
-			return _methodInfo[index];
+			return _methodInfos[index];
+		}
+		
+		// metadata info
+		
+		public function getMetadataInfo():uint {
+			return _metadataInfo;
 		}
 		
 		public function getMetadataInfoAtIndex(index:uint):uint {
-			return _metadataInfo[index];
+			return _metadataInfos[index];
 		}
 		
 		// instance info
@@ -316,11 +331,12 @@ package com.codeazur.as3swf.data.abc.io
 	    }
 	
 	    private function scanMethods(input:SWFData):void {
-	        _methodInfo = new Vector.<uint>();
+			_methodInfo = input.position;
+	        _methodInfos = new Vector.<uint>();
 			
 	        const size:uint = input.readEncodedU32();
 	        for(var i:uint = 0; i < size; i++) {
-	            _methodInfo.push(input.position);
+	            _methodInfos.push(input.position);
 				
 	            const paramCount:uint = input.readEncodedU32();
 	            input.readEncodedU32();
@@ -341,11 +357,12 @@ package com.codeazur.as3swf.data.abc.io
 	    }
 	
 	    private function scanMetadata(input:SWFData):void {
-	        _metadataInfo = new Vector.<uint>();
+			_metadataInfo = input.position;
+	        _metadataInfos = new Vector.<uint>();
 			
 	        const size:uint = input.readEncodedU32();
 	        for(var i:uint = 0; i < size; i++) {
-	            _metadataInfo.push(input.position);
+	            _metadataInfos.push(input.position);
 				
 	            input.readEncodedU32();
 	            const value_count:uint = input.readEncodedU32();
@@ -483,8 +500,8 @@ package com.codeazur.as3swf.data.abc.io
 			str += "\n" + StringUtils.repeat(indent + 4) + "NamespaceSet: " + _constantNamespaceSetPool;
 			str += "\n" + StringUtils.repeat(indent + 4) + "Multiname: " + _constantMultinamePool;
 			
-			str += "\n" + StringUtils.repeat(indent + 2) + "MethodInfo: " + _methodInfo;
-			str += "\n" + StringUtils.repeat(indent + 2) + "MetadataInfo: " + _metadataInfo;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MethodInfo: " + _methodInfos;
+			str += "\n" + StringUtils.repeat(indent + 2) + "MetadataInfo: " + _metadataInfos;
 			str += "\n" + StringUtils.repeat(indent + 2) + "InstanceInfo: " + _instanceInfos;
 			str += "\n" + StringUtils.repeat(indent + 2) + "ClassInfo: " + _classInfos;
 			str += "\n" + StringUtils.repeat(indent + 2) + "ScriptInfo: " + _scriptInfos;
