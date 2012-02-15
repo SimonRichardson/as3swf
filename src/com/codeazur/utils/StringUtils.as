@@ -5,7 +5,7 @@
 	{
 		
 		public static function isEmpty(input:String):Boolean {
-			return null != input && input.length > 0;
+			return null == input || input.length < 1;
 		}
 		
 		public static function trim(input:String):String {

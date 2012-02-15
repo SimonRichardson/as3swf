@@ -27,6 +27,10 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			data.writeUTF(type);
 		}
 		
+		public static function isType(type:String, kind:ABCJavascriptTokenKind):Boolean {
+			return kind.type == type;
+		}
+		
 		public function get type():String { return _type; }
 	}
 }

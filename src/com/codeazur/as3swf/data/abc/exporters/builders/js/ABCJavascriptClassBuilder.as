@@ -3,6 +3,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassConstructorBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassPackageNameBuilder;
 
 	import flash.utils.ByteArray;
@@ -24,6 +25,9 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		public function write(data:ByteArray):void {
 			const nameBuilder:IABCClassPackageNameBuilder = ABCJavascriptClassPackageNameBuilder.create(qname);
 			nameBuilder.write(data);
+			
+			const ctorBuilder:IABCClassConstructorBuilder = ABCJavascriptClassConstructorBuilder.create(qname);
+			ctorBuilder.write(data);
 		}
 
 		public function get qname():ABCQualifiedName { return _qname; }
