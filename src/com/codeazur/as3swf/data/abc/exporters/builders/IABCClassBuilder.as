@@ -1,7 +1,9 @@
 package com.codeazur.as3swf.data.abc.exporters.builders
 {
+
+	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -10,7 +12,10 @@ package com.codeazur.as3swf.data.abc.exporters.builders
 		function get qname():ABCQualifiedName;
 		function set qname(value:ABCQualifiedName):void;
 		
-		function get traits():Vector.<ABCTraitInfo>;
-		function set traits(value:Vector.<ABCTraitInfo>):void;
+		function get classInfo():ABCClassInfo;
+		function set classInfo(value:ABCClassInfo):void;
+		
+		function get instanceInfo():ABCInstanceInfo;
+		function set instanceInfo(value:ABCInstanceInfo):void;
 	}
 }

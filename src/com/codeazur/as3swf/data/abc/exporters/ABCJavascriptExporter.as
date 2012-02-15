@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters
 {
+	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
@@ -21,13 +22,19 @@ package com.codeazur.as3swf.data.abc.exporters
 		}
 		
 		public function write(data:ByteArray) : void {
+			//trace(abcData.scriptInfoSet.scriptInfos[0]);
+			trace(abcData.instanceInfoSet.instanceInfos[0].instanceInitialiser);
+			
 			const total:uint = abcData.classInfoSet.length;
 			for(var i:uint=0; i<total; i++) {
 				const classInfo:ABCClassInfo = abcData.classInfoSet.getAt(i);
+				const instanceInfo:ABCInstanceInfo = abcData.instanceInfoSet.getAt(i);
+				
 				
 				const classQName:ABCQualifiedName = classInfo.qname.toQualifiedName();
 				const classBuilder:IABCClassBuilder = ABCJavascriptClassBuilder.create(classQName);
-				classBuilder.traits = classInfo.traits;
+				classBuilder.classInfo = classInfo;
+				classBuilder.instanceInfo = instanceInfo;
 				classBuilder.write(data);
 			}
 		}
