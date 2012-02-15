@@ -48,6 +48,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			super.read(data, scanner);
 		}
 		
+		public function get hasDefaultValue():Boolean { return valueIndex > 0; }
+		
 		override public function get name():String { return "ABCTraitSlotInfo"; }
 		
 		override public function toString(indent:uint = 0) : String {

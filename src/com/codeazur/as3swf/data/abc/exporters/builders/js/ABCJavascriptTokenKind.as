@@ -7,6 +7,8 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	public class ABCJavascriptTokenKind {
 		
 		public static const COLON:ABCJavascriptTokenKind = new ABCJavascriptTokenKind(":");
+		public static const DOT:ABCJavascriptTokenKind = new ABCJavascriptTokenKind(".");
+		public static const DOUBLE_QUOTE:ABCJavascriptTokenKind = new ABCJavascriptTokenKind("\"");
 		public static const EQUALS:ABCJavascriptTokenKind = new ABCJavascriptTokenKind("=");
 		public static const LEFT_CURLY_BRACKET:ABCJavascriptTokenKind = new ABCJavascriptTokenKind("{");
 		public static const LEFT_PARENTHESES:ABCJavascriptTokenKind = new ABCJavascriptTokenKind("(");
@@ -16,6 +18,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		public static const RIGHT_PARENTHESES:ABCJavascriptTokenKind = new ABCJavascriptTokenKind(")");
 		public static const RIGHT_SQUARE_BRACKET:ABCJavascriptTokenKind = new ABCJavascriptTokenKind("]");
 		public static const SEMI_COLON:ABCJavascriptTokenKind = new ABCJavascriptTokenKind(";");
+		public static const SINGLE_QUOTE:ABCJavascriptTokenKind = new ABCJavascriptTokenKind("'");
 		
 		private var _type:String;
 		

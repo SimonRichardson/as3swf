@@ -27,6 +27,8 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			
 			ABCJavascriptTokenKind.EQUALS.write(data);
 			ABCJavascriptLiteralKind.FUNCTION.write(data);
+			
+			ABCJavascriptTokenKind.SEMI_COLON.write(data);
 		}
 
 		public function get qname():ABCQualifiedName { return _qname; }

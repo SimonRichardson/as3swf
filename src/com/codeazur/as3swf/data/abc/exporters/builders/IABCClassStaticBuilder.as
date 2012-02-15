@@ -5,7 +5,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public interface IABCClassBuilder extends IABCBuilder {
+	public interface IABCClassStaticBuilder extends IABCBuilder {
 		
 		function get qname():ABCQualifiedName;
 		function set qname(value:ABCQualifiedName):void;

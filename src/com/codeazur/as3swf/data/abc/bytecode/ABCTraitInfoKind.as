@@ -39,6 +39,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return _types[(type & 0xF)];
 		}
 		
+		public static function isType(type:uint, kind:ABCTraitInfoKind):Boolean {
+			return (type & 0xF) == kind.type;
+		}
+		
 		public function get type():uint { return _type; }
 		public function get name():String { return "ABCTraitInfoKind"; }
 		

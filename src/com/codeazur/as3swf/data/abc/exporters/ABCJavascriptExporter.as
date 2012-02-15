@@ -27,7 +27,7 @@ package com.codeazur.as3swf.data.abc.exporters
 				
 				const classQName:ABCQualifiedName = classInfo.qname.toQualifiedName();
 				const classBuilder:IABCClassBuilder = ABCJavascriptClassBuilder.create(classQName);
-				
+				classBuilder.traits = classInfo.traits;
 				classBuilder.write(data);
 			}
 		}
