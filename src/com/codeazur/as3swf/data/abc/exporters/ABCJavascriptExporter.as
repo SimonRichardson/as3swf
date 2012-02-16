@@ -6,7 +6,7 @@ package com.codeazur.as3swf.data.abc.exporters
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.ABCJavascriptClassBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSClassBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.core.IABCExporter;
 
 	import flash.utils.ByteArray;
@@ -27,9 +27,8 @@ package com.codeazur.as3swf.data.abc.exporters
 				const classInfo:ABCClassInfo = abcData.classInfoSet.getAt(i);
 				const instanceInfo:ABCInstanceInfo = abcData.instanceInfoSet.getAt(i);
 				
-				
 				const classQName:ABCQualifiedName = classInfo.qname.toQualifiedName();
-				const classBuilder:IABCClassBuilder = ABCJavascriptClassBuilder.create(classQName);
+				const classBuilder:IABCClassBuilder = JSClassBuilder.create(classQName);
 				classBuilder.classInfo = classInfo;
 				classBuilder.instanceInfo = instanceInfo;
 				classBuilder.write(data);

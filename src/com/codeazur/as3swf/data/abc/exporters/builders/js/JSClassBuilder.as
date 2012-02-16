@@ -14,29 +14,29 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class ABCJavascriptClassBuilder implements IABCClassBuilder {
+	public class JSClassBuilder implements IABCClassBuilder {
 		
 		private var _qname:ABCQualifiedName;
 		private var _classInfo:ABCClassInfo;
 		private var _instanceInfo:ABCInstanceInfo;
 		
-		public function ABCJavascriptClassBuilder() {}
+		public function JSClassBuilder() {}
 		
-		public static function create(qname:ABCQualifiedName):ABCJavascriptClassBuilder {
-			const builder:ABCJavascriptClassBuilder = new ABCJavascriptClassBuilder();
+		public static function create(qname:ABCQualifiedName):JSClassBuilder {
+			const builder:JSClassBuilder = new JSClassBuilder();
 			builder.qname = qname;
 			return builder; 
 		}
 		
 		public function write(data:ByteArray):void {
-			const nameBuilder:IABCClassPackageNameBuilder = ABCJavascriptClassPackageNameBuilder.create(qname);
+			const nameBuilder:IABCClassPackageNameBuilder = JSClassPackageNameBuilder.create(qname);
 			nameBuilder.write(data);
 			
-			const ctorBuilder:IABCClassConstructorBuilder = ABCJavascriptClassConstructorBuilder.create(qname);
+			const ctorBuilder:IABCClassConstructorBuilder = JSClassConstructorBuilder.create(qname);
 			ctorBuilder.instanceInfo = instanceInfo;
 			ctorBuilder.write(data);
 			
-			const staticBuilder:IABCClassStaticBuilder = ABCJavascriptClassStaticBuilder.create(qname);
+			const staticBuilder:IABCClassStaticBuilder = JSClassStaticBuilder.create(qname);
 			staticBuilder.traits = classInfo.traits;
 			staticBuilder.write(data);
 		}
@@ -50,7 +50,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		public function get instanceInfo():ABCInstanceInfo { return _instanceInfo; }
 		public function set instanceInfo(value:ABCInstanceInfo):void { _instanceInfo = value; }
 		
-		public function get name():String { return "ABCJavascriptClassBuilder"; }
+		public function get name():String { return "JSClassBuilder"; }
 		
 		public function toString(indent:uint=0):String {
 			return ABC.toStringCommon(name, indent);

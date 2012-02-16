@@ -9,16 +9,16 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class ABCJavascriptClassPackageNameBuilder implements IABCClassPackageNameBuilder {
+	public class JSClassPackageNameBuilder implements IABCClassPackageNameBuilder {
 		
 		private var _qname:ABCQualifiedName;
 		
-		public function ABCJavascriptClassPackageNameBuilder() {
+		public function JSClassPackageNameBuilder() {
 			
 		}
 		
-		public static function create(qname:ABCQualifiedName):ABCJavascriptClassPackageNameBuilder {
-			const builder:ABCJavascriptClassPackageNameBuilder = new ABCJavascriptClassPackageNameBuilder();
+		public static function create(qname:ABCQualifiedName):JSClassPackageNameBuilder {
+			const builder:JSClassPackageNameBuilder = new JSClassPackageNameBuilder();
 			builder.qname = qname;
 			return builder; 
 		}
@@ -34,13 +34,13 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 				
 				data.writeUTF(pns);
 				
-				ABCJavascriptTokenKind.EQUALS.write(data);
+				JSTokenKind.EQUALS.write(data);
 				
 				data.writeUTF(pns);
 				
-				ABCJavascriptOperatorKind.OR.write(data);
-				ABCJavascriptLiteralKind.OBJECT.write(data);
-				ABCJavascriptTokenKind.SEMI_COLON.write(data);
+				JSOperatorKind.OR.write(data);
+				JSLiteralKind.OBJECT.write(data);
+				JSTokenKind.SEMI_COLON.write(data);
 			}
 		}
 		
@@ -51,7 +51,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		public function get qname():ABCQualifiedName { return _qname; }
 		public function set qname(value:ABCQualifiedName) : void { _qname = value; }
 		
-		public function get name():String { return "ABCJavascriptClassPackageNameBuilder"; }
+		public function get name():String { return "JSClassPackageNameBuilder"; }
 		
 		public function toString(indent:uint=0):String {
 			return ABC.toStringCommon(name, indent);

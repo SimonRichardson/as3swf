@@ -1,26 +1,27 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
-	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedNameType;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitSlotInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfoKind;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfoKind;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitSlotInfo;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassStaticBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
 
 	import flash.utils.ByteArray;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class ABCJavascriptClassStaticBuilder implements IABCClassStaticBuilder {
+	public class JSClassStaticBuilder implements IABCClassStaticBuilder {
 		
 		private var _qname:ABCQualifiedName;
 		private var _traits:Vector.<ABCTraitInfo>;
 		
-		public function ABCJavascriptClassStaticBuilder() {}
+		public function JSClassStaticBuilder() {}
 		
-		public static function create(qname:ABCQualifiedName):ABCJavascriptClassStaticBuilder {
-			const builder:ABCJavascriptClassStaticBuilder = new ABCJavascriptClassStaticBuilder();
+		public static function create(qname:ABCQualifiedName):JSClassStaticBuilder {
+			const builder:JSClassStaticBuilder = new JSClassStaticBuilder();
 			builder.qname = qname;
 			return builder; 
 		}
@@ -43,29 +44,22 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 								
 								data.writeUTF(qname.fullName);
 								
-								ABCJavascriptTokenKind.DOT.write(data);
+								JSTokenKind.DOT.write(data);
 								
 								data.writeUTF(traitQName.label);
 								
 								if(slotTrait.hasDefaultValue) {
 									const valueQName:ABCQualifiedName = slotTrait.typeMultiname.toQualifiedName();
 									if(null != valueQName) {
-										ABCJavascriptTokenKind.EQUALS.write(data);
+										JSTokenKind.EQUALS.write(data);
 										
-										if(ABCQualifiedNameType.isType(valueQName, ABCQualifiedNameType.STRING)) {
-											
-											ABCJavascriptTokenKind.DOUBLE_QUOTE.write(data);
-											data.writeUTF(slotTrait.defaultValue);
-											ABCJavascriptTokenKind.DOUBLE_QUOTE.write(data);
-											
-										} else {
-											data.writeUTF(slotTrait.defaultValue);
-										}
-										
+										const value:* = slotTrait.defaultValue;
+										const valueBuilder:IABCValueBuilder = JSValueBuilder.create(value, valueQName);
+										valueBuilder.write(data);
 									}
 								}
 								
-								ABCJavascriptTokenKind.SEMI_COLON.write(data);
+								JSTokenKind.SEMI_COLON.write(data);
 							}
 						}
 					}
@@ -79,7 +73,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		public function get traits() : Vector.<ABCTraitInfo> { return _traits; }
 		public function set traits(value : Vector.<ABCTraitInfo>) : void { _traits = value; }
 		
-		public function get name():String { return "ABCJavascriptClassStaticBuilder"; }
+		public function get name():String { return "JSClassStaticBuilder"; }
 		
 		public function toString(indent:uint=0):String {
 			return ABC.toStringCommon(name, indent);
