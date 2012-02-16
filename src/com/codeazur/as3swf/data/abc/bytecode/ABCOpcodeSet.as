@@ -124,6 +124,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function getAt(index:uint):ABCOpcode {
+			return opcodes[index];
+		}
+		
+		override public function get length():uint { return opcodes.length; }
 		override public function get name():String { return "ABCOpcodeSet"; }
 		
 		override public function toString(indent:uint = 0) : String {

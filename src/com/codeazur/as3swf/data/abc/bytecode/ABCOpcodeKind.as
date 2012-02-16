@@ -188,6 +188,26 @@ package com.codeazur.as3swf.data.abc.bytecode
 			 return _types[type];
 		}
 		
+		public static function isType(type:ABCOpcodeKind, kind:ABCOpcodeKind):Boolean {
+			return type.type == kind.type;
+		}
+		
+		public static function isDebug(kind:ABCOpcodeKind):Boolean {
+			var result:Boolean;
+			switch(kind) {
+				case DEBUG:
+				case DEBUGFILE:
+				case DEBUGLINE:
+					result = true;
+					break;
+					
+				default:
+					result = false;
+					break;
+			}
+			return result;
+		}
+		
 		public function get type():uint { return _type; }
 		public function get name():String { return "ABCOpcodeKind"; }
 		

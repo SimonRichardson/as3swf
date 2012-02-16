@@ -20,14 +20,18 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return qname;
 		}
 		
+		public function get isTopLevel():Boolean {
+			return (ns == null) || (ns != null && ns.value == ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value);
+		}
+		
 		override public function get name():String { return "ABCQualifiedName"; }
 		override public function get fullName():String {
 			var result:String;
 			if(label != ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) {
-				if(!StringUtils.isEmpty(ns.value)) {
-					result = ns.value + "." + label;
-				} else {
+				if(isTopLevel) {
 					result = label;
+				} else {
+					result = ns.value + "." + label;
 				}
 			} else {
 				result = super.fullName;

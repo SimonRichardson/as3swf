@@ -3,8 +3,17 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceType;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCExpression;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.expressions.JSThisExpression;
 
 	import flash.utils.ByteArray;
 	/**
@@ -23,10 +32,28 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		}
 
 		public function write(data : ByteArray) : void {
-			//trace(methodBody.initScopeDepth, methodBody.localCount, methodBody.maxScopeDepth, methodBody.maxStack);
-			//trace(methodBody.opcode);
-			
-			
+			const opcodes:ABCOpcodeSet = methodBody.opcode;
+			const total:uint = opcodes.length;
+			if(total > 0) {
+				// Add scope.
+				const scopeQName:ABCQualifiedName = ABCQualifiedName.create('scope', ABCNamespace.getType(ABCNamespaceType.ASTERISK));
+				const scopeExpression:IABCExpression = JSThisExpression.create(); 
+				const scope:IABCVariableBuilder = JSLocalVariableBuilder.create(scopeQName, scopeExpression);
+				scope.write(data);
+				
+				// Build method args
+				for(var i:uint=0; i<total; i++) {
+					const opcode:ABCOpcode = opcodes.getAt(i);
+					const kind:ABCOpcodeKind = opcode.kind;
+					
+					if(!ABCOpcodeKind.isDebug(kind)) {
+						if(!(i == total - 1 && ABCOpcodeKind.isType(kind, ABCOpcodeKind.RETURNVOID))) {
+							trace(opcode);
+							break;
+						}
+					}
+				}
+			}
 		}
 		
 		public function get methodBody():ABCMethodBody { return _methodBody; }
