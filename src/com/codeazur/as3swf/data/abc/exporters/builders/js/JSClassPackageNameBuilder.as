@@ -38,7 +38,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 				
 				data.writeUTF(pns);
 				
-				JSOperatorKind.OR.write(data);
+				JSOperatorKind.LOGICAL_OR.write(data);
 				JSLiteralKind.OBJECT.write(data);
 				JSTokenKind.SEMI_COLON.write(data);
 			}
