@@ -36,7 +36,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 			return _types[kind] == type;
 		}
 		
-		public static function isNameType(name:String):Boolean {
+		public static function isKind(name:String):Boolean {
 			return _nameTypes[name];
 		}
 		

@@ -11,10 +11,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 		private var _source:String;
 		private var _byteArray:ByteArray;
 		
-		
-		public var result:String;
-		
-		
 		public function JSSourceFormatter() {
 			
 		}
@@ -27,7 +23,10 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 			
 			_lexer = new JSSourceLexer(_source);
 			
-			result = "";
+			var root:JSSourceBlock = new JSSourceBlock("");
+			var block:JSSourceBlock = root;
+			var parent:JSSourceBlock = root;
+			var indent:uint = 0;
 			
 			var previous:JSSourceToken;
 			
@@ -36,13 +35,49 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 				if(JSSourceToken.isType(token, JSSourceTokenKind.EOF)) {
 					break;
 				} else {
-					trace(token.chars);
+					switch(token.kind) {
+						case JSSourceTokenKind.SEMI_COLON:
+							block.add(token.chars);
+							block.add("\n", indent);
+							break;
+						
+						case JSSourceTokenKind.WORD:
+							if(JSSourceNewLineType.isKind(token.chars) && (block.tail.value != "\n" && block.tail.value != " = ")) {
+								block.add("\n", indent);
+							}
+							block.add(token.chars);
+							break;
+							
+						case JSSourceTokenKind.START_BLOCK:
+							parent = block;	
+							block = block.add(token.chars, ++indent);
+							block.parent = parent;
+							break;
+							
+						case JSSourceTokenKind.END_BLOCK:
+							parent = block.parent;
+							if(block.tail.value == "\n") {
+								block.tail.indent -= 1;
+							}
+							block.add(token.chars, --indent);
+							block = parent;
+							break;
+						
+						case JSSourceTokenKind.EQUALITY:
+						case JSSourceTokenKind.OPERATOR:
+							block.add(" " + token.chars + " ");
+							break;
+						
+						default:
+							block.add(token.chars);
+							break;
+					}
 				}
 				
 				previous = token;
 			}
 			
-			return result;
+			return root.toString();
 		}
 		
 		private function extractUTF(byteArray:ByteArray):String {
