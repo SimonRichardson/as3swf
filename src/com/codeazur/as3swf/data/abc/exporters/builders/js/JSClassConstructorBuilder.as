@@ -1,6 +1,8 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
 
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.matchers.JSStringNotEmptyMatcher;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedNameType;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
@@ -98,9 +100,10 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 				}
 			}
 			
-			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create();
-			opcode.methodBody = instanceInitialiser.methodBody;
-			opcode.returnType = instanceInitialiser.returnType;
+			const methodBody:ABCMethodBody = instanceInitialiser.methodBody;
+			const returnType:IABCMultiname = instanceInitialiser.returnType;
+			
+			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(parameters, methodBody, returnType);
 			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);

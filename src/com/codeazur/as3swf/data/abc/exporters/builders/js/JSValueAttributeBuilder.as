@@ -1,0 +1,50 @@
+package com.codeazur.as3swf.data.abc.exporters.builders.js
+{
+	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
+
+	import flash.utils.ByteArray;
+	/**
+	 * @author Simon Richardson - simon@ustwo.co.uk
+	 */
+	public class JSValueAttributeBuilder implements IABCValueBuilder {
+		
+		public var attribute:ABCOpcodeAttribute;
+		
+		private var _value:*;
+		private var _qname:ABCQualifiedName;
+		
+		public function JSValueAttributeBuilder() {
+		}
+		
+		public static function create(attribute:ABCOpcodeAttribute):JSValueAttributeBuilder {
+			const builder:JSValueAttributeBuilder = new JSValueAttributeBuilder();
+			builder.attribute = attribute;
+			return builder;
+		}
+		
+		public function write(data:ByteArray):void {
+			if(attribute is ABCOpcodeMultinameUIntAttribute) {
+				const mnameUInt:ABCOpcodeMultinameUIntAttribute = ABCOpcodeMultinameUIntAttribute(attribute);
+				data.writeUTF(mnameUInt.multiname.toQualifiedName().fullName);
+			} else {
+				throw new Error();
+			}
+		}
+		
+		public function get value():* { return _value; }
+		public function set value(data:*):void { _value = data; }
+		
+		public function get qname():ABCQualifiedName { return _qname; }
+		public function set qname(value:ABCQualifiedName) : void { _qname = value; }
+		
+		public function get name():String { return "JSValueAttributeBuilder"; }
+		
+		public function toString(indent:uint=0):String {
+			return ABC.toStringCommon(name, indent);
+		}
+	}
+}

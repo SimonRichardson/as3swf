@@ -22,7 +22,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.expressions
 			JSReservedKind.THIS.write(data);
 		}
 		
-		public function get name():String { return "JSVariableBuilder"; }
+		public function get name():String { return "JSThisExpression"; }
 		
 		public function toString(indent:uint=0):String {
 			return ABC.toStringCommon(name, indent);

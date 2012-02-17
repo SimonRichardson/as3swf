@@ -1,7 +1,5 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js.matchers
 {
-	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedNameType;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAccessorBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMatcher;
@@ -11,6 +9,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.matchers
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSReservedKind;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSTokenKind;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSValueBuilder;
+	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 
 	import flash.utils.ByteArray;
 	/**
@@ -43,7 +42,8 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.matchers
 			
 			// value.length > 0
 			const length:IABCValueBuilder = JSValueBuilder.create('length');
-			const builder:IABCAccessorBuilder = JSAccessorBuilder.create(value, length);
+			const stack:Vector.<IABCWriteable> = new <IABCWriteable>[value, length];
+			const builder:IABCAccessorBuilder = JSAccessorBuilder.create(stack);
 			builder.write(data);
 			
 			JSOperatorKind.GREATER_THAN.write(data);

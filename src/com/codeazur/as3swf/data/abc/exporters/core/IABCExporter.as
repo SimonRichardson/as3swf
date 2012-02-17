@@ -1,11 +1,10 @@
 package com.codeazur.as3swf.data.abc.exporters.core
 {
-	import flash.utils.ByteArray;
+	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public interface IABCExporter {
+	public interface IABCExporter extends IABCWriteable {
 		
-		function write(datA:ByteArray):void;
 	}
 }
