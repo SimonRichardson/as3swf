@@ -49,17 +49,22 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 							break;
 							
 						case JSSourceTokenKind.START_BLOCK:
-							parent = block;	
-							block = block.add(token.chars, ++indent);
+							parent = block;
+							block = block.add(token.chars, indent);
 							block.parent = parent;
+							
+							indent += 4;
 							break;
 							
 						case JSSourceTokenKind.END_BLOCK:
 							parent = block.parent;
 							if(block.tail.value == "\n") {
-								block.tail.indent -= 1;
+								block.tail.indent -= 4;
 							}
-							block.add(token.chars, --indent);
+							
+							indent -= 4;
+							
+							block.add(token.chars, indent);
 							block = parent;
 							break;
 						

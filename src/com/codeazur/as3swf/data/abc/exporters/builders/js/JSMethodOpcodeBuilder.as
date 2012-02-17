@@ -1,6 +1,5 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
@@ -10,6 +9,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.exporters.ABCJavascriptExporter;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCExpression;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
@@ -36,7 +36,8 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			const total:uint = opcodes.length;
 			if(total > 0) {
 				// Add scope.
-				const scopeQName:ABCQualifiedName = ABCQualifiedName.create('scope', ABCNamespace.getType(ABCNamespaceType.ASTERISK));
+				const scopeName:String = getScopeName();
+				const scopeQName:ABCQualifiedName = ABCQualifiedName.create(scopeName, ABCNamespace.getType(ABCNamespaceType.ASTERISK));
 				const scopeExpression:IABCExpression = JSThisExpression.create(); 
 				const scope:IABCVariableBuilder = JSLocalVariableBuilder.create(scopeQName, scopeExpression);
 				scope.write(data);
@@ -54,6 +55,10 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 					}
 				}
 			}
+		}
+		
+		public function getScopeName():String {
+			return ABCJavascriptExporter.PRE_FIX + 'scope';
 		}
 		
 		public function get methodBody():ABCMethodBody { return _methodBody; }

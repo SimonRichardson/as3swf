@@ -1,6 +1,8 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
 
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.matchers.JSStringNotEmptyMatcher;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedNameType;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMatcher;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.matchers.JSNotNullMatcher;
@@ -81,7 +83,13 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 					
 					const value:IABCValueBuilder = JSValueBuilder.create(parameterName);
 					const defaultValue:IABCValueBuilder = JSValueBuilder.create(parameterDefaultValue, parameterQName);
-					const matcher:IABCMatcher = JSNotNullMatcher.create(value);
+					
+					var matcher:IABCMatcher;
+					if(ABCQualifiedNameType.isType(parameterQName, ABCQualifiedNameType.STRING)){
+						matcher = JSStringNotEmptyMatcher.create(value);	
+					} else {
+						matcher = JSNotNullMatcher.create(value);
+					}
 					
 					const ternary:IABCTernaryBuilder = JSTernaryBuilder.create(matcher, value, defaultValue);
 					ternary.write(data);

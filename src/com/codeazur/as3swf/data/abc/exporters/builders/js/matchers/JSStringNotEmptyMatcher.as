@@ -1,5 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js.matchers
 {
+	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedNameType;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAccessorBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMatcher;
@@ -21,8 +23,8 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.matchers
 		public function JSStringNotEmptyMatcher() {
 		}
 		
-		public static function create(value:IABCValueBuilder):JSNotNullMatcher {
-			const matcher:JSNotNullMatcher = new JSNotNullMatcher();
+		public static function create(value:IABCValueBuilder):JSStringNotEmptyMatcher {
+			const matcher:JSStringNotEmptyMatcher = new JSStringNotEmptyMatcher();
 			matcher.value = value;
 			return matcher;
 		}

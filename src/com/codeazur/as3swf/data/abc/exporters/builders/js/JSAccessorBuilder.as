@@ -26,9 +26,9 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 
 		public function write(data : ByteArray) : void
 		{
-			data.writeUTF(object.qname.fullName);
+			data.writeUTF(object.value);
 			JSTokenKind.DOT.write(data);
-			data.writeUTF(property.qname.fullName);
+			data.writeUTF(property.value);
 		}
 		
 		public function get name():String { return "JSClassBuilder"; }
