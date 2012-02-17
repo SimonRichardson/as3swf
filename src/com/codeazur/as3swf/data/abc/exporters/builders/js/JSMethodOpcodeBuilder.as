@@ -52,71 +52,74 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 					const kind:ABCOpcodeKind = opcode.kind;
 					
 					if(!ABCOpcodeKind.isDebug(kind)) {
-						if(!(i == total - 1 && ABCOpcodeKind.isType(kind, ABCOpcodeKind.RETURNVOID))) {
-							switch(kind) {
-								case ABCOpcodeKind.CALLPROPERTY:
-									const numArguments:uint = getNumberArguments(opcode.attribute);
-									
-									scope.length = 0;
-									scope[0] = stack[stack.length - numArguments];
-									
-									params.length = 0;
-									for(var j:uint=0; j<numArguments; j++) {
-										params.push(stack[(stack.length - numArguments) + j]);
-									}
-									
-									const method:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
-									item = JSMethodCallBuilder.create(scope, method, params);
-									item.write(data);
-									stack.push(item);
-									pending = true;
-									break;
+						switch(kind) {
+							case ABCOpcodeKind.CALLPROPERTY:
+								const numArguments:uint = getNumberArguments(opcode.attribute);
 								
-								case ABCOpcodeKind.CONSTRUCTSUPER:
-									scope.length = 0;
-									scope[0] = stack[stack.length - 1];
-									
-									const superctorMethod:IABCValueBuilder = JSValueBuilder.create(JSReservedKind.SUPER.type);
-									item = JSMethodCallBuilder.create(scope, superctorMethod);
-									item.write(data);
-									stack.push(item);
-									pending = true;
-									break;
+								scope.length = 0;
+								scope[0] = stack[stack.length - numArguments];
 								
-								case ABCOpcodeKind.GETLOCAL_0:
-									if(pending) {
-										pending = false;
-										JSTokenKind.SEMI_COLON.write(data);
-									}
-									stack.push(JSThisExpression.create());
-									break;
+								params.length = 0;
+								for(var j:uint=0; j<numArguments; j++) {
+									params.push(stack[(stack.length - numArguments) + j]);
+								}
 								
-								case ABCOpcodeKind.GETLOCAL_1:
-									stack.push(JSValueBuilder.create(parameters[0].name));
-									break;
-									
-								case ABCOpcodeKind.PUSHSCOPE:
-									scope.length = 0;
-									scope[0] = stack[stack.length - 1];
-									
-									item = JSAccessorBuilder.create(scope);
-									item.write(data);
-									stack.push(item);
-									pending = true;
-									break;
+								const method:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
+								item = JSMethodCallBuilder.create(scope, method, params);
+								item.write(data);
+								stack.push(item);
+								pending = true;
+								break;
+							
+							case ABCOpcodeKind.CONSTRUCTSUPER:
+								scope.length = 0;
+								scope[0] = stack[stack.length - 1];
 								
-								case ABCOpcodeKind.POP:
-									if(pending) {
-										pending = false;
-										JSTokenKind.SEMI_COLON.write(data);
-									}
-									stack.pop();
-									break;
-									
-								default:
-									trace(kind);
-									break;
-							}
+								const superctorMethod:IABCValueBuilder = JSValueBuilder.create(JSReservedKind.SUPER.type);
+								item = JSMethodCallBuilder.create(scope, superctorMethod);
+								item.write(data);
+								stack.push(item);
+								pending = true;
+								break;
+							
+							case ABCOpcodeKind.GETLOCAL_0:
+								if(pending) {
+									pending = false;
+									JSTokenKind.SEMI_COLON.write(data);
+								}
+								stack.push(JSThisExpression.create());
+								break;
+							
+							case ABCOpcodeKind.GETLOCAL_1:
+								stack.push(JSValueBuilder.create(parameters[0].name));
+								break;
+								
+							case ABCOpcodeKind.PUSHSCOPE:
+								scope.length = 0;
+								scope[0] = stack[stack.length - 1];
+								
+								item = JSAccessorBuilder.create(scope);
+								item.write(data);
+								stack.push(item);
+								pending = true;
+								break;
+							
+							case ABCOpcodeKind.POP:
+								stack.pop();
+								break;
+								
+							case ABCOpcodeKind.RETURNVOID:
+								if(pending) {
+									pending = false;
+									JSTokenKind.SEMI_COLON.write(data);
+								}
+								JSReservedKind.RETURN.write(data);
+								JSTokenKind.SEMI_COLON.write(data);
+								break;
+								
+							default:
+								trace(kind);
+								break;
 						}
 					}
 				}
