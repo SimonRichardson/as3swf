@@ -12,7 +12,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public static const ASTERISK:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.NAMESPACE, "*"));
 
-		public var _ns:ABCNamespace;
+		private var _ns:ABCNamespace;
 
 		public function ABCNamespaceType(ns:ABCNamespace) {
 			_ns = ns;

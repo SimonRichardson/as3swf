@@ -1,5 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters
 {
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSMethodBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodBuilder;
 	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
@@ -42,7 +44,8 @@ package com.codeazur.as3swf.data.abc.exporters
 			for(var j:uint=0; j<methodInfoSet; j++) {
 				const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
 				if(!StringUtils.isEmpty(methodInfo.methodName) && !methodInfo.isConstructor) {
-					trace(methodInfo.methodName);
+					const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
+					methodBuilder.write(data);
 				}
 			}
 		}

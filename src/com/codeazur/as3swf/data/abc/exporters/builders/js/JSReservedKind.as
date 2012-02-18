@@ -18,6 +18,8 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		public static const IF:JSReservedKind = new JSReservedKind("if");
 		public static const IN:JSReservedKind = new JSReservedKind("in");
 		public static const NULL:JSReservedKind = new JSReservedKind("null");
+		public static const PROTO:JSReservedKind = new JSReservedKind("__proto__");
+		public static const PROTOTYPE:JSReservedKind = new JSReservedKind("prototype");
 		public static const RETURN:JSReservedKind = new JSReservedKind("return");
 		public static const SWITCH:JSReservedKind = new JSReservedKind("switch");
 		public static const SUPER:JSReservedKind = new JSReservedKind("super");
