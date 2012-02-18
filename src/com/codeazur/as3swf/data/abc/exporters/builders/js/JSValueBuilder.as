@@ -1,10 +1,11 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
 
-	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedNameType;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
+	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
 	/**
@@ -46,7 +47,16 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		public function get name():String { return "JSValueBuilder"; }
 		
 		public function toString(indent:uint=0):String {
-			return ABC.toStringCommon(name, indent);
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "Value:" + value;
+			
+			if(_qname) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "QName:";
+				str += "\n" + _qname.toString(indent + 4);
+			}
+			
+			return str;
 		}
 		
 	}

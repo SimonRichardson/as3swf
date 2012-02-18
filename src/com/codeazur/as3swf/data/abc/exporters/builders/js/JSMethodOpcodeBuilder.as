@@ -1,6 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -8,6 +8,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
@@ -44,7 +45,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 				
 				const scope:Vector.<IABCWriteable> = new Vector.<IABCWriteable>();
 				const stack:Vector.<IABCWriteable> = new Vector.<IABCWriteable>();
-				const params:Vector.<IABCWriteable> = new Vector.<IABCWriteable>();
+				const params:Vector.<JSParameterBuilder> = new Vector.<JSParameterBuilder>();
 								
 				// Build method args
 				for(var i:uint=0; i<total; i++) {
@@ -60,7 +61,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 								scope[0] = stack[stack.length - numArguments];
 								
 								params.length = 0;
-								for(var j:uint=0; j<numArguments; j++) {
+								for(var j:uint=1; j<numArguments; j++) {
 									params.push(stack[(stack.length - numArguments) + j]);
 								}
 								
@@ -91,7 +92,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 								break;
 							
 							case ABCOpcodeKind.GETLOCAL_1:
-								stack.push(JSValueBuilder.create(parameters[0].name));
+								stack.push(JSParameterBuilder.create(parameters[0]));
 								break;
 								
 							case ABCOpcodeKind.PUSHSCOPE:
