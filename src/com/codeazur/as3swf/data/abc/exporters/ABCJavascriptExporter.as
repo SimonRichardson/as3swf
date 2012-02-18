@@ -1,5 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters
 {
+	import com.codeazur.utils.StringUtils;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
@@ -24,8 +26,8 @@ package com.codeazur.as3swf.data.abc.exporters
 		}
 		
 		public function write(data:ByteArray) : void {
-			const total:uint = abcData.classInfoSet.length;
-			for(var i:uint=0; i<total; i++) {
+			const classInfoTotal:uint = abcData.classInfoSet.length;
+			for(var i:uint=0; i<classInfoTotal; i++) {
 				const classInfo:ABCClassInfo = abcData.classInfoSet.getAt(i);
 				const instanceInfo:ABCInstanceInfo = abcData.instanceInfoSet.getAt(i);
 				
@@ -34,6 +36,14 @@ package com.codeazur.as3swf.data.abc.exporters
 				classBuilder.classInfo = classInfo;
 				classBuilder.instanceInfo = instanceInfo;
 				classBuilder.write(data);
+			}
+			
+			const methodInfoSet:uint = abcData.methodInfoSet.length;
+			for(var j:uint=0; j<methodInfoSet; j++) {
+				const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
+				if(!StringUtils.isEmpty(methodInfo.methodName) && !methodInfo.isConstructor) {
+					trace(methodInfo.methodName);
+				}
 			}
 		}
 		

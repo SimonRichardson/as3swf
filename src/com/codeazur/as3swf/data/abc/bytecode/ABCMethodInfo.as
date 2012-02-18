@@ -16,6 +16,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var returnType:IABCMultiname;
 		public var scopeName:String;
 		public var flags:uint;
+		public var isConstructor:Boolean;
 
 		public function ABCMethodInfo(abcData:ABCData) {
 			super(abcData);
@@ -115,6 +116,18 @@ package com.codeazur.as3swf.data.abc.bytecode
 					const paramName:String = getStringByIndex(paramNameIndex);
 					const nameParam:ABCParameter = parameters[l];
 					nameParam.label = paramName;
+				}
+			}
+			
+			if(!StringUtils.isEmpty(methodName)){
+				const parts:Array = methodName.split("/");
+				if(parts.length == 2) {
+					const qname:String = parts[0];
+					const name:String = parts[1];
+					const diff:int = qname.lastIndexOf(name) - name.length;
+					isConstructor = diff >= 0;
+				} else {
+					throw new Error();
 				}
 			}
 		}
