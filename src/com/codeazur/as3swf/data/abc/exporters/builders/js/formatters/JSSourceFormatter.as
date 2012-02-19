@@ -42,9 +42,14 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 							break;
 						
 						case JSSourceTokenKind.WORD:
+							trace(token.chars, JSSourceNewLineType.isKind(token.chars));
 							if(JSSourceNewLineType.isKind(token.chars) && (block.tail.value != "\n" && block.tail.value != " = ")) {
 								block.add("\n", indent);
 							}
+							block.add(token.chars);
+							break;
+						
+						case JSSourceTokenKind.STRING:
 							block.add(token.chars);
 							break;
 							

@@ -37,7 +37,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 		}
 		
 		public static function isKind(name:String):Boolean {
-			return _nameTypes[name];
+			return (name != "toString") ? _nameTypes[name] : false;
 		}
 		
 		public function get kind():JSReservedKind { return _kind; }

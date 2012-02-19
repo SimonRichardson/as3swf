@@ -8,6 +8,21 @@
 			return null == input || input.length < 1;
 		}
 		
+		public static function clean(input:String):String {
+			var result:String = "";
+			if (input != null) {
+				var size:Number = input.length;
+				for(var i:Number = 0; i < size; i++) {
+					if(input.charCodeAt(i) >= 32) {
+						result += input.charAt(i); 
+					}
+				}
+			} else {
+				result = input;
+			}
+			return result;
+		}
+		
 		public static function trim(input:String):String {
 			return StringUtils.ltrim(StringUtils.rtrim(input));
 		}
