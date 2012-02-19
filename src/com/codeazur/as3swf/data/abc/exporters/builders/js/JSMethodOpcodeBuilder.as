@@ -68,7 +68,12 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 								
 								params.length = 0;
 								for(var j:uint=1; j<numArguments; j++) {
-									params.push(stack[(stack.length - numArguments) + j]);
+									const writeable:IABCWriteable = stack[(stack.length - numArguments) + j];
+									if(writeable is JSParameterBuilder) {
+										params.push(writeable);
+									} else {
+										//
+									}
 								}
 								
 								const method:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);

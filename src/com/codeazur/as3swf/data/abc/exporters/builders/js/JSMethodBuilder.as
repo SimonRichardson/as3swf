@@ -2,11 +2,16 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceType;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodNameBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOptionalParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodParameterBuilder;
 
 	import flash.utils.ByteArray;
@@ -34,13 +39,22 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			JSReservedKind.FUNCTION.write(data);
 			JSTokenKind.LEFT_PARENTHESES.write(data);
 			
-			const parameterBuilder:IABCMethodParameterBuilder = JSMethodParameterBuilder.create(methodInfo.parameters);
+			const parameters:Vector.<ABCParameter> = methodInfo.parameters;
+			
+			const parameterBuilder:IABCMethodParameterBuilder = JSMethodParameterBuilder.create(parameters);
 			parameterBuilder.write(data);
 			
 			JSTokenKind.RIGHT_PARENTHESES.write(data);
 			JSTokenKind.LEFT_CURLY_BRACKET.write(data);
 			
-			// TODO
+			const optionalParameterBuilder:IABCMethodOptionalParameterBuilder = JSMethodOptionalParameterBuilder.create(parameters);
+			optionalParameterBuilder.write(data);
+			
+			const methodBody:ABCMethodBody = methodInfo.methodBody;
+			const returnType:IABCMultiname = methodInfo.returnType;
+			
+			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(parameters, methodBody, returnType);
+			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
 			JSTokenKind.SEMI_COLON.write(data);

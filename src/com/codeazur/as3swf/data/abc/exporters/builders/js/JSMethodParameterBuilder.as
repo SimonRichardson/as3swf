@@ -26,15 +26,10 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		}
 
 		public function write(data : ByteArray) : void {
-			var hasOptional:Boolean = false;
 			if(parameters.length > 0) {
 				const total:uint = parameters.length;
 				for(var i:uint=0; i<total; i++) {
 					const parameter:ABCParameter = parameters[i];
-					if(parameter.optional) {
-						hasOptional = true;
-					}
-					
 					const parameterName:String = getParameterName(parameter.label, i);
 					data.writeUTF(parameterName);
 										

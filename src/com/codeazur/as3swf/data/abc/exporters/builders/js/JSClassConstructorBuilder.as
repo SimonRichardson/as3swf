@@ -7,17 +7,11 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedNameType;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassConstructorBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMatcher;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOptionalParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodParameterBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCTernaryBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.matchers.JSNotNullMatcher;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.matchers.JSStringNotEmptyMatcher;
-	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
 	/**
@@ -54,40 +48,8 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			JSTokenKind.RIGHT_PARENTHESES.write(data);
 			JSTokenKind.LEFT_CURLY_BRACKET.write(data);
 			
-			var parameterName:String;
-			var parameterQName:ABCQualifiedName;
-			var parameterDefaultValue:String;
-			const total:uint = parameters.length;
-			for(var j:uint=0; j<total; j++) {
-				const parameter:ABCParameter = parameters[j];
-				if(parameter.optional) {
-					parameterName = StringUtils.isEmpty(parameter.label) ? JSMethodParameterBuilder.DEFAULT_PARAMETER_NAME + j : parameter.label;
-					parameterQName = parameter.qname.toQualifiedName();
-					parameterDefaultValue = parameter.defaultValue;
-					
-					JSReservedKind.VAR.write(data);
-					JSTokenKind.SPACE.write(data);
-					
-					data.writeUTF(parameterName);
-					
-					JSTokenKind.EQUALS.write(data);
-					
-					const value:IABCValueBuilder = JSValueBuilder.create(parameterName);
-					const defaultValue:IABCValueBuilder = JSValueBuilder.create(parameterDefaultValue, parameterQName);
-					
-					var matcher:IABCMatcher;
-					if(ABCQualifiedNameType.isType(parameterQName, ABCQualifiedNameType.STRING)){
-						matcher = JSStringNotEmptyMatcher.create(value);	
-					} else {
-						matcher = JSNotNullMatcher.create(value);
-					}
-					
-					const ternary:IABCTernaryBuilder = JSTernaryBuilder.create(matcher, value, defaultValue);
-					ternary.write(data);
-					
-					JSTokenKind.SEMI_COLON.write(data);
-				}
-			}
+			const optionalParameterBuilder:IABCMethodOptionalParameterBuilder = JSMethodOptionalParameterBuilder.create(parameters);
+			optionalParameterBuilder.write(data);
 			
 			const methodBody:ABCMethodBody = instanceInitialiser.methodBody;
 			const returnType:IABCMultiname = instanceInitialiser.returnType;
