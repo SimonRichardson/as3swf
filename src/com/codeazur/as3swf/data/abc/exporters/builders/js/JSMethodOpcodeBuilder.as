@@ -10,8 +10,12 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCDebugBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.debug.JSDebugBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.debug.JSDebugFileBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.debug.JSDebugLineBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.expressions.JSThisExpression;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 
@@ -24,8 +28,10 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		private var _parameters:Vector.<ABCParameter>;
 		private var _methodBody:ABCMethodBody;
 		private var _returnType:IABCMultiname;
+		private var _enableDebug:Boolean;
 		
 		public function JSMethodOpcodeBuilder() {
+			_enableDebug = false;
 		}
 		
 		public static function create(parameters:Vector.<ABCParameter>, methodBody:ABCMethodBody, returnType:IABCMultiname):JSMethodOpcodeBuilder {
@@ -122,6 +128,33 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 								trace(kind);
 								break;
 						}
+					} else {
+						// Don't push this on the stack!
+						if(enableDebug) {
+							if(pending) {
+								pending = false;
+								JSTokenKind.SEMI_COLON.write(data);
+							}
+							switch(kind) {
+								case ABCOpcodeKind.DEBUG:
+									const debug:IABCDebugBuilder = JSDebugBuilder.create(opcode.attribute);
+									debug.write(data);
+									break;
+									
+								case ABCOpcodeKind.DEBUGFILE:
+									const debugFile:IABCDebugBuilder = JSDebugFileBuilder.create(opcode.attribute);
+									debugFile.write(data);
+									break;
+									
+								case ABCOpcodeKind.DEBUGLINE:
+									const debugLine:IABCDebugBuilder = JSDebugLineBuilder.create(opcode.attribute);
+									debugLine.write(data);
+									break;
+								
+								default:
+									throw new Error();
+							}
+						}
 					}
 				}
 			}
@@ -143,6 +176,9 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		
 		public function get returnType():IABCMultiname { return _returnType; }
 		public function set returnType(value:IABCMultiname):void { _returnType = value; }
+		
+		public function get enableDebug() : Boolean { return _enableDebug; }
+		public function set enableDebug(value : Boolean) : void { _enableDebug = value;	}
 		
 		public function get name():String { return "JSMethodOpcodeBuilder"; }
 		

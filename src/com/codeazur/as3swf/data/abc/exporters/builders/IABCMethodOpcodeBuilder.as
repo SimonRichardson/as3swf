@@ -16,5 +16,8 @@ package com.codeazur.as3swf.data.abc.exporters.builders
 		
 		function get returnType():IABCMultiname;
 		function set returnType(value:IABCMultiname):void;
+		
+		function get enableDebug():Boolean;
+		function set enableDebug(value:Boolean):void;
 	}
 }
