@@ -1,21 +1,22 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
 
-	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.matchers.JSStringNotEmptyMatcher;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedNameType;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMatcher;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.matchers.JSNotNullMatcher;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedNameType;
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassConstructorBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMatcher;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCTernaryBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.matchers.JSNotNullMatcher;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.matchers.JSStringNotEmptyMatcher;
 	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
@@ -23,8 +24,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
 	public class JSClassConstructorBuilder implements IABCClassConstructorBuilder {
-		
-		public static const DEFAULT_PARAMETER_NAME:String = "value";
 		
 		private var _qname:ABCQualifiedName;
 		private var _instanceInfo:ABCInstanceInfo;
@@ -49,30 +48,20 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			const instanceInitialiser:ABCMethodInfo = instanceInfo.instanceInitialiser;
 			const parameters:Vector.<ABCParameter> = instanceInitialiser.parameters;
 			
-			var parameter:ABCParameter;
-			var parameterName:String;
-			var parameterQName:ABCQualifiedName;
-			var parameterDefaultValue:String;
-			
-			const total:uint = parameters.length;
-			for(var i:uint=0; i<total; i++) {
-				parameter = parameters[i];
-				parameterName = getParameterName(parameter.label, i);
-				
-				data.writeUTF(parameterName);
-									
-				if(i < total - 1) {
-					JSTokenKind.COMMA.write(data);
-				}
-			}
+			const parameterBuilder:IABCMethodParameterBuilder = JSMethodParameterBuilder.create(parameters);
+			parameterBuilder.write(data);
 			
 			JSTokenKind.RIGHT_PARENTHESES.write(data);
 			JSTokenKind.LEFT_CURLY_BRACKET.write(data);
 			
+			var parameterName:String;
+			var parameterQName:ABCQualifiedName;
+			var parameterDefaultValue:String;
+			const total:uint = parameters.length;
 			for(var j:uint=0; j<total; j++) {
-				parameter = parameters[j];
+				const parameter:ABCParameter = parameters[j];
 				if(parameter.optional) {
-					parameterName = StringUtils.isEmpty(parameter.label) ? DEFAULT_PARAMETER_NAME + i : parameter.label;
+					parameterName = StringUtils.isEmpty(parameter.label) ? JSMethodParameterBuilder.DEFAULT_PARAMETER_NAME + j : parameter.label;
 					parameterQName = parameter.qname.toQualifiedName();
 					parameterDefaultValue = parameter.defaultValue;
 					
@@ -110,10 +99,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			JSTokenKind.SEMI_COLON.write(data);
 		}
 		
-		private function getParameterName(label:String, index:uint):String {
-			return StringUtils.isEmpty(label) ? DEFAULT_PARAMETER_NAME + index : label;
-		}
-
 		public function get qname():ABCQualifiedName { return _qname; }
 		public function set qname(value:ABCQualifiedName) : void { _qname = value; }
 		

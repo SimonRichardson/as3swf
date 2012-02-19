@@ -7,6 +7,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodNameBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodParameterBuilder;
 
 	import flash.utils.ByteArray;
 	/**
@@ -33,14 +34,13 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			JSReservedKind.FUNCTION.write(data);
 			JSTokenKind.LEFT_PARENTHESES.write(data);
 			
-			// TODO
+			const parameterBuilder:IABCMethodParameterBuilder = JSMethodParameterBuilder.create(methodInfo.parameters);
+			parameterBuilder.write(data);
 			
 			JSTokenKind.RIGHT_PARENTHESES.write(data);
 			JSTokenKind.LEFT_CURLY_BRACKET.write(data);
 			
 			// TODO
-			JSReservedKind.VAR.write(data);
-			JSTokenKind.SEMI_COLON.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
 			JSTokenKind.SEMI_COLON.write(data);
