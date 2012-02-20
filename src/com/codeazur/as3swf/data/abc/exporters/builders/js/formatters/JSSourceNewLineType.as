@@ -15,7 +15,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 		public static const CONTINUE:JSSourceNewLineType = new JSSourceNewLineType(JSReservedKind.CONTINUE);
 		public static const DEFAULT:JSSourceNewLineType = new JSSourceNewLineType(JSReservedKind.DEFAULT);
 		public static const FOR:JSSourceNewLineType = new JSSourceNewLineType(JSReservedKind.FOR);
-		public static const FUNCTION:JSSourceNewLineType = new JSSourceNewLineType(JSReservedKind.FUNCTION);
 		public static const IF:JSSourceNewLineType = new JSSourceNewLineType(JSReservedKind.IF);
 		public static const RETURN:JSSourceNewLineType = new JSSourceNewLineType(JSReservedKind.RETURN);
 		public static const SWITCH:JSSourceNewLineType = new JSSourceNewLineType(JSReservedKind.SWITCH);

@@ -42,9 +42,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 							break;
 						
 						case JSSourceTokenKind.WORD:
-							if(JSSourceNewLineType.isKind(token.chars) && (block.tail.value != "\n" && block.tail.value != " = ")) {
-								block.add("\n", indent);
-							}
 							block.add(token.chars);
 							break;
 						
@@ -73,16 +70,20 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 							
 							if(block.tail.value == ";") {
 								block.add("\n", indent);
+							} else if(block.tail.tail.value == "}") {
+								block.add("\n", indent);
 							}
 							
-							block.add(token.chars, indent);
+							block.add(token.chars);
 							block = parent;
 							break;
 						
 						case JSSourceTokenKind.EQUALITY:
 						case JSSourceTokenKind.OPERATOR:
 							if(token.chars == ",") {
+								const newLine:Boolean = (block.tail.tail.value == "}");
 								block.add(token.chars + " ");
+								if(newLine) block.add("\n", indent);
 							} else {
 								block.add(" " + token.chars + " ");
 							}
