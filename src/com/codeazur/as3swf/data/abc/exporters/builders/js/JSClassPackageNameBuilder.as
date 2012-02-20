@@ -32,6 +32,9 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			for(var i:uint=0; i<total; i++) {
 				const pns:String = merge(parts, i + 1);
 				
+				JSReservedKind.VAR.write(data);
+				JSTokenKind.SPACE.write(data);
+				
 				data.writeUTF(pns);
 				
 				JSTokenKind.EQUALS.write(data);
