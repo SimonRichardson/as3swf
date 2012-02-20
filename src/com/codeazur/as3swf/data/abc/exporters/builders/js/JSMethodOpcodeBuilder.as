@@ -54,8 +54,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		}
 
 		public function write(data : ByteArray) : void {			
-			trace("------------------------------- START -");
-			
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
 			if(opcodes.length > 0) {
 				_position = -1;
@@ -65,8 +63,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 				
 				stack.write(data);
 			}
-			
-			trace("------------------------------ FINISH -");
 		}
 		
 		private function recursion():void {
@@ -187,7 +183,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 						break;
 						
 					default:
-						trace("Root", opcode.kind);
+						// trace("Root", opcode.kind);
 						break;
 				}
 				
