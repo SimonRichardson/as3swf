@@ -41,7 +41,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 				_position++;
 			}
 			
-			if(_position >= _sourceLength) {
+			if(_position > _sourceLength) {
 				token = JSSourceToken.create(char, JSSourceTokenKind.EOF);
 			} else if(isWordChar(code)) {
 				while(isWordChar(code)) {
