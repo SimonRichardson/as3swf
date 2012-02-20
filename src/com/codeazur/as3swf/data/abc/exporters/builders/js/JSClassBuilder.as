@@ -8,7 +8,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassConstructorBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassPackageNameBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassStaticBuilder;
+
 	import flash.utils.ByteArray;
 
 	/**
@@ -35,10 +35,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			const ctorBuilder:IABCClassConstructorBuilder = JSClassConstructorBuilder.create(qname);
 			ctorBuilder.instanceInfo = instanceInfo;
 			ctorBuilder.write(data);
-			
-			const staticBuilder:IABCClassStaticBuilder = JSClassStaticBuilder.create(qname);
-			staticBuilder.traits = classInfo.traits;
-			staticBuilder.write(data);
 		}
 
 		public function get qname():ABCQualifiedName { return _qname; }

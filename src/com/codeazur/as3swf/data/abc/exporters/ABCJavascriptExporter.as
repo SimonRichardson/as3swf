@@ -1,5 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters
 {
+
+	import com.codeazur.utils.HexUtils;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
@@ -7,11 +9,15 @@ package com.codeazur.as3swf.data.abc.exporters
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassStaticBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSClassBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSClassStaticBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSMethodBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSTokenKind;
 	import com.codeazur.as3swf.data.abc.exporters.core.IABCExporter;
 	import com.codeazur.utils.StringUtils;
+
 	import flash.utils.ByteArray;
 
 	/**
@@ -30,23 +36,31 @@ package com.codeazur.as3swf.data.abc.exporters
 		public function write(data:ByteArray) : void {
 			const classInfoTotal:uint = abcData.classInfoSet.length;
 			for(var i:uint=0; i<classInfoTotal; i++) {
+				
 				const classInfo:ABCClassInfo = abcData.classInfoSet.getAt(i);
 				const instanceInfo:ABCInstanceInfo = abcData.instanceInfoSet.getAt(i);
 				
+				// constructor
 				const classQName:ABCQualifiedName = classInfo.qname.toQualifiedName();
 				const classBuilder:IABCClassBuilder = JSClassBuilder.create(classQName);
 				classBuilder.classInfo = classInfo;
 				classBuilder.instanceInfo = instanceInfo;
 				classBuilder.write(data);
-			}
-			
-			const methodInfoSet:uint = abcData.methodInfoSet.length;
-			for(var j:uint=0; j<methodInfoSet; j++) {
-				const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
-				if(!StringUtils.isEmpty(methodInfo.methodName) && !methodInfo.isConstructor) {
-					const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
-					methodBuilder.write(data);
+				
+				// methods
+				const methodInfoSet:uint = abcData.methodInfoSet.length;
+				for(var j:uint=0; j<methodInfoSet; j++) {
+					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
+					if(!StringUtils.isEmpty(methodInfo.methodName) && !methodInfo.isConstructor) {
+						const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
+						methodBuilder.write(data);
+					}
 				}
+				
+				// statics
+				const staticBuilder:IABCClassStaticBuilder = JSClassStaticBuilder.create();
+				staticBuilder.traits = classInfo.traits;
+				staticBuilder.write(data);
 			}
 		}
 		

@@ -41,7 +41,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		private var _hasRestArguments:Boolean;
 		
 		public function JSMethodOpcodeBuilder() {
-			_enableDebug = true;
+			_enableDebug = false;
 			_hasRestArguments = false;
 		}
 		

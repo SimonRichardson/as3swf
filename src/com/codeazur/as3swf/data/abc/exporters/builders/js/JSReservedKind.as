@@ -12,8 +12,10 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		public static const ARGUMENTS:JSReservedKind = new JSReservedKind("arguments");
 		public static const BREAK:JSReservedKind = new JSReservedKind("break");
 		public static const CASE:JSReservedKind = new JSReservedKind("case");
+		public static const CONSTRUCTOR:JSReservedKind = new JSReservedKind("constructor");
 		public static const CONTINUE:JSReservedKind = new JSReservedKind("continue");
 		public static const DEFAULT:JSReservedKind = new JSReservedKind("default");
+		public static const EXTENDS:JSReservedKind = new JSReservedKind("extends");
 		public static const FOR:JSReservedKind = new JSReservedKind("for");
 		public static const FUNCTION:JSReservedKind = new JSReservedKind("function");
 		public static const IF:JSReservedKind = new JSReservedKind("if");
@@ -23,7 +25,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		public static const PROTOTYPE:JSReservedKind = new JSReservedKind("prototype");
 		public static const RETURN:JSReservedKind = new JSReservedKind("return");
 		public static const SWITCH:JSReservedKind = new JSReservedKind("switch");
-		public static const SUPER:JSReservedKind = new JSReservedKind("super");
+		public static const SUPER:JSReservedKind = new JSReservedKind("base");
 		public static const THIS:JSReservedKind = new JSReservedKind("this");
 		public static const THROW:JSReservedKind = new JSReservedKind("throw");
 		public static const TRY:JSReservedKind = new JSReservedKind("try");

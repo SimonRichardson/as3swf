@@ -37,7 +37,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			const methodBuilder:IABCMethodNameBuilder = JSMethodNameBuilder.create(qname);
 			methodBuilder.write(data);
 			
-			JSTokenKind.EQUALS.write(data);
+			JSTokenKind.COLON.write(data);
 			JSReservedKind.FUNCTION.write(data);
 			JSTokenKind.LEFT_PARENTHESES.write(data);
 			
@@ -59,7 +59,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
-			JSTokenKind.SEMI_COLON.write(data);
+			JSTokenKind.COMMA.write(data);
 		}
 		
 		public function get methodInfo():ABCMethodInfo { return _methodInfo; }
