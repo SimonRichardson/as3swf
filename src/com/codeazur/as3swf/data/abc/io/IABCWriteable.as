@@ -9,6 +9,9 @@ package com.codeazur.as3swf.data.abc.io
 		
 		function write(data:ByteArray):void;
 		
+		function toString(indent:uint=0):String;
+		
 		function get name():String;
+		
 	}
 }

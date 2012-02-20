@@ -11,6 +11,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCDebugBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
@@ -55,16 +56,14 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			trace("------------------------------- START -");
 			
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
-			const total:uint = opcodes.length;
-			if(total > 0) {
-				// Build method args
+			if(opcodes.length > 0) {
 				_position = -1;
 				_stack = new JSStack();
 				
 				recursion();
+				
+				stack.write(data);
 			}
-			
-			stack.write(data);
 			
 			trace("------------------------------ FINISH -");
 		}
@@ -74,8 +73,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			const total:uint = opcodes.length;
 			for(_position++; _position<total; _position++) {
 				const opcode:ABCOpcode = opcodes.getAt(_position);
-				
-				trace(">>", _position, opcode.kind);
 				
 				switch(opcode.kind) {
 					case ABCOpcodeKind.CALLPROPERTY:
@@ -120,6 +117,21 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 						recursion();
 						break;
 					
+					case ABCOpcodeKind.GETLOCAL_2:
+						if(parameters.length > 1) {
+							stack.add(JSParameterBuilder.create(parameters[1]));
+						} else {
+							if(!_hasRestArguments) {
+								_hasRestArguments = true;
+								stack.add(createRestArgument());
+							} else {
+								throw new Error();
+							}
+						}
+						
+						recursion();
+						break;
+					
 					case ABCOpcodeKind.GETPROPERTY:
 					case ABCOpcodeKind.PUSHSTRING:
 						stack.add(createParameterFromAttribute(opcode.attribute));
@@ -133,7 +145,37 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 						stack.pop();
 						break;
 					
-						
+					case ABCOpcodeKind.RETURNVALUE:
+						var index:int = stack.length;
+						while(--index > -1) {
+							const prev:JSStackItem = stack.getAt(index);
+							if(index == 0) {
+								stack.addAt(JSReturnBuilder.create(), index);
+							} else if(prev.terminator) {
+								if(enableDebug) {
+									// debug is pushed inbetween the content to be returned!
+									if(stack.length >= index - 1) {
+										const prevPrev:JSStackItem = stack.getAt(index - 1);
+										if(prev.writeable is IABCDebugBuilder && (!(prevPrev.writeable is IABCDebugBuilder) && !prevPrev.terminator)) {
+											// splice the debug line in above the index
+											const debug:IABCDebugBuilder = stack.removeAt(index).writeable as IABCDebugBuilder;
+											stack.addAt(JSReturnBuilder.create(), index - 1);
+											stack.addAt(debug, index - 1);
+										} else {
+											stack.addAt(JSReturnBuilder.create(), index + 1);
+										}
+									} else {
+										throw new Error();
+									}
+								} else {
+									stack.addAt(JSReturnBuilder.create(), index + 1);
+								}
+								break;
+							}
+						}
+						stack.tail.terminator = true;
+						break;
+					
 					case ABCOpcodeKind.RETURNVOID:
 						stack.add(JSReturnVoidBuilder.create());
 						break;
@@ -142,12 +184,15 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 					case ABCOpcodeKind.DEBUGFILE:
 					case ABCOpcodeKind.DEBUGLINE:
 						if(enableDebug) {
-							stack.add(JSDebugFactory.create(opcode.kind, opcode.attribute));
+							// we should ignore the first DEBUGLINE as it's not important
+							if(_position != 1) {
+								stack.add(JSDebugFactory.create(opcode.kind, opcode.attribute));
+							}
 						} 
 						break;
 						
 					default:
-						//trace("Getlocal_0", opcode.kind);
+						trace("Root", opcode.kind);
 						break;
 				}
 				

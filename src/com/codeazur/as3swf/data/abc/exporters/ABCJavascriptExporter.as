@@ -46,17 +46,13 @@ package com.codeazur.as3swf.data.abc.exporters
 				if(!StringUtils.isEmpty(methodInfo.methodName) && !methodInfo.isConstructor) {
 					const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
 					methodBuilder.write(data);
-					
-					if(j > 2) {
-						break;
-					}
 				}
 			}
 		}
 		
 		public function get name():String { return "ABCJavascriptExporter"; }
 		
-		public function toString(indent:uint):String {
+		public function toString(indent:uint=0):String {
 			return ABC.toStringCommon(name, indent);
 		}
 	}

@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
+	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCDebugBuilder;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
@@ -35,7 +36,16 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		public function get name():String { return "JSStackItem"; }
 		
 		public function toString(indent:uint=0):String {
-			return ABC.toStringCommon(name, indent);
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			if(writeable) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Writeable:";
+				str += "\n" + writeable.toString(indent + 4);
+			}
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "Terminator: " + terminator;
+			
+			return str;
 		}
 	}
 }

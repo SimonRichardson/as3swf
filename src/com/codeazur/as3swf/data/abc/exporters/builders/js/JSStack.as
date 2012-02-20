@@ -25,6 +25,14 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			return item;
 		}
 		
+		public function addAt(writeable:IABCWriteable, index:uint, terminator:Boolean = false):JSStackItem {
+			const item:JSStackItem = JSStackItem.create(writeable, terminator);
+			
+			_stack.splice(index, 0, item);
+			
+			return item;
+		}
+		
 		public function getAt(index:uint):JSStackItem {
 			return _stack[index];
 		}
