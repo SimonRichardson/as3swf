@@ -1,12 +1,13 @@
-package com.codeazur.as3swf.data.abc.exporters.builders.js
+package com.codeazur.as3swf.data.abc.exporters.builders.js.parameters
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodParameterBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSTokenKind;
 	import com.codeazur.utils.StringUtils;
-
 	import flash.utils.ByteArray;
+
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */

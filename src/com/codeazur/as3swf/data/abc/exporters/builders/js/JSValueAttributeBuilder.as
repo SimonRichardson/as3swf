@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
+	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedNameType;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
@@ -28,8 +29,13 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		
 		public function write(data:ByteArray):void {
 			if(attribute is ABCOpcodeMultinameUIntAttribute) {
-				const mnameUInt:ABCOpcodeMultinameUIntAttribute = ABCOpcodeMultinameUIntAttribute(attribute);
-				data.writeUTF(mnameUInt.multiname.toQualifiedName().fullName);
+				const mname:ABCOpcodeMultinameUIntAttribute = ABCOpcodeMultinameUIntAttribute(attribute);
+				const qname:ABCQualifiedName = mname.multiname.toQualifiedName();
+				if(ABCQualifiedNameType.isType(qname, ABCQualifiedNameType.APPLY)) {
+					data.writeUTF(qname.label);
+				} else {
+					data.writeUTF(qname.fullName);
+				}
 			} else {
 				throw new Error();
 			}

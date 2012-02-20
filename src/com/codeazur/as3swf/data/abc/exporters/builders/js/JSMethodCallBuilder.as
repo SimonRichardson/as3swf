@@ -1,11 +1,12 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodCallBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCParameterBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 
 	import flash.utils.ByteArray;
+
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -13,12 +14,12 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		
 		public var expressions:Vector.<IABCWriteable>;
 		public var method:IABCWriteable;
-		public var parameters:Vector.<JSParameterBuilder>;
+		public var parameters:Vector.<IABCParameterBuilder>;
 		
 		public function JSMethodCallBuilder() {
 		}
 		
-		public static function create(expressions:Vector.<IABCWriteable>, method:IABCWriteable, parameters:Vector.<JSParameterBuilder> = null):JSMethodCallBuilder {
+		public static function create(expressions:Vector.<IABCWriteable>, method:IABCWriteable, parameters:Vector.<IABCParameterBuilder> = null):JSMethodCallBuilder {
 			const builder:JSMethodCallBuilder = new JSMethodCallBuilder();
 			builder.expressions = expressions;
 			builder.method = method;
@@ -38,7 +39,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			if(null != parameters) {
 				const total:uint = parameters.length;
 				for(var i:uint=0; i<total; i++) {
-					const parameter:JSParameterBuilder = parameters[i];
+					const parameter:IABCParameterBuilder = parameters[i];
 					parameter.write(data);
 					
 					if(i < total - 1) {

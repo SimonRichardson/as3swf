@@ -1,4 +1,4 @@
-package com.codeazur.as3swf.data.abc.exporters.builders.js
+package com.codeazur.as3swf.data.abc.exporters.builders.js.parameters
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;
@@ -9,11 +9,15 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOptionalParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCTernaryBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSReservedKind;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSTernaryBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSTokenKind;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSValueBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.matchers.JSNotNullMatcher;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.matchers.JSStringNotEmptyMatcher;
 	import com.codeazur.utils.StringUtils;
-
 	import flash.utils.ByteArray;
+
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */

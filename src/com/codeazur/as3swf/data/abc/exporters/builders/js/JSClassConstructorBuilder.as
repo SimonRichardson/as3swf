@@ -12,8 +12,10 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOptionalParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodParameterBuilder;
-
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.parameters.JSMethodOptionalParameterBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.parameters.JSMethodParameterBuilder;
 	import flash.utils.ByteArray;
+
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */

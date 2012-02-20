@@ -9,6 +9,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		
 		private static const _types : Dictionary = new Dictionary();
 		
+		public static const ARGUMENTS:JSReservedKind = new JSReservedKind("arguments");
 		public static const BREAK:JSReservedKind = new JSReservedKind("break");
 		public static const CASE:JSReservedKind = new JSReservedKind("case");
 		public static const CONTINUE:JSReservedKind = new JSReservedKind("continue");

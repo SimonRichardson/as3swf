@@ -18,9 +18,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			optional = false;
 		}
 		
-		public static function create(qname:IABCMultiname):ABCParameter {
+		public static function create(qname:IABCMultiname, label:String = ""):ABCParameter {
 			const argument:ABCParameter = new ABCParameter();
 			argument.qname = qname;
+			argument.label = label;
 			return argument;
 		}
 		
@@ -34,9 +35,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 				str += "Label: " + label + "";
 			}
 			
-			str += "\n" + StringUtils.repeat(indent + 2) + "";
-			str += "QName: ";
-			str += "\n" + qname.toString(indent + 4);
+			if(qname) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "QName: ";
+				str += "\n" + qname.toString(indent + 4);
+			}
 			
 			if(optional) {
 				str += "\n" + StringUtils.repeat(indent + 2) + "";

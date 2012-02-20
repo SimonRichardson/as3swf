@@ -8,5 +8,7 @@ package com.codeazur.as3swf.data.abc.io
 	{
 		
 		function write(data:ByteArray):void;
+		
+		function get name():String;
 	}
 }
