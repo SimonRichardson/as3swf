@@ -40,14 +40,16 @@ package com.codeazur.as3swf.data.abc.exporters
 				classBuilder.write(data);
 			}
 			
-			return;
-			
 			const methodInfoSet:uint = abcData.methodInfoSet.length;
 			for(var j:uint=0; j<methodInfoSet; j++) {
 				const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
 				if(!StringUtils.isEmpty(methodInfo.methodName) && !methodInfo.isConstructor) {
 					const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
 					methodBuilder.write(data);
+					
+					if(j > 2) {
+						break;
+					}
 				}
 			}
 		}

@@ -11,16 +11,12 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCDebugBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.debug.JSDebugBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.debug.JSDebugFileBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.debug.JSDebugLineBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.debug.JSDebugFactory;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.expressions.JSThisExpression;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.parameters.JSMultinameParameterBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.parameters.JSNullParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.parameters.JSParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.parameters.JSStringParameterBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
@@ -95,6 +91,11 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 									case ABCOpcodeKind.GETLOCAL_1:
 										stack.add(JSParameterBuilder.create(parameters[0]));
 										break;
+									
+									case ABCOpcodeKind.GETPROPERTY:
+									case ABCOpcodeKind.PUSHSTRING:
+										stack.add(createParameterFromAttribute(opcode.attribute));
+										break;
 										
 									case ABCOpcodeKind.PUSHSCOPE:
 										stack.pop();
@@ -104,7 +105,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 									case ABCOpcodeKind.DEBUGFILE:
 									case ABCOpcodeKind.DEBUGLINE:
 										if(enableDebug) {
-											stack.add(getDebugStackItem(opcode.kind, opcode.attribute));
+											stack.add(JSDebugFactory.create(opcode.kind, opcode.attribute));
 										} 
 										break;
 										
@@ -128,7 +129,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 						case ABCOpcodeKind.DEBUGFILE:
 						case ABCOpcodeKind.DEBUGLINE:
 							if(enableDebug) {
-								stack.add(getDebugStackItem(opcode.kind, opcode.attribute));
+								stack.add(JSDebugFactory.create(opcode.kind, opcode.attribute));
 							}
 							break;
 						
@@ -154,25 +155,21 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			return numArguments;
 		}
 		
-		private function getDebugStackItem(kind:ABCOpcodeKind, attribute:ABCOpcodeAttribute):IABCDebugBuilder {
-			var debug:IABCDebugBuilder;
-			switch(kind) {
-				case ABCOpcodeKind.DEBUG:
-					debug = JSDebugBuilder.create(attribute);
-					break;
-					
-				case ABCOpcodeKind.DEBUGFILE:
-					debug = JSDebugFileBuilder.create(attribute);
-					break;
-					
-				case ABCOpcodeKind.DEBUGLINE:
-					debug = JSDebugLineBuilder.create(attribute);
-					break;
+		private function createParameterFromAttribute(attribute:ABCOpcodeAttribute):IABCParameterBuilder {
+			var builder:IABCParameterBuilder;
+			if(attribute is ABCOpcodeMultinameAttribute) {
+				const mnameAttr:ABCOpcodeMultinameAttribute = ABCOpcodeMultinameAttribute(attribute);
+				builder = JSMultinameParameterBuilder.create(mnameAttr.multiname);
 				
-				default:
-					throw new Error();
+			} else if(attribute is ABCOpcodeStringAttribute) {
+				const strAttr:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(attribute);
+				builder = JSStringParameterBuilder.create(strAttr.string);
+				
+			} else {
+				throw new Error(attribute);
 			}
-			return debug;
+						
+			return builder;					
 		}
 		
 		public function get parameters():Vector.<ABCParameter> { return _parameters; }

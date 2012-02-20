@@ -32,6 +32,11 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 			return block;
 		}
 		
+		public function getAt(index:uint):JSSourceBlock {
+			if(null == _tokens || _tokens.length == 0 || index >= _tokens.length) return SOME;
+			else return _tokens[index];
+		}
+		
 		public function pop():void {
 			if(null != _tokens) _tokens.pop();
 		}
@@ -39,6 +44,10 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js.formatters
 		public function get tail():JSSourceBlock {
 			if(null == _tokens || _tokens.length == 0) return SOME;
 			else return _tokens[_tokens.length - 1];
+		}
+		
+		public function get length():uint { 
+			return (null == _tokens) ? 0 : _tokens.length;
 		}
 	
 		public function toString():String {
