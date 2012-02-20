@@ -1,5 +1,7 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameKind;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
 	 */

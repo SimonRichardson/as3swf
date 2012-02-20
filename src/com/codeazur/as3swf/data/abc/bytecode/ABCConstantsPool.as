@@ -2,6 +2,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 {
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameGeneric;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameLate;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamedMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCRuntimeQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCRuntimeQualifiedNameLate;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
 	import com.codeazur.utils.StringUtils;
 	/**

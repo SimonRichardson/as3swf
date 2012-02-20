@@ -1,7 +1,9 @@
-package com.codeazur.as3swf.data.abc.bytecode
+package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceType;
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
 	 */

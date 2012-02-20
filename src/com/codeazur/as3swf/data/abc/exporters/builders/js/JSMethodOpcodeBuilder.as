@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.builders.js
 {
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.parameters.JSRestParameterBuilder;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -71,8 +72,11 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		private function recursion():void {
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
 			const total:uint = opcodes.length;
+			
 			for(_position++; _position<total; _position++) {
 				const opcode:ABCOpcode = opcodes.getAt(_position);
+				
+				var getLocalIndex:uint = 0;
 				
 				switch(opcode.kind) {
 					case ABCOpcodeKind.CALLPROPERTY:
@@ -102,28 +106,19 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 						recursion();
 						break;
 					
-					case ABCOpcodeKind.GETLOCAL_1:
-						if(parameters.length > 0) {
-							stack.add(JSParameterBuilder.create(parameters[0]));
-						} else {
-							if(!_hasRestArguments) {
-								_hasRestArguments = true;
-								stack.add(createRestArgument());
-							} else {
-								throw new Error();
-							}
-						}
-						
-						recursion();
-						break;
-					
+					// NOTE: Notice the fall through of the switch
+					case ABCOpcodeKind.GETLOCAL_3:
+						getLocalIndex++;
 					case ABCOpcodeKind.GETLOCAL_2:
-						if(parameters.length > 1) {
-							stack.add(JSParameterBuilder.create(parameters[1]));
+						getLocalIndex++;
+					case ABCOpcodeKind.GETLOCAL_1:
+						if(parameters.length > getLocalIndex) {
+							stack.add(JSParameterBuilder.create(parameters[getLocalIndex]));
 						} else {
 							if(!_hasRestArguments) {
 								_hasRestArguments = true;
-								stack.add(createRestArgument());
+								
+								stack.add(JSRestParameterBuilder.create(parameters.length));
 							} else {
 								throw new Error();
 							}
@@ -227,10 +222,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			}
 						
 			return builder;					
-		}
-		
-		private function createRestArgument():JSParameterBuilder {
-			return JSParameterBuilder.create(ABCParameter.create(null, JSReservedKind.ARGUMENTS.type));
 		}
 		
 		public function get stack():JSStack { return _stack; }

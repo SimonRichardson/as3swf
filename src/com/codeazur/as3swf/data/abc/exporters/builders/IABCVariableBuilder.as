@@ -1,6 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.builders
 {
-	import com.codeazur.as3swf.data.abc.bytecode.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
