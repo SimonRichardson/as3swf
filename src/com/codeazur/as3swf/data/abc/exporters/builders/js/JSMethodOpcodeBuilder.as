@@ -57,10 +57,9 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			if(total > 0) {
 				var pending:Boolean = false;
 				var hasRestArguments:Boolean = false;
-				var item:IABCWriteable;
 				
-				const scope:Vector.<IABCWriteable> = new Vector.<IABCWriteable>();
-				const stack:Vector.<IABCWriteable> = new Vector.<IABCWriteable>();
+				const stack:JSStack = new JSStack();
+				const scope:JSScope = new JSScope();
 				const params:Vector.<IABCParameterBuilder> = new Vector.<IABCParameterBuilder>();
 								
 				// Build method args
@@ -74,19 +73,17 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 							case ABCOpcodeKind.CALLPROPERTY:
 								if(pending) {
 									pending = false;
-									JSTokenKind.SEMI_COLON.write(data);
+									stack.tail.terminator = true;
 								}
 								
 								const numArguments:uint = getNumberArguments(opcode.attribute);
 								
-								scope.length = 0;
-								scope[0] = stack[stack.length - numArguments];
-								
-								stack.forEach(printName);
+								scope.reset();
+								scope.add(stack.tail);
 								
 								params.length = 0;
 								for(var j:uint=1; j<numArguments; j++) {
-									const writeable:IABCWriteable = stack[(stack.length - numArguments) + j];
+									const writeable:IABCWriteable = stack.getAt((stack.length - numArguments) + j).writeable;
 									if(writeable is IABCParameterBuilder) {
 										params.push(writeable);
 									} else {
@@ -95,51 +92,43 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 								}
 								
 								const method:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
-								item = JSMethodCallBuilder.create(scope, method, params);
-								item.write(data);
-								stack.push(item);
+								stack.add(JSMethodCallBuilder.create(scope.expressions, method, params));
 								pending = true;
 								break;
 							
 							case ABCOpcodeKind.CONSTRUCTSUPER:
-								scope.length = 0;
-								scope[0] = stack[stack.length - 1];
+								scope.reset();
+								scope.add(stack.tail);
 								
 								const superctorMethod:IABCValueBuilder = JSValueBuilder.create(JSReservedKind.SUPER.type);
-								item = JSMethodCallBuilder.create(scope, superctorMethod);
-								item.write(data);
-								stack.push(item);
+								stack.add(JSMethodCallBuilder.create(scope.expressions, superctorMethod));
 								pending = true;
-								break;
-							
-							case ABCOpcodeKind.FINDPROPSTRICT:
-								// TODO: Work out if the method name is available.
-								// trace("FINDPROPSTRICT", opcode);
 								break;
 							
 							case ABCOpcodeKind.GETLOCAL_0:
 								if(pending) {
 									pending = false;
-									JSTokenKind.SEMI_COLON.write(data);
+									stack.tail.terminator = true;
 								}
-								stack.push(JSThisExpression.create());
+								
+								stack.add(JSThisExpression.create());
 								break;
 								
 							case ABCOpcodeKind.GETPROPERTY:
-								stack.push(createParameterFromAttribute(attribute));
+								stack.add(createParameterFromAttribute(attribute));
 								break;
 							
 							case ABCOpcodeKind.GETLOCAL_1:
-								stack.push(JSParameterBuilder.create(parameters[0]));
+								stack.add(JSParameterBuilder.create(parameters[0]));
 								break;
 							
 							case ABCOpcodeKind.GETLOCAL_2:
 								if(parameters.length >= 2) {
-									stack.push(JSParameterBuilder.create(parameters[1]));
+									stack.add(JSParameterBuilder.create(parameters[1]));
 								} else {
 									if(!hasRestArguments) {
 										hasRestArguments = true;
-										stack.push(createRestArgument());
+										stack.add(createRestArgument());
 									} else {
 										throw new Error();
 									}
@@ -148,11 +137,11 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 							
 							case ABCOpcodeKind.GETLOCAL_3:
 								if(parameters.length >= 2) {
-									stack.push(JSParameterBuilder.create(parameters[1]));
+									stack.add(JSParameterBuilder.create(parameters[1]));
 								} else {
 									if(!hasRestArguments) {
 										hasRestArguments = true;
-										stack.push(createRestArgument());
+										stack.add(createRestArgument());
 									} else {
 										throw new Error();
 									}
@@ -160,21 +149,19 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 								break;
 							
 							case ABCOpcodeKind.PUSHNULL:
-								stack.push(JSNullParameterBuilder.create());
+								stack.add(JSNullParameterBuilder.create());
 								break;
 							
 							case ABCOpcodeKind.PUSHSCOPE:
-								scope.length = 0;
-								scope[0] = stack[stack.length - 1];
+								scope.reset();
+								scope.add(stack.tail);
 								
-								item = JSAccessorBuilder.create(scope);
-								item.write(data);
-								stack.push(item);
+								stack.add(JSAccessorBuilder.create(scope.expressions));
 								pending = true;
 								break;
 							
 							case ABCOpcodeKind.PUSHSTRING:
-								stack.push(createParameterFromAttribute(attribute));
+								stack.add(createParameterFromAttribute(attribute));
 								break;
 							
 							case ABCOpcodeKind.POP:
@@ -184,7 +171,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 							case ABCOpcodeKind.RETURNVALUE:
 								if(pending) {
 									pending = false;
-									JSTokenKind.SEMI_COLON.write(data);
+									stack.tail.terminator = true;
 								}
 								trace(opcode);
 								break;
@@ -192,10 +179,9 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 							case ABCOpcodeKind.RETURNVOID:
 								if(pending) {
 									pending = false;
-									JSTokenKind.SEMI_COLON.write(data);
+									stack.tail.terminator = true;
 								}
-								JSReservedKind.RETURN.write(data);
-								JSTokenKind.SEMI_COLON.write(data);
+								stack.add(JSReturnVoidBuilder.create());
 								break;
 							
 							default:
@@ -207,32 +193,38 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 						if(enableDebug) {
 							if(pending) {
 								pending = false;
-								JSTokenKind.SEMI_COLON.write(data);
+								stack.tail.terminator = true;
 							}
 							
+							var debug:IABCDebugBuilder;
 							switch(kind) {
 								case ABCOpcodeKind.DEBUG:
-									const debug:IABCDebugBuilder = JSDebugBuilder.create(opcode.attribute);
-									debug.write(data);
+									debug = JSDebugBuilder.create(opcode.attribute);
 									break;
 									
 								case ABCOpcodeKind.DEBUGFILE:
-									const debugFile:IABCDebugBuilder = JSDebugFileBuilder.create(opcode.attribute);
-									debugFile.write(data);
+									debug = JSDebugFileBuilder.create(opcode.attribute);
 									break;
 									
 								case ABCOpcodeKind.DEBUGLINE:
-									const debugLine:IABCDebugBuilder = JSDebugLineBuilder.create(opcode.attribute);
-									debugLine.write(data);
+									debug = JSDebugLineBuilder.create(opcode.attribute);
 									break;
 								
 								default:
 									throw new Error();
 							}
+							
+							if(length > 0) {
+								stack.tail.debug = debug;
+							} else {
+								stack.add(debug, debug);
+							}
 						}
 					}
 				}
 			}
+			
+			stack.write(data);
 			
 			trace("------------------------------ FINISH -");
 		}
@@ -254,7 +246,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 				builder = JSMultinameParameterBuilder.create(mnameAttr.multiname);
 				
 			} else if(attribute is ABCOpcodeStringAttribute) {
-				
 				const strAttr:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(attribute);
 				builder = JSStringParameterBuilder.create(strAttr.string);
 				
@@ -268,11 +259,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		private function createRestArgument():JSParameterBuilder {
 			return JSParameterBuilder.create(ABCParameter.create(null, JSReservedKind.ARGUMENTS.type));
 		}
-		
-		private function printName(item:IABCWriteable, index:int, stack:Vector.<IABCWriteable>):void {
-			trace(item.name);
-		}
-		
+				
 		public function get parameters():Vector.<ABCParameter> { return _parameters; }
 		public function set parameters(value:Vector.<ABCParameter>):void { _parameters = value; }
 			

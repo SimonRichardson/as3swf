@@ -40,6 +40,8 @@ package com.codeazur.as3swf.data.abc.exporters
 				classBuilder.write(data);
 			}
 			
+			return;
+			
 			const methodInfoSet:uint = abcData.methodInfoSet.length;
 			for(var j:uint=0; j<methodInfoSet; j++) {
 				const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
