@@ -12,26 +12,21 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	 */
 	public class JSMethodCallBuilder implements IABCMethodCallBuilder {
 		
-		public var expressions:Vector.<IABCWriteable>;
 		public var method:IABCWriteable;
 		public var parameters:Vector.<IABCParameterBuilder>;
 		
 		public function JSMethodCallBuilder() {
 		}
 		
-		public static function create(expressions:Vector.<IABCWriteable>, method:IABCWriteable, parameters:Vector.<IABCParameterBuilder> = null):JSMethodCallBuilder {
+		public static function create(method:IABCWriteable, parameters:Vector.<IABCParameterBuilder> = null):JSMethodCallBuilder {
 			const builder:JSMethodCallBuilder = new JSMethodCallBuilder();
-			builder.expressions = expressions;
 			builder.method = method;
 			builder.parameters = parameters;
 			return builder;
 		}
 
 		public function write(data : ByteArray) : void {
-			if(expressions.length > 0) {
-				JSAccessorBuilder.create(expressions).write(data);
-				JSTokenKind.DOT.write(data);
-			}
+			JSTokenKind.DOT.write(data);
 			
 			method.write(data);
 			

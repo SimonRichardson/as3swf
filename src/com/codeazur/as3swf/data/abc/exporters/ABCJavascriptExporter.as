@@ -19,7 +19,7 @@ package com.codeazur.as3swf.data.abc.exporters
 	 */
 	public class ABCJavascriptExporter implements IABCExporter {
 		
-		public static const PRE_FIX:String = "$js_";
+		public static const PRE_FIX:String = "__as3_";
 		
 		public var abcData:ABCData;
 		

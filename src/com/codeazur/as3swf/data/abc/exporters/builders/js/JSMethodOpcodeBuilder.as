@@ -38,7 +38,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		private var _enableDebug:Boolean;
 		
 		public function JSMethodOpcodeBuilder() {
-			_enableDebug = false;
+			_enableDebug = true;
 		}
 		
 		public static function create(parameters:Vector.<ABCParameter>, methodBody:ABCMethodBody, returnType:IABCMultiname):JSMethodOpcodeBuilder {
@@ -55,171 +55,86 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
 			const total:uint = opcodes.length;
 			if(total > 0) {
-				var pending:Boolean = false;
-				var hasRestArguments:Boolean = false;
+				var opcode:ABCOpcode;
 				
 				const stack:JSStack = new JSStack();
-				const scope:JSScope = new JSScope();
-				const params:Vector.<IABCParameterBuilder> = new Vector.<IABCParameterBuilder>();
-								
+				
 				// Build method args
 				for(var i:uint=0; i<total; i++) {
-					const opcode:ABCOpcode = opcodes.getAt(i);
-					const attribute:ABCOpcodeAttribute = opcode.attribute;
-					const kind:ABCOpcodeKind = opcode.kind;
+					opcode = opcodes.getAt(i);
 					
-					if(!ABCOpcodeKind.isDebug(kind)) {
-						switch(kind) {
-							case ABCOpcodeKind.CALLPROPERTY:
-								if(pending) {
-									pending = false;
-									stack.tail.terminator = true;
-								}
+					switch(opcode.kind) {
+						case ABCOpcodeKind.GETLOCAL_0:
+							stack.add(JSThisExpression.create());
+						
+							for(; i<total; i++) {
+								opcode = opcodes.getAt(i);
 								
-								const numArguments:uint = getNumberArguments(opcode.attribute);
-								
-								scope.reset();
-								scope.add(stack.tail);
-								
-								params.length = 0;
-								for(var j:uint=1; j<numArguments; j++) {
-									const writeable:IABCWriteable = stack.getAt((stack.length - numArguments) + j).writeable;
-									if(writeable is IABCParameterBuilder) {
-										params.push(writeable);
-									} else {
-										throw new Error();
-									}
-								}
-								
-								const method:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
-								stack.add(JSMethodCallBuilder.create(scope.expressions, method, params));
-								pending = true;
-								break;
-							
-							case ABCOpcodeKind.CONSTRUCTSUPER:
-								scope.reset();
-								scope.add(stack.tail);
-								
-								const superctorMethod:IABCValueBuilder = JSValueBuilder.create(JSReservedKind.SUPER.type);
-								stack.add(JSMethodCallBuilder.create(scope.expressions, superctorMethod));
-								pending = true;
-								break;
-							
-							case ABCOpcodeKind.GETLOCAL_0:
-								if(pending) {
-									pending = false;
-									stack.tail.terminator = true;
-								}
-								
-								stack.add(JSThisExpression.create());
-								break;
-								
-							case ABCOpcodeKind.GETPROPERTY:
-								stack.add(createParameterFromAttribute(attribute));
-								break;
-							
-							case ABCOpcodeKind.GETLOCAL_1:
-								stack.add(JSParameterBuilder.create(parameters[0]));
-								break;
-							
-							case ABCOpcodeKind.GETLOCAL_2:
-								if(parameters.length >= 2) {
-									stack.add(JSParameterBuilder.create(parameters[1]));
-								} else {
-									if(!hasRestArguments) {
-										hasRestArguments = true;
-										stack.add(createRestArgument());
-									} else {
-										throw new Error();
-									}
-								}
-								break;
-							
-							case ABCOpcodeKind.GETLOCAL_3:
-								if(parameters.length >= 2) {
-									stack.add(JSParameterBuilder.create(parameters[1]));
-								} else {
-									if(!hasRestArguments) {
-										hasRestArguments = true;
-										stack.add(createRestArgument());
-									} else {
-										throw new Error();
-									}
-								}
-								break;
-							
-							case ABCOpcodeKind.PUSHNULL:
-								stack.add(JSNullParameterBuilder.create());
-								break;
-							
-							case ABCOpcodeKind.PUSHSCOPE:
-								scope.reset();
-								scope.add(stack.tail);
-								
-								stack.add(JSAccessorBuilder.create(scope.expressions));
-								pending = true;
-								break;
-							
-							case ABCOpcodeKind.PUSHSTRING:
-								stack.add(createParameterFromAttribute(attribute));
-								break;
-							
-							case ABCOpcodeKind.POP:
-								stack.pop();
-								break;
-							
-							case ABCOpcodeKind.RETURNVALUE:
-								if(pending) {
-									pending = false;
-									stack.tail.terminator = true;
-								}
-								trace(opcode);
-								break;
-								
-							case ABCOpcodeKind.RETURNVOID:
-								if(pending) {
-									pending = false;
-									stack.tail.terminator = true;
-								}
-								stack.add(JSReturnVoidBuilder.create());
-								break;
-							
-							default:
-								trace(kind);
-								break;
-						}
-					} else {
-						// Don't push this on the stack!
-						if(enableDebug) {
-							if(pending) {
-								pending = false;
-								stack.tail.terminator = true;
-							}
-							
-							var debug:IABCDebugBuilder;
-							switch(kind) {
-								case ABCOpcodeKind.DEBUG:
-									debug = JSDebugBuilder.create(opcode.attribute);
-									break;
+								switch(opcode.kind) {
+									case ABCOpcodeKind.CALLPROPERTY:
+										const params:Vector.<IABCParameterBuilder> = new Vector.<IABCParameterBuilder>();
+										const numArguments:uint = getNumberArguments(opcode.attribute);
+										for(var j:uint=1; j<numArguments; j++) {
+											const writeable:IABCWriteable = stack.removeAt((stack.length - numArguments) + j).writeable;
+											if(writeable is IABCParameterBuilder) {
+												params.push(writeable);
+											} else {
+												throw new Error();
+											}
+										}
+										
+										const method:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
+										stack.add(JSMethodCallBuilder.create(method, params));
+										break;
 									
-								case ABCOpcodeKind.DEBUGFILE:
-									debug = JSDebugFileBuilder.create(opcode.attribute);
-									break;
+									case ABCOpcodeKind.CONSTRUCTSUPER:
+										const superConstructorMethod:IABCValueBuilder = JSValueBuilder.create(JSReservedKind.SUPER.type);
+										stack.add(JSMethodCallBuilder.create(superConstructorMethod));
+										break;
+										
+									case ABCOpcodeKind.GETLOCAL_1:
+										stack.add(JSParameterBuilder.create(parameters[0]));
+										break;
+										
+									case ABCOpcodeKind.PUSHSCOPE:
+										stack.pop();
+										break;
 									
-								case ABCOpcodeKind.DEBUGLINE:
-									debug = JSDebugLineBuilder.create(opcode.attribute);
-									break;
+									case ABCOpcodeKind.DEBUG:
+									case ABCOpcodeKind.DEBUGFILE:
+									case ABCOpcodeKind.DEBUGLINE:
+										if(enableDebug) {
+											stack.add(getDebugStackItem(opcode.kind, opcode.attribute));
+										} 
+										break;
+										
+									default:
+										trace("Getlocal_0", opcode.kind);
+										break;
+								}
 								
-								default:
-									throw new Error();
+								if(JSOpcodeTerminatorKind.isType(opcode.kind)) {
+									stack.tail.terminator = true;
+									break;
+								}
 							}
-							
-							if(length > 0) {
-								stack.tail.debug = debug;
-							} else {
-								stack.add(debug, debug);
+							break;
+						
+						case ABCOpcodeKind.RETURNVOID:
+							stack.add(JSReturnVoidBuilder.create());
+							break;
+						
+						case ABCOpcodeKind.DEBUG:
+						case ABCOpcodeKind.DEBUGFILE:
+						case ABCOpcodeKind.DEBUGLINE:
+							if(enableDebug) {
+								stack.add(getDebugStackItem(opcode.kind, opcode.attribute));
 							}
-						}
+							break;
+						
+						default:
+							trace("Root:", opcode.kind);
+							break;
 					}
 				}
 			}
@@ -239,27 +154,27 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			return numArguments;
 		}
 		
-		private function createParameterFromAttribute(attribute:ABCOpcodeAttribute):IABCParameterBuilder {
-			var builder:IABCParameterBuilder;
-			if(attribute is ABCOpcodeMultinameAttribute) {
-				const mnameAttr:ABCOpcodeMultinameAttribute = ABCOpcodeMultinameAttribute(attribute);
-				builder = JSMultinameParameterBuilder.create(mnameAttr.multiname);
+		private function getDebugStackItem(kind:ABCOpcodeKind, attribute:ABCOpcodeAttribute):IABCDebugBuilder {
+			var debug:IABCDebugBuilder;
+			switch(kind) {
+				case ABCOpcodeKind.DEBUG:
+					debug = JSDebugBuilder.create(attribute);
+					break;
+					
+				case ABCOpcodeKind.DEBUGFILE:
+					debug = JSDebugFileBuilder.create(attribute);
+					break;
+					
+				case ABCOpcodeKind.DEBUGLINE:
+					debug = JSDebugLineBuilder.create(attribute);
+					break;
 				
-			} else if(attribute is ABCOpcodeStringAttribute) {
-				const strAttr:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(attribute);
-				builder = JSStringParameterBuilder.create(strAttr.string);
-				
-			} else {
-				throw new Error(attribute);
+				default:
+					throw new Error();
 			}
-						
-			return builder;					
+			return debug;
 		}
 		
-		private function createRestArgument():JSParameterBuilder {
-			return JSParameterBuilder.create(ABCParameter.create(null, JSReservedKind.ARGUMENTS.type));
-		}
-				
 		public function get parameters():Vector.<ABCParameter> { return _parameters; }
 		public function set parameters(value:Vector.<ABCParameter>):void { _parameters = value; }
 			

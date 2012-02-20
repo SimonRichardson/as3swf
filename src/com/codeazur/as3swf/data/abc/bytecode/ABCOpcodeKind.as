@@ -207,7 +207,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			return result;
 		}
-		
+				
 		public function get type():uint { return _type; }
 		public function get name():String { return "ABCOpcodeKind"; }
 		

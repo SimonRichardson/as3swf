@@ -16,8 +16,15 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		}
 		
 		public function add(item:JSStackItem):void {
-			_scope.push(item);
-			_expressions.push(item.writeable);
+			if(item != null) {
+				_scope.push(item);
+				_expressions.push(item.writeable);
+			}
+		}
+		
+		public function pop():void {
+			_scope.pop();
+			_expressions.pop();
 		}
 		
 		public function reset():void {
