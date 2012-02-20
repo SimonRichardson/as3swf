@@ -17,6 +17,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.debug.JSDebugFactory;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.expressions.JSThisExpression;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.parameters.JSMultinameParameterBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.js.parameters.JSNullParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.parameters.JSParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.js.parameters.JSStringParameterBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
@@ -33,8 +34,13 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 		private var _returnType:IABCMultiname;
 		private var _enableDebug:Boolean;
 		
+		private var _stack:JSStack;
+		private var _position:int;
+		private var _hasRestArguments:Boolean;
+		
 		public function JSMethodOpcodeBuilder() {
 			_enableDebug = true;
+			_hasRestArguments = false;
 		}
 		
 		public static function create(parameters:Vector.<ABCParameter>, methodBody:ABCMethodBody, returnType:IABCMultiname):JSMethodOpcodeBuilder {
@@ -45,104 +51,110 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 			return builder;
 		}
 
-		public function write(data : ByteArray) : void {
+		public function write(data : ByteArray) : void {			
 			trace("------------------------------- START -");
 			
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
 			const total:uint = opcodes.length;
 			if(total > 0) {
-				var opcode:ABCOpcode;
-				
-				const stack:JSStack = new JSStack();
-				
 				// Build method args
-				for(var i:uint=0; i<total; i++) {
-					opcode = opcodes.getAt(i);
-					
-					switch(opcode.kind) {
-						case ABCOpcodeKind.GETLOCAL_0:
-							stack.add(JSThisExpression.create());
-						
-							for(; i<total; i++) {
-								opcode = opcodes.getAt(i);
-								
-								switch(opcode.kind) {
-									case ABCOpcodeKind.CALLPROPERTY:
-										const params:Vector.<IABCParameterBuilder> = new Vector.<IABCParameterBuilder>();
-										const numArguments:uint = getNumberArguments(opcode.attribute);
-										for(var j:uint=1; j<numArguments; j++) {
-											const writeable:IABCWriteable = stack.removeAt((stack.length - numArguments) + j).writeable;
-											if(writeable is IABCParameterBuilder) {
-												params.push(writeable);
-											} else {
-												throw new Error();
-											}
-										}
-										
-										const method:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
-										stack.add(JSMethodCallBuilder.create(method, params));
-										break;
-									
-									case ABCOpcodeKind.CONSTRUCTSUPER:
-										const superConstructorMethod:IABCValueBuilder = JSValueBuilder.create(JSReservedKind.SUPER.type);
-										stack.add(JSMethodCallBuilder.create(superConstructorMethod));
-										break;
-										
-									case ABCOpcodeKind.GETLOCAL_1:
-										stack.add(JSParameterBuilder.create(parameters[0]));
-										break;
-									
-									case ABCOpcodeKind.GETPROPERTY:
-									case ABCOpcodeKind.PUSHSTRING:
-										stack.add(createParameterFromAttribute(opcode.attribute));
-										break;
-										
-									case ABCOpcodeKind.PUSHSCOPE:
-										stack.pop();
-										break;
-									
-									case ABCOpcodeKind.DEBUG:
-									case ABCOpcodeKind.DEBUGFILE:
-									case ABCOpcodeKind.DEBUGLINE:
-										if(enableDebug) {
-											stack.add(JSDebugFactory.create(opcode.kind, opcode.attribute));
-										} 
-										break;
-										
-									default:
-										trace("Getlocal_0", opcode.kind);
-										break;
-								}
-								
-								if(JSOpcodeTerminatorKind.isType(opcode.kind)) {
-									stack.tail.terminator = true;
-									break;
-								}
-							}
-							break;
-						
-						case ABCOpcodeKind.RETURNVOID:
-							stack.add(JSReturnVoidBuilder.create());
-							break;
-						
-						case ABCOpcodeKind.DEBUG:
-						case ABCOpcodeKind.DEBUGFILE:
-						case ABCOpcodeKind.DEBUGLINE:
-							if(enableDebug) {
-								stack.add(JSDebugFactory.create(opcode.kind, opcode.attribute));
-							}
-							break;
-						
-						default:
-							trace("Root:", opcode.kind);
-							break;
-					}
-				}
+				_position = -1;
+				_stack = new JSStack();
+				
+				recursion();
 			}
 			
 			stack.write(data);
 			
 			trace("------------------------------ FINISH -");
+		}
+		
+		private function recursion():void {
+			const opcodes:ABCOpcodeSet = methodBody.opcode;
+			const total:uint = opcodes.length;
+			for(_position++; _position<total; _position++) {
+				const opcode:ABCOpcode = opcodes.getAt(_position);
+				
+				trace(">>", _position, opcode.kind);
+				
+				switch(opcode.kind) {
+					case ABCOpcodeKind.CALLPROPERTY:
+						const params:Vector.<IABCParameterBuilder> = new Vector.<IABCParameterBuilder>();
+						const numArguments:uint = getNumberArguments(opcode.attribute);
+						for(var j:uint=1; j<numArguments; j++) {
+							const writeable:IABCWriteable = stack.removeAt((stack.length - numArguments) + j).writeable;
+							if(writeable is IABCParameterBuilder) {
+								params.push(writeable);
+							} else {
+								throw new Error();
+							}
+						}
+						
+						const method:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
+						stack.add(JSMethodCallBuilder.create(method, params));
+						break;
+					
+					case ABCOpcodeKind.CONSTRUCTSUPER:
+						const superConstructorMethod:IABCValueBuilder = JSValueBuilder.create(JSReservedKind.SUPER.type);
+						stack.add(JSMethodCallBuilder.create(superConstructorMethod));
+						break;
+						
+					case ABCOpcodeKind.GETLOCAL_0:
+						stack.add(JSThisExpression.create());
+						
+						recursion();
+						break;
+					
+					case ABCOpcodeKind.GETLOCAL_1:
+						if(parameters.length > 0) {
+							stack.add(JSParameterBuilder.create(parameters[0]));
+						} else {
+							if(!_hasRestArguments) {
+								_hasRestArguments = true;
+								stack.add(createRestArgument());
+							} else {
+								throw new Error();
+							}
+						}
+						
+						recursion();
+						break;
+					
+					case ABCOpcodeKind.GETPROPERTY:
+					case ABCOpcodeKind.PUSHSTRING:
+						stack.add(createParameterFromAttribute(opcode.attribute));
+						break;
+						
+					case ABCOpcodeKind.PUSHNULL:
+						stack.add(JSNullParameterBuilder.create());
+						break;
+								
+					case ABCOpcodeKind.PUSHSCOPE:
+						stack.pop();
+						break;
+					
+						
+					case ABCOpcodeKind.RETURNVOID:
+						stack.add(JSReturnVoidBuilder.create());
+						break;
+					
+					case ABCOpcodeKind.DEBUG:
+					case ABCOpcodeKind.DEBUGFILE:
+					case ABCOpcodeKind.DEBUGLINE:
+						if(enableDebug) {
+							stack.add(JSDebugFactory.create(opcode.kind, opcode.attribute));
+						} 
+						break;
+						
+					default:
+						//trace("Getlocal_0", opcode.kind);
+						break;
+				}
+				
+				if(JSOpcodeTerminatorKind.isType(opcode.kind)) {
+					stack.tail.terminator = true;
+				}
+			}
 		}
 		
 		private function getNumberArguments(attribute:ABCOpcodeAttribute):uint {
@@ -171,6 +183,12 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 						
 			return builder;					
 		}
+		
+		private function createRestArgument():JSParameterBuilder {
+			return JSParameterBuilder.create(ABCParameter.create(null, JSReservedKind.ARGUMENTS.type));
+		}
+		
+		public function get stack():JSStack { return _stack; }
 		
 		public function get parameters():Vector.<ABCParameter> { return _parameters; }
 		public function set parameters(value:Vector.<ABCParameter>):void { _parameters = value; }

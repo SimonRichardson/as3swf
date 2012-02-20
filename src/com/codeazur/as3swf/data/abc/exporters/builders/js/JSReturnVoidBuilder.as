@@ -19,7 +19,6 @@ package com.codeazur.as3swf.data.abc.exporters.builders.js
 
 		public function write(data : ByteArray) : void {
 			JSReservedKind.RETURN.write(data);
-		 	JSTokenKind.SEMI_COLON.write(data);
 		}
 		
 		public function get name():String { return "JSReturnVoidBuilder"; }
