@@ -1,7 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters
 {
 
-	import com.codeazur.utils.HexUtils;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
@@ -11,14 +10,12 @@ package com.codeazur.as3swf.data.abc.exporters
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassStaticBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSClassBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSClassStaticBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSMethodBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.js.JSTokenKind;
-	import com.codeazur.as3swf.data.abc.exporters.core.IABCExporter;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSClassBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSClassStaticBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSMethodBuilder;
 	import com.codeazur.utils.StringUtils;
-
 	import flash.utils.ByteArray;
+
 
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
