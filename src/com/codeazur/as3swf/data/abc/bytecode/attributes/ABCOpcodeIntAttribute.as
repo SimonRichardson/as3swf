@@ -6,9 +6,9 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class ABCOpcodeIntAttribute extends ABCOpcodeAttribute {
+	public class ABCOpcodeIntAttribute extends ABCOpcodeAttribute implements IABCOpcodeIntegerAttribute {
 		
-		public var integer:int;
+		private var _integer:int;
 		
 		public function ABCOpcodeIntAttribute(abcData:ABCData) {
 			super(abcData);
@@ -19,9 +19,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 		}
 		
 		override public function read(data:SWFData):void {
-			integer = data.readEncodedU30();
+			_integer = data.readEncodedU30();
 		}
 		
+		public function get integer():int { return _integer; }
 		override public function get name():String { return "ABCOpcodeIntAttribute"; }
 		
 		override public function toString(indent : uint = 0) : String {

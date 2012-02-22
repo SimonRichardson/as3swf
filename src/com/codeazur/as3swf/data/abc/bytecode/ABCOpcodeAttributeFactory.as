@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeInt24Attribute;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDebugAttribute;
@@ -59,6 +60,24 @@ package com.codeazur.as3swf.data.abc.bytecode
 					
 				case ABCOpcodeKind.LOOKUPSWITCH:
 					attribute = ABCOpcodeLookupSwitchAttribute.create(abcData);
+					break;
+				
+				case ABCOpcodeKind.IFEQ:
+				case ABCOpcodeKind.IFFALSE:
+				case ABCOpcodeKind.IFGE:
+				case ABCOpcodeKind.IFGT:
+				case ABCOpcodeKind.IFLE:
+				case ABCOpcodeKind.IFLT:
+				case ABCOpcodeKind.IFNE:
+				case ABCOpcodeKind.IFNGE:
+				case ABCOpcodeKind.IFNGT:
+				case ABCOpcodeKind.IFNLE:
+				case ABCOpcodeKind.IFNLT:
+				case ABCOpcodeKind.IFSTRICTEQ:
+				case ABCOpcodeKind.IFSTRICTNE:
+				case ABCOpcodeKind.IFTRUE:
+				case ABCOpcodeKind.JUMP:
+					attribute = ABCOpcodeInt24Attribute.create(abcData);
 					break;
 				
 				case ABCOpcodeKind.ASTYPE:

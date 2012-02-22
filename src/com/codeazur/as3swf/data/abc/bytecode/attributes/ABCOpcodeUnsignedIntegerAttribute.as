@@ -6,9 +6,9 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class ABCOpcodeUnsignedIntegerAttribute extends ABCOpcodeAttribute {
+	public class ABCOpcodeUnsignedIntegerAttribute extends ABCOpcodeAttribute implements IABCOpcodeUnsignedIntegerAttribute {
 		
-		public var unsignedInteger:uint;
+		private var _unsignedInteger:uint;
 		
 		public function ABCOpcodeUnsignedIntegerAttribute(abcData:ABCData) {
 			super(abcData);
@@ -20,9 +20,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 		
 		override public function read(data:SWFData):void {
 			const index:uint = data.readEncodedU30();
-			unsignedInteger = getUnsignedIntegerByIndex(index);
+			_unsignedInteger = getUnsignedIntegerByIndex(index);
 		}
 		
+		public function get unsignedInteger():uint { return _unsignedInteger; }
 		override public function get name():String { return "ABCOpcodeUnsignedIntegerAttribute"; }
 		
 		override public function toString(indent : uint = 0) : String {

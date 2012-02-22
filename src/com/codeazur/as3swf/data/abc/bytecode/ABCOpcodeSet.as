@@ -1,10 +1,12 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeIntAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeLookupSwitchAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeIntegerAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.utils.getClassFromInstance;
 	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.Dictionary;
@@ -101,8 +103,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 						}
 					} else {
 						
-						if(jumpOpcode.attribute is ABCOpcodeIntAttribute) {
-							const intAttribute:ABCOpcodeIntAttribute = ABCOpcodeIntAttribute(jumpOpcode.attribute);
+						if(jumpOpcode.attribute is IABCOpcodeIntegerAttribute) {
+							const intAttribute:IABCOpcodeIntegerAttribute = IABCOpcodeIntegerAttribute(jumpOpcode.attribute);
 							
 							position = intAttribute.integer;
 							
@@ -117,7 +119,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 							
 							jumpTarget.targetOpcode = targetOpcode;
 						} else {
-							throw new Error("Invalid attribute");
+							throw new Error("Invalid attribute: " + getClassFromInstance(jumpOpcode.attribute));
 						}
 					}
 				}

@@ -6,13 +6,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.formatters
 	 */
 	public class JSSourceBlock {
 	
-		private static const SOME:JSSourceBlock = new JSSourceBlock("");
+		private static const OPTION:JSSourceBlock = new JSSourceBlock("");
 		
 		private var _tokens:Vector.<JSSourceBlock>;
+		private var _parent:JSSourceBlock;
 		
 		public var value:String;
 		public var indent:uint;
-		public var parent:JSSourceBlock;
 		
 		public function JSSourceBlock(value:String)
 		{
@@ -33,7 +33,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.formatters
 		}
 		
 		public function getAt(index:uint):JSSourceBlock {
-			if(null == _tokens || _tokens.length == 0 || index >= _tokens.length) return SOME;
+			if(null == _tokens || _tokens.length == 0 || index >= _tokens.length) return OPTION;
 			else return _tokens[index];
 		}
 		
@@ -42,9 +42,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.formatters
 		}
 		
 		public function get tail():JSSourceBlock {
-			if(null == _tokens || _tokens.length == 0) return SOME;
+			if(null == _tokens || _tokens.length == 0) return OPTION;
 			else return _tokens[_tokens.length - 1];
 		}
+		
+		public function get parent():JSSourceBlock { return (null == _parent)? OPTION : _parent; }
+		public function set parent(value:JSSourceBlock):void { _parent = value; }
 		
 		public function get length():uint { 
 			return (null == _tokens) ? 0 : _tokens.length;
