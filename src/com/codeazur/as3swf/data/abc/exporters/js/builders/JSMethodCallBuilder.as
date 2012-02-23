@@ -26,8 +26,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 
 		public function write(data : ByteArray) : void {
-			JSTokenKind.DOT.write(data);
-			
 			method.write(data);
 						
 			JSTokenKind.LEFT_PARENTHESES.write(data);
@@ -42,6 +40,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					}
 				}
 			}
+			
 			JSTokenKind.RIGHT_PARENTHESES.write(data);
 		}
 		

@@ -13,14 +13,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			var result:Boolean = false;
 			
 			switch(kind) {
-				case ABCOpcodeKind.CONSTRUCTSUPER:
-				case ABCOpcodeKind.CALLPROPVOID:
-				case ABCOpcodeKind.DEBUG:
-				case ABCOpcodeKind.DEBUGFILE:
-				case ABCOpcodeKind.DEBUGLINE:
-				case ABCOpcodeKind.POP:
-				case ABCOpcodeKind.POPSCOPE:
-				case ABCOpcodeKind.PUSHSCOPE:
+				case ABCOpcodeKind.RETURNVALUE:
 				case ABCOpcodeKind.RETURNVOID:
 					result = true;
 					break;

@@ -7,9 +7,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSStack implements IABCWriteable {
+	public class JSStack extends JSStackItem implements IABCWriteable {
 		
-		private static const EMPTY:JSStackItem = new JSStackItem();
+		private static const OPTION:JSStackItem = new JSStackItem();
 		
 		private var _stack:Vector.<JSStackItem>;
 				
@@ -17,20 +17,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			_stack = new Vector.<JSStackItem>();
 		}
 		
-		public function add(writeable:IABCWriteable, terminator:Boolean = false):JSStackItem {
-			const item:JSStackItem = JSStackItem.create(writeable, terminator);
-			
+		public function add(item:JSStackItem):void {
 			_stack.push(item);
-			
-			return item;
 		}
 		
-		public function addAt(writeable:IABCWriteable, index:uint, terminator:Boolean = false):JSStackItem {
-			const item:JSStackItem = JSStackItem.create(writeable, terminator);
-			
+		public function addAt(item:JSStackItem, index:uint):void {
 			_stack.splice(index, 0, item);
-			
-			return item;
 		}
 		
 		public function getAt(index:uint):JSStackItem {
@@ -46,11 +38,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			return _stack.pop();
 		}
 		
-		public function write(data:ByteArray):void {
+		override public function write(data:ByteArray):void {
 			const total:uint = _stack.length;
 			for(var i:uint=0; i<total; i++) {
 				_stack[i].write(data);
 			}
+			
+			JSTokenKind.SEMI_COLON.write(data);
 		}
 		
 		public function describe():String {
@@ -72,16 +66,16 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public function get tail():JSStackItem {
 			var item:JSStackItem;
 			if(_stack.length < 1) {
-				item = EMPTY;
+				item = OPTION;
 			} else {
 				item = _stack[_stack.length - 1];
 			}
 			return item;
 		}
 		
-		public function get name():String { return "JSStack"; }
+		override public function get name():String { return "JSStack"; }
 		
-		public function toString(indent:uint=0):String {
+		override public function toString(indent:uint=0):String {
 			return ABC.toStringCommon(name, indent);
 		}
 	}

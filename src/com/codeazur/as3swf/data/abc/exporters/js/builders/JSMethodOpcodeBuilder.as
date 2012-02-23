@@ -11,9 +11,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCDebugBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSNullArgumentBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSRestArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.debug.JSDebugFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSThisExpression;
@@ -54,16 +54,17 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			if(opcodes.length > 0) {
 				_position = -1;
 				_stack = new JSStack();
-				
-				recursion();
+				_stack.add(recursion());
 				
 				stack.write(data);
 			}
 		}
 		
-		private function recursion():void {
+		private function recursion():JSStack {
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
 			const total:uint = opcodes.length;
+			
+			const stack : JSStack = new JSStack();
 			
 			for(_position++; _position<total; _position++) {
 				const opcode:ABCOpcode = opcodes.getAt(_position);
@@ -74,6 +75,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				trace(">", opcode);
 				
 				switch(opcode.kind) {
+					
+					//
+					// Consume the stack
+					//
 					
 					// NOTE: Notice the fall through of the switch
 					case ABCOpcodeKind.CONSTRUCTSUPER:
@@ -92,14 +97,23 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						}
 						
 						method = method || JSValueAttributeBuilder.create(opcode.attribute);
-						stack.add(JSMethodCallBuilder.create(method, params));
+						stack.add(JSStackItem.create(JSMethodCallBuilder.create(method, params)));
 						
 						break;
+					
+					case ABCOpcodeKind.IFFALSE:
+						const tail:IABCWriteable = stack.removeAt(stack.length - 1).writeable;
 						
+						stack.add(JSStackItem.create(JSIfStatementBuilder.create(tail)));
+						// TODO : recusively go out and find the items with it's own stack.
+						break;
+					
+					//
+					// Add to the stack
+					//
+					
 					case ABCOpcodeKind.GETLOCAL_0:
-						stack.add(JSThisExpression.create());
-						
-						recursion();
+						stack.add(JSStackItem.create(JSThisExpression.create()));
 						break;
 					
 					// NOTE: Notice the fall through of the switch
@@ -109,71 +123,30 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						getLocalIndex++;
 					case ABCOpcodeKind.GETLOCAL_1:
 						if(parameters.length > getLocalIndex) {
-							stack.add(JSArgumentBuilder.create(parameters[getLocalIndex]));
+							stack.add(JSStackItem.create(JSArgumentBuilder.create(parameters[getLocalIndex])));
 						} else {
 							if(!_hasRestArguments) {
 								_hasRestArguments = true;
 								
-								stack.add(JSRestArgumentBuilder.create(parameters.length));
+								stack.add(JSStackItem.create(JSRestArgumentBuilder.create(parameters.length)));
 							} else {
 								throw new Error();
 							}
 						}
-						
-						recursion();
 						break;
 					
 					case ABCOpcodeKind.GETPROPERTY:
 					case ABCOpcodeKind.PUSHBYTE:
 					case ABCOpcodeKind.PUSHSTRING:
-						stack.add(JSArgumentBuilderFactory.create(opcode.attribute));
-						break;
-						
-					case ABCOpcodeKind.IFFALSE:
-						//trace(opcode);
+						stack.add(JSStackItem.create(JSArgumentBuilderFactory.create(opcode.attribute)));
 						break;
 						
 					case ABCOpcodeKind.PUSHNULL:
-						stack.add(JSNullArgumentBuilder.create());
+						stack.add(JSStackItem.create(JSNullArgumentBuilder.create()));
 						break;
 								
-					case ABCOpcodeKind.PUSHSCOPE:
-						stack.pop();
-						break;
-					
-					case ABCOpcodeKind.RETURNVALUE:
-						var index:int = stack.length;
-						while(--index > -1) {
-							const prev:JSStackItem = stack.getAt(index);
-							if(index == 0) {
-								stack.addAt(JSReturnBuilder.create(), index);
-							} else if(prev.terminator) {
-								if(enableDebug) {
-									// debug is pushed inbetween the content to be returned!
-									if(stack.length >= index - 1) {
-										const prevPrev:JSStackItem = stack.getAt(index - 1);
-										if(prev.writeable is IABCDebugBuilder && (!(prevPrev.writeable is IABCDebugBuilder) && !prevPrev.terminator)) {
-											// splice the debug line in above the index
-											const debug:IABCDebugBuilder = stack.removeAt(index).writeable as IABCDebugBuilder;
-											stack.addAt(JSReturnBuilder.create(), index - 1);
-											stack.addAt(debug, index - 1);
-										} else {
-											stack.addAt(JSReturnBuilder.create(), index + 1);
-										}
-									} else {
-										throw new Error();
-									}
-								} else {
-									stack.addAt(JSReturnBuilder.create(), index + 1);
-								}
-								break;
-							}
-						}
-						stack.tail.terminator = true;
-						break;
-					
 					case ABCOpcodeKind.RETURNVOID:
-						stack.add(JSReturnVoidBuilder.create());
+						stack.add(JSStackItem.create(JSReturnVoidBuilder.create()));
 						break;
 					
 					case ABCOpcodeKind.DEBUG:
@@ -182,9 +155,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						if(enableDebug) {
 							// we should ignore the first DEBUGLINE as it's not important
 							if(_position != 1) {
-								stack.add(JSDebugFactory.create(opcode.kind, opcode.attribute));
+								stack.add(JSStackItem.create(JSDebugFactory.create(opcode.kind, opcode.attribute)));
 							}
 						} 
+						break;
+					
+					case ABCOpcodeKind.PUSHSCOPE:
+						stack.pop();
 						break;
 						
 					default:
@@ -193,9 +170,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				}
 				
 				if(JSOpcodeTerminatorKind.isType(opcode.kind)) {
-					stack.tail.terminator = true;
+					break;
 				}
 			}
+			
+			return stack;
 		}
 		
 		public function get stack():JSStack { return _stack; }

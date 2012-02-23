@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 {
 
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSReservedKind;
@@ -20,6 +21,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 
 		public function write(data:ByteArray):void {
 			JSReservedKind.THIS.write(data);
+			JSTokenKind.DOT.write(data);
 		}
 		
 		public function get name():String { return "JSThisExpression"; }
