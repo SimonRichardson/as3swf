@@ -1,19 +1,16 @@
 package com.codeazur.as3swf.data.abc.exporters
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassStaticBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSClassBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSClassStaticBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSMethodBuilder;
-	import com.codeazur.utils.StringUtils;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
+
 	import flash.utils.ByteArray;
 
 
@@ -45,19 +42,30 @@ package com.codeazur.as3swf.data.abc.exporters
 				classBuilder.write(data);
 				
 				// methods
-				const methodInfoSet:uint = abcData.methodInfoSet.length;
-				for(var j:uint=0; j<methodInfoSet; j++) {
-					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
-					if(!StringUtils.isEmpty(methodInfo.methodName) && !methodInfo.isConstructor) {
-						const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
-						methodBuilder.write(data);
-					}
+				// TODO : Make sure we only output the right methods for the class
+//				const methodInfoSet:uint = abcData.methodInfoSet.length;
+//				for(var j:uint=0; j<methodInfoSet; j++) {
+//					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
+//					if(!StringUtils.isEmpty(methodInfo.methodName) && !methodInfo.isConstructor) {
+//						const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
+//						methodBuilder.write(data);
+//					}
+//				}
+
+				// statics
+				if(classInfo.traits.length > 0) {
+					
+					JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
+					JSTokenKind.COMMA.write(data);
+					
+					const staticBuilder:IABCClassStaticBuilder = JSClassStaticBuilder.create();
+					staticBuilder.traits = classInfo.traits;
+					staticBuilder.write(data);
 				}
 				
-				// statics
-				const staticBuilder:IABCClassStaticBuilder = JSClassStaticBuilder.create();
-				staticBuilder.traits = classInfo.traits;
-				staticBuilder.write(data);
+				JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
+				JSTokenKind.RIGHT_PARENTHESES.write(data);
+				JSTokenKind.SEMI_COLON.write(data);
 			}
 		}
 		

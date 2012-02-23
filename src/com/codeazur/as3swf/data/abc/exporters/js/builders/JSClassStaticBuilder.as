@@ -25,12 +25,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		public function write(data:ByteArray):void {
-			// Remove the last comma and then tidy
-			data.length -= 3;
-			
-			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
-			JSTokenKind.COMMA.write(data);
-			
 			JSTokenKind.LEFT_CURLY_BRACKET.write(data);
 			
 			if(null != traits && traits.length > 0) {
@@ -69,10 +63,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					}
 				}
 			}
-			
-			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
-			JSTokenKind.RIGHT_PARENTHESES.write(data);
-			JSTokenKind.SEMI_COLON.write(data);
 		}
 
 		public function get traits() : Vector.<ABCTraitInfo> { return _traits; }

@@ -4,10 +4,10 @@ package com.codeazur.as3swf.data.abc.exporters.builders
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public interface IABCParameterBuilder extends IABCBuilder
+	public interface IABCArgumentBuilder extends IABCBuilder
 	{
 		
-		function get parameter():ABCParameter;
-		function set parameter(value:ABCParameter):void;
+		function get argument():ABCParameter;
+		function set argument(value:ABCParameter):void;
 	}
 }

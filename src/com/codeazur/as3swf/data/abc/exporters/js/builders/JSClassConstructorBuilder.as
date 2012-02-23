@@ -46,13 +46,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			JSTokenKind.LEFT_PARENTHESES.write(data);
 			JSTokenKind.LEFT_CURLY_BRACKET.write(data);
 			
-			const instanceInitialiser:ABCMethodInfo = instanceInfo.instanceInitialiser;
-			const parameters:Vector.<ABCParameter> = instanceInitialiser.parameters;
-			
 			JSReservedKind.CONSTRUCTOR.write(data);
 			JSTokenKind.COLON.write(data);
 			JSReservedKind.FUNCTION.write(data);
 			JSTokenKind.LEFT_PARENTHESES.write(data);
+			
+			const instanceInitialiser:ABCMethodInfo = instanceInfo.instanceInitialiser;
+			const parameters:Vector.<ABCParameter> = instanceInitialiser.parameters;
 			
 			const parameterBuilder:IABCMethodParameterBuilder = JSMethodParameterBuilder.create(parameters);
 			parameterBuilder.write(data);
@@ -70,7 +70,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
-			JSTokenKind.COMMA.write(data);
 		}
 		
 		public function get qname():ABCQualifiedName { return _qname; }

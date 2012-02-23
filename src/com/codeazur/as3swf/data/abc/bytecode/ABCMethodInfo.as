@@ -146,11 +146,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 			str += "\n" + StringUtils.repeat(indent + 2);
 			str += "MethodName: " + methodName;
 			
-			if(null != methodBody) {
-				str += "\n" + StringUtils.repeat(indent + 2) + "MethodBody:";
-				str += "\n" + methodBody.toString(indent + 4);
-			}
-			
 			const total:int = parameters.length;
 			if(total > 0) {
 				str += "\n" + StringUtils.repeat(indent + 2);

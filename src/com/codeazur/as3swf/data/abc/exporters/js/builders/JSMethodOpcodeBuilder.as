@@ -11,18 +11,21 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeUnsignedIntegerAttribute;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCDebugBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSMultinameArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSNullArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSParameterBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSRestArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSStringArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSUnsignedIntegerArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.debug.JSDebugFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSThisExpression;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.parameters.JSMultinameParameterBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.parameters.JSNullParameterBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.parameters.JSParameterBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.parameters.JSRestParameterBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.parameters.JSStringParameterBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
+
 	import flash.utils.ByteArray;
 
 
@@ -74,13 +77,15 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				
 				var getLocalIndex:uint = 0;
 				
+				trace(">", opcode.kind);
+				
 				switch(opcode.kind) {
 					case ABCOpcodeKind.CALLPROPERTY:
-						const params:Vector.<IABCParameterBuilder> = new Vector.<IABCParameterBuilder>();
+						const params:Vector.<IABCArgumentBuilder> = new Vector.<IABCArgumentBuilder>();
 						const numArguments:uint = getNumberArguments(opcode.attribute);
 						for(var j:uint=1; j<numArguments; j++) {
 							const writeable:IABCWriteable = stack.removeAt((stack.length - numArguments) + j).writeable;
-							if(writeable is IABCParameterBuilder) {
+							if(writeable is IABCArgumentBuilder) {
 								params.push(writeable);
 							} else {
 								throw new Error();
@@ -114,7 +119,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 							if(!_hasRestArguments) {
 								_hasRestArguments = true;
 								
-								stack.add(JSRestParameterBuilder.create(parameters.length));
+								stack.add(JSRestArgumentBuilder.create(parameters.length));
 							} else {
 								throw new Error();
 							}
@@ -124,12 +129,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 					
 					case ABCOpcodeKind.GETPROPERTY:
+					case ABCOpcodeKind.PUSHBYTE:
 					case ABCOpcodeKind.PUSHSTRING:
-						stack.add(createParameterFromAttribute(opcode.attribute));
+						stack.add(createArgumentFromAttribute(opcode.attribute));
 						break;
 						
 					case ABCOpcodeKind.PUSHNULL:
-						stack.add(JSNullParameterBuilder.create());
+						stack.add(JSNullArgumentBuilder.create());
 						break;
 								
 					case ABCOpcodeKind.PUSHSCOPE:
@@ -183,7 +189,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 						
 					default:
-						// trace("Root", opcode.kind);
+						trace("Root", opcode.kind);
 						break;
 				}
 				
@@ -203,15 +209,19 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			return numArguments;
 		}
 		
-		private function createParameterFromAttribute(attribute:ABCOpcodeAttribute):IABCParameterBuilder {
-			var builder:IABCParameterBuilder;
-			if(attribute is ABCOpcodeMultinameAttribute) {
+		private function createArgumentFromAttribute(attribute:ABCOpcodeAttribute):IABCArgumentBuilder {
+			var builder:IABCArgumentBuilder;
+			if(attribute is IABCOpcodeUnsignedIntegerAttribute) {
+				const uintAttr:IABCOpcodeUnsignedIntegerAttribute = IABCOpcodeUnsignedIntegerAttribute(attribute);
+				builder = JSUnsignedIntegerArgumentBuilder.create(uintAttr.unsignedInteger);
+				
+			} else if(attribute is ABCOpcodeMultinameAttribute) {
 				const mnameAttr:ABCOpcodeMultinameAttribute = ABCOpcodeMultinameAttribute(attribute);
-				builder = JSMultinameParameterBuilder.create(mnameAttr.multiname);
+				builder = JSMultinameArgumentBuilder.create(mnameAttr.multiname);
 				
 			} else if(attribute is ABCOpcodeStringAttribute) {
 				const strAttr:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(attribute);
-				builder = JSStringParameterBuilder.create(strAttr.string);
+				builder = JSStringArgumentBuilder.create(strAttr.string);
 				
 			} else {
 				throw new Error(attribute);

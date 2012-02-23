@@ -2,7 +2,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodCallBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCParameterBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 
 	import flash.utils.ByteArray;
@@ -13,12 +13,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	public class JSMethodCallBuilder implements IABCMethodCallBuilder {
 		
 		public var method:IABCWriteable;
-		public var parameters:Vector.<IABCParameterBuilder>;
+		public var parameters:Vector.<IABCArgumentBuilder>;
 		
 		public function JSMethodCallBuilder() {
 		}
 		
-		public static function create(method:IABCWriteable, parameters:Vector.<IABCParameterBuilder> = null):JSMethodCallBuilder {
+		public static function create(method:IABCWriteable, parameters:Vector.<IABCArgumentBuilder> = null):JSMethodCallBuilder {
 			const builder:JSMethodCallBuilder = new JSMethodCallBuilder();
 			builder.method = method;
 			builder.parameters = parameters;
@@ -34,7 +34,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			if(null != parameters) {
 				const total:uint = parameters.length;
 				for(var i:uint=0; i<total; i++) {
-					const parameter:IABCParameterBuilder = parameters[i];
+					const parameter:IABCArgumentBuilder = parameters[i];
 					parameter.write(data);
 					
 					if(i < total - 1) {

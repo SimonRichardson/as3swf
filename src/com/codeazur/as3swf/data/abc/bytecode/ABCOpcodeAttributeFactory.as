@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeUnsignedByteAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeInt24Attribute;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
@@ -114,6 +115,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 				case ABCOpcodeKind.PUSHCONSTANT:
 				case ABCOpcodeKind.PUSHSTRING:
 					attribute = ABCOpcodeStringAttribute.create(abcData);
+					break;
+				
+				case ABCOpcodeKind.PUSHBYTE:
+					attribute = ABCOpcodeUnsignedByteAttribute.create(abcData);
 					break;
 				
 				case ABCOpcodeKind.PUSHUINT:

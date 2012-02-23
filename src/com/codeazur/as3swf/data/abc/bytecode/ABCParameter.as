@@ -18,10 +18,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 			optional = false;
 		}
 		
-		public static function create(qname:IABCMultiname, label:String = ""):ABCParameter {
+		public static function create(qname:IABCMultiname, label:String = "", defaultValue:* = null):ABCParameter {
 			const argument:ABCParameter = new ABCParameter();
 			argument.qname = qname;
 			argument.label = label;
+			argument.defaultValue = defaultValue;
 			return argument;
 		}
 		
