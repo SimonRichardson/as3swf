@@ -1,6 +1,5 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.parameters
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
@@ -15,7 +14,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.parameters
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSValueBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.matchers.JSNotNullMatcher;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.matchers.JSStringNotEmptyMatcher;
-	import com.codeazur.utils.StringUtils;
+
 	import flash.utils.ByteArray;
 
 	/**
@@ -42,7 +41,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.parameters
 				for(var i:uint=0; i<total; i++) {
 					const parameter:ABCParameter = parameters[i];
 					if(parameter.optional) {
-						const parameterName:String = getParameterName(parameter.label, i);
+						const parameterName:String = parameter.label;
 						const parameterQName:ABCQualifiedName = parameter.qname.toQualifiedName();
 						const parameterDefaultValue:* = parameter.defaultValue;
 						
@@ -71,11 +70,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.parameters
 				}
 			}
 		}
-		
-		private function getParameterName(label:String, index:uint):String {
-			return StringUtils.isEmpty(label) ? DEFAULT_PARAMETER_NAME + index : label;
-		}
-		
+				
 		public function get parameters() : Vector.<ABCParameter> { return _parameters;	}
 		public function set parameters(value : Vector.<ABCParameter>) : void { _parameters = value; }
 		

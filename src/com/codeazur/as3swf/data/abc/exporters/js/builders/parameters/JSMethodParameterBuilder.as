@@ -28,10 +28,18 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.parameters
 
 		public function write(data : ByteArray) : void {
 			if(parameters.length > 0) {
+				
 				const total:uint = parameters.length;
 				for(var i:uint=0; i<total; i++) {
 					const parameter:ABCParameter = parameters[i];
 					const parameterName:String = getParameterName(parameter.label, i);
+					
+					if(parameter.label != parameterName) {
+						const modified:ABCParameter = parameter.clone();
+						modified.label = parameterName;
+						parameters[i] = modified;
+					}
+					
 					data.writeUTF(parameterName);
 										
 					if(i < total - 1) {

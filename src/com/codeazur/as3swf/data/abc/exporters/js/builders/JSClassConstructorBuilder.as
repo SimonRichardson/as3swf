@@ -60,13 +60,16 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			JSTokenKind.RIGHT_PARENTHESES.write(data);
 			JSTokenKind.LEFT_CURLY_BRACKET.write(data);
 			
-			const optionalParameterBuilder:IABCMethodOptionalParameterBuilder = JSMethodOptionalParameterBuilder.create(parameters);
+			// These are no longer parameters, but are in fact arguments now.
+			const args:Vector.<ABCParameter> = parameterBuilder.parameters;
+			
+			const optionalParameterBuilder:IABCMethodOptionalParameterBuilder = JSMethodOptionalParameterBuilder.create(args);
 			optionalParameterBuilder.write(data);
 			
 			const methodBody:ABCMethodBody = instanceInitialiser.methodBody;
 			const returnType:IABCMultiname = instanceInitialiser.returnType;
 			
-			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(parameters, methodBody, returnType);
+			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(args, methodBody, returnType);
 			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);

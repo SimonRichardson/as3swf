@@ -10,15 +10,15 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSParameterBuilder implements IABCArgumentBuilder
+	public class JSArgumentBuilder implements IABCArgumentBuilder
 	{
 		private var _argument:ABCParameter;
 
-		public function JSParameterBuilder() {
+		public function JSArgumentBuilder() {
 		}
 		
-		public static function create(argument:ABCParameter):JSParameterBuilder {
-			const builder:JSParameterBuilder = new JSParameterBuilder();
+		public static function create(argument:ABCParameter):JSArgumentBuilder {
+			const builder:JSArgumentBuilder = new JSArgumentBuilder();
 			builder.argument = argument;
 			return builder;
 		}

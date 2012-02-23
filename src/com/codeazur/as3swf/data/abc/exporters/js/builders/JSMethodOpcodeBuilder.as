@@ -7,21 +7,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeUnsignedIntegerAttribute;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCDebugBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSMultinameArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSNullArgumentBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSParameterBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSRestArgumentBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSStringArgumentBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSUnsignedIntegerArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.debug.JSDebugFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSThisExpression;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
@@ -76,13 +69,19 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				const opcode:ABCOpcode = opcodes.getAt(_position);
 				
 				var getLocalIndex:uint = 0;
+				var method:IABCValueBuilder = null;
 				
-				trace(">", opcode.kind);
+				trace(">", opcode);
 				
 				switch(opcode.kind) {
+					
+					// NOTE: Notice the fall through of the switch
+					case ABCOpcodeKind.CONSTRUCTSUPER:
+						method = JSValueBuilder.create(JSReservedKind.SUPER.type);
 					case ABCOpcodeKind.CALLPROPERTY:
+					case ABCOpcodeKind.CALLPROPVOID:
 						const params:Vector.<IABCArgumentBuilder> = new Vector.<IABCArgumentBuilder>();
-						const numArguments:uint = getNumberArguments(opcode.attribute);
+						const numArguments:uint = JSArgumentBuilderFactory.getNumberArguments(opcode.attribute);
 						for(var j:uint=1; j<numArguments; j++) {
 							const writeable:IABCWriteable = stack.removeAt((stack.length - numArguments) + j).writeable;
 							if(writeable is IABCArgumentBuilder) {
@@ -92,13 +91,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 							}
 						}
 						
-						const method:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
+						method = method || JSValueAttributeBuilder.create(opcode.attribute);
 						stack.add(JSMethodCallBuilder.create(method, params));
-						break;
-					
-					case ABCOpcodeKind.CONSTRUCTSUPER:
-						const superConstructorMethod:IABCValueBuilder = JSValueBuilder.create(JSReservedKind.SUPER.type);
-						stack.add(JSMethodCallBuilder.create(superConstructorMethod));
+						
 						break;
 						
 					case ABCOpcodeKind.GETLOCAL_0:
@@ -114,7 +109,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						getLocalIndex++;
 					case ABCOpcodeKind.GETLOCAL_1:
 						if(parameters.length > getLocalIndex) {
-							stack.add(JSParameterBuilder.create(parameters[getLocalIndex]));
+							stack.add(JSArgumentBuilder.create(parameters[getLocalIndex]));
 						} else {
 							if(!_hasRestArguments) {
 								_hasRestArguments = true;
@@ -131,7 +126,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.GETPROPERTY:
 					case ABCOpcodeKind.PUSHBYTE:
 					case ABCOpcodeKind.PUSHSTRING:
-						stack.add(createArgumentFromAttribute(opcode.attribute));
+						stack.add(JSArgumentBuilderFactory.create(opcode.attribute));
+						break;
+						
+					case ABCOpcodeKind.IFFALSE:
+						//trace(opcode);
 						break;
 						
 					case ABCOpcodeKind.PUSHNULL:
@@ -189,7 +188,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 						
 					default:
-						trace("Root", opcode.kind);
+						//trace("Root", opcode.kind);
 						break;
 				}
 				
@@ -197,37 +196,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					stack.tail.terminator = true;
 				}
 			}
-		}
-		
-		private function getNumberArguments(attribute:ABCOpcodeAttribute):uint {
-			var numArguments:uint = 1;
-			if(attribute is ABCOpcodeMultinameUIntAttribute){
-				numArguments = ABCOpcodeMultinameUIntAttribute(attribute).numArguments + 1;
-			} else {
-				throw new Error();
-			}
-			return numArguments;
-		}
-		
-		private function createArgumentFromAttribute(attribute:ABCOpcodeAttribute):IABCArgumentBuilder {
-			var builder:IABCArgumentBuilder;
-			if(attribute is IABCOpcodeUnsignedIntegerAttribute) {
-				const uintAttr:IABCOpcodeUnsignedIntegerAttribute = IABCOpcodeUnsignedIntegerAttribute(attribute);
-				builder = JSUnsignedIntegerArgumentBuilder.create(uintAttr.unsignedInteger);
-				
-			} else if(attribute is ABCOpcodeMultinameAttribute) {
-				const mnameAttr:ABCOpcodeMultinameAttribute = ABCOpcodeMultinameAttribute(attribute);
-				builder = JSMultinameArgumentBuilder.create(mnameAttr.multiname);
-				
-			} else if(attribute is ABCOpcodeStringAttribute) {
-				const strAttr:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(attribute);
-				builder = JSStringArgumentBuilder.create(strAttr.string);
-				
-			} else {
-				throw new Error(attribute);
-			}
-						
-			return builder;					
 		}
 		
 		public function get stack():JSStack { return _stack; }

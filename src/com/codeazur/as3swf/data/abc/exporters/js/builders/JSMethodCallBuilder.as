@@ -13,15 +13,15 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	public class JSMethodCallBuilder implements IABCMethodCallBuilder {
 		
 		public var method:IABCWriteable;
-		public var parameters:Vector.<IABCArgumentBuilder>;
+		public var args:Vector.<IABCArgumentBuilder>;
 		
 		public function JSMethodCallBuilder() {
 		}
 		
-		public static function create(method:IABCWriteable, parameters:Vector.<IABCArgumentBuilder> = null):JSMethodCallBuilder {
+		public static function create(method:IABCWriteable, args:Vector.<IABCArgumentBuilder> = null):JSMethodCallBuilder {
 			const builder:JSMethodCallBuilder = new JSMethodCallBuilder();
 			builder.method = method;
-			builder.parameters = parameters;
+			builder.args = args;
 			return builder;
 		}
 
@@ -29,13 +29,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			JSTokenKind.DOT.write(data);
 			
 			method.write(data);
-			
+						
 			JSTokenKind.LEFT_PARENTHESES.write(data);
-			if(null != parameters) {
-				const total:uint = parameters.length;
+			if(null != args) {
+				const total:uint = args.length;
 				for(var i:uint=0; i<total; i++) {
-					const parameter:IABCArgumentBuilder = parameters[i];
-					parameter.write(data);
+					const argument:IABCArgumentBuilder = args[i];
+					argument.write(data);
 					
 					if(i < total - 1) {
 						JSTokenKind.COMMA.write(data);

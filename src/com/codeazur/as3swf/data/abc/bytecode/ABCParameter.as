@@ -26,6 +26,16 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return argument;
 		}
 		
+		public function clone():ABCParameter {
+			const parameter:ABCParameter = new ABCParameter();
+			parameter.qname = qname;
+			parameter.optional = optional;
+			parameter.optionalKind = optionalKind;
+			parameter.label = parameter.label;
+			parameter.defaultValue = defaultValue;
+			return parameter;
+		}
+		
 		public function get name():String { return "ABCParameter"; }
 		
 		public function toString(indent:uint = 0) : String {

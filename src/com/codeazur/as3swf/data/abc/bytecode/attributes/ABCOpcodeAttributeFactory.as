@@ -1,18 +1,7 @@
-package com.codeazur.as3swf.data.abc.bytecode
+package com.codeazur.as3swf.data.abc.bytecode.attributes
 {
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeUnsignedByteAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeInt24Attribute;
 	import com.codeazur.as3swf.data.abc.ABCData;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDebugAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDoubleAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeIntAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeIntegerAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeLookupSwitchAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeUnsignedIntegerAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */

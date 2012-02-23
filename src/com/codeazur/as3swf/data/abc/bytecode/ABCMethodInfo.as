@@ -110,13 +110,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 				}
 			}
 			
-			if(hasParamNames) {
-				for(var l:uint=0; l<paramTotal; l++) {
-					const paramNameIndex:uint = data.readEncodedU30();
-					const paramName:String = getStringByIndex(paramNameIndex);
-					const nameParam:ABCParameter = parameters[l];
-					nameParam.label = paramName;
-				}
+			for(var l:uint=0; l<paramTotal; l++) {
+				const paramNameIndex:uint = data.readEncodedU30();
+				const paramName:String = getStringByIndex(paramNameIndex);
+				const nameParam:ABCParameter = parameters[l];
+				
+				nameParam.label = (hasParamNames) ? paramName : "";
 			}
 			
 			if(!StringUtils.isEmpty(methodName)){
@@ -127,7 +126,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 					const diff:int = qname.lastIndexOf(name) - name.length;
 					isConstructor = diff >= 0;
 				} else {
-					throw new Error();
+					isConstructor = false;
 				}
 			}
 		}

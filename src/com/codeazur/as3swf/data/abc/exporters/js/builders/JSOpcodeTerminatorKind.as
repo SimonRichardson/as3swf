@@ -14,6 +14,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			
 			switch(kind) {
 				case ABCOpcodeKind.CONSTRUCTSUPER:
+				case ABCOpcodeKind.CALLPROPVOID:
 				case ABCOpcodeKind.DEBUG:
 				case ABCOpcodeKind.DEBUGFILE:
 				case ABCOpcodeKind.DEBUGLINE:
