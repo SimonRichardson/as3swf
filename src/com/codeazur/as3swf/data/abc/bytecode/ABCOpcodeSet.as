@@ -16,11 +16,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 	public class ABCOpcodeSet extends ABCSet {
 		
 		public var opcodes:Vector.<ABCOpcode>;
-		
+		public var jumpTargets:Vector.<ABCOpcodeJumpTarget>;
+				
 		public function ABCOpcodeSet(abcData:ABCData) {
 			super(abcData);
 			
 			opcodes = new Vector.<ABCOpcode>();
+			jumpTargets = new Vector.<ABCOpcodeJumpTarget>();
 		}
 		
 		public static function create(abcData:ABCData):ABCOpcodeSet {
@@ -28,13 +30,15 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function parse(data:SWFData):void {
+			
+			opcodes.length = 0;
+			jumpTargets.length = 0;
+			
 			var opcodeStartPosition:uint = 0;
 			var opcodeOffsetPosition:uint = 0;
 			
 			const jumpTargetByOpcode:Dictionary = new Dictionary();
 			const jumpTargetByPositions:Dictionary = new Dictionary();
-			
-			const jumpTargets:Vector.<ABCOpcodeJumpTarget> = new Vector.<ABCOpcodeJumpTarget>();
 			
 			const codeLength:uint = data.readEncodedU30();
 			const total:uint = data.position + codeLength;
@@ -128,6 +132,20 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function getAt(index:uint):ABCOpcode {
 			return opcodes[index];
+		}
+		
+		public function getJumpTarget(opcode:ABCOpcode):ABCOpcode {
+			var result:ABCOpcode = null;
+			
+			const total:uint = jumpTargets.length;
+			for(var i:uint=0; i<total; i++) {
+				const jumpTarget:ABCOpcodeJumpTarget = jumpTargets[i];
+				if(jumpTarget.opcode == opcode) {
+					result = jumpTarget.targetOpcode;
+				}
+			}
+			
+			return result;
 		}
 		
 		override public function get length():uint { return opcodes.length; }

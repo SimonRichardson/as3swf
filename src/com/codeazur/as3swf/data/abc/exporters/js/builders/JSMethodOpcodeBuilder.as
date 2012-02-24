@@ -10,6 +10,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCExpression;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
@@ -66,19 +67,24 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			}
 			
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
+			trace(">>> ", methodBody.opcode.jumpTargets);
 			const opcodesTotal:uint = opcodes.length;
 			if(opcodesTotal > 0) {
-				statementBuilder(0, _stack, opcodesTotal);
+				statementBuilder(0, _stack);
 			}
 			
 			_stack.write(data);
 		}
 		
-		private function statementBuilder(indent:uint, stack:JSStack, total:uint):void {
+		private function statementBuilder(indent:uint, stack:JSStack, tail:ABCOpcode = null):void {
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
 			
+			const total:uint = opcodes.length;
 			for(; _position<total; _position++) {
 				const opcode:ABCOpcode = opcodes.getAt(_position);
+				if(null != tail && opcode == tail) {
+					return;
+				}
 				
 				trace(indent, opcode);
 				
@@ -130,20 +136,27 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const right:IABCWriteable = stack.pop().writeable;
 						const left:IABCWriteable = stack.pop().writeable;
 						
-						_position++;
-						const content:JSStack = new JSStack();
-						statementBuilder(indent++, content, _position + 3);
-						_position--;
+						const ifStatement:IABCExpression = JSEqualityExpression.create(left, right);
+						const ifStack:JSStack = parseInternalStack(indent, opcode);
 						
-						stack.add(JSIfStatementBuilder.create(JSEqualityExpression.create(left, right), content));
-						
+						stack.add(JSIfStatementBuilder.create(ifStatement, ifStack));
 						break;
 						
 					default:
-						// trace("Root", opcode.kind);
 						break;
 				}
 			}
+		}
+		
+		private function parseInternalStack(indent:uint, opcode:ABCOpcode):JSStack {
+			const stack:JSStack = JSStack.create();
+			const opcodes:ABCOpcodeSet = methodBody.opcode;
+			
+			_position++;
+			statementBuilder(indent + 1, stack, opcodes.getJumpTarget(opcode));
+			_position--;
+			
+			return stack;
 		}
 		
 		private function getLocal(index:uint):IABCArgumentBuilder {
