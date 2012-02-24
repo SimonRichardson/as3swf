@@ -86,7 +86,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					return;
 				}
 				
-				trace(indent, opcode);
+				// trace(indent, opcode);
 				
 				switch(opcode.kind) {
 					case ABCOpcodeKind.GETLOCAL_0:
@@ -101,7 +101,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						stack.add(JSConsumableBlock.create(stack.pop().writeable));
 						break;
 					
+					case ABCOpcodeKind.PUSHBYTE:
+					case ABCOpcodeKind.PUSHINT:
 					case ABCOpcodeKind.PUSHSTRING:
+					case ABCOpcodeKind.GETLEX:
 						stack.add(JSArgumentBuilderFactory.create(opcode.attribute));
 						break;
 					
@@ -118,6 +121,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const superArguments:Vector.<IABCArgumentBuilder> = createMethodArguments(stack, opcode.attribute);
 						
 						stack.add(JSConsumableBlock.create(stack.pop().writeable, JSMethodCallBuilder.create(superMethod, superArguments)));
+						break;
+					
+					case ABCOpcodeKind.DUP:
+						stack.add(stack.tail.clone().writeable);
 						break;
 					
 					case ABCOpcodeKind.CALLPROPERTY:
@@ -208,7 +215,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				}
 			}
 			
-			return results;
+			return results.reverse();
 		}
 		
 		public function get parameters():Vector.<ABCParameter> { return _parameters; }

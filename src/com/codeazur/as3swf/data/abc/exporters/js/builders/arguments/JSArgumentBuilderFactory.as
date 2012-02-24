@@ -4,6 +4,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeIntegerAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeUnsignedIntegerAttribute;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
 	/**
@@ -18,6 +19,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 				const uintAttr:IABCOpcodeUnsignedIntegerAttribute = IABCOpcodeUnsignedIntegerAttribute(attribute);
 				builder = JSUnsignedIntegerArgumentBuilder.create(uintAttr.unsignedInteger);
 				
+			} else if(attribute is IABCOpcodeIntegerAttribute) { 
+				const intAttr:IABCOpcodeIntegerAttribute = IABCOpcodeIntegerAttribute(attribute);
+				builder = JSIntegerArgumentBuilder.create(intAttr.integer);
+			
 			} else if(attribute is ABCOpcodeMultinameAttribute) {
 				const mnameAttr:ABCOpcodeMultinameAttribute = ABCOpcodeMultinameAttribute(attribute);
 				builder = JSMultinameArgumentBuilder.create(mnameAttr.multiname);

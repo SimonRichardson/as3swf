@@ -10,37 +10,37 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSUnsignedIntegerArgumentBuilder implements IABCArgumentBuilder
+	public class JSIntegerArgumentBuilder implements IABCArgumentBuilder
 	{
 		
-		public var unsignedInteger:uint;
+		public var integer:int;
 		
 		private var _parameter:ABCParameter;
 
-		public function JSUnsignedIntegerArgumentBuilder() {
+		public function JSIntegerArgumentBuilder() {
 		}
 		
-		public static function create(unsignedInteger:uint):JSUnsignedIntegerArgumentBuilder {
-			const builder:JSUnsignedIntegerArgumentBuilder = new JSUnsignedIntegerArgumentBuilder();
-			builder.unsignedInteger = unsignedInteger;
-			builder.argument = ABCParameter.create(ABCQualifiedNameType.UINT.type, "", unsignedInteger);
+		public static function create(integer:int):JSIntegerArgumentBuilder {
+			const builder:JSIntegerArgumentBuilder = new JSIntegerArgumentBuilder();
+			builder.integer = integer;
+			builder.argument = ABCParameter.create(ABCQualifiedNameType.INT.type, "", integer);
 			return builder;
 		}
 		
 		public function write(data:ByteArray):void {
-			data.writeUTF(unsignedInteger.toString(10));
+			data.writeUTF(integer.toString(10));
 		}
 		
 		public function get argument():ABCParameter { return _parameter; }
 		public function set argument(value:ABCParameter) : void { _parameter = value; }
 		
-		public function get name():String { return "JSUnsignedIntegerArgumentBuilder"; }
+		public function get name():String { return "JSIntegerArgumentBuilder"; }
 		
 		public function toString(indent:uint=0):String {
 			var str:String = ABC.toStringCommon(name, indent);
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "Value:";
-			str += "\n" + StringUtils.repeat(indent + 5) + unsignedInteger.toString(10);
+			str += "\n" + StringUtils.repeat(indent + 5) + integer.toString(10);
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "Argument:";
 			str += "\n" + argument.toString(indent + 4);

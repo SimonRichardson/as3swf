@@ -25,6 +25,11 @@ package com.codeazur.as3swf.data.abc.exporters.js
 			writeable.write(data);
 		}
 		
+		public function clone():JSStackItem {
+			// TODO: we should clone the writeable here!
+			return JSStackItem.create(writeable);
+		}
+		
 		public function get name():String { return "JSStackItem"; }
 		
 		public function toString(indent:uint=0):String {
