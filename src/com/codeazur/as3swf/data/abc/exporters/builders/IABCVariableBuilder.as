@@ -12,5 +12,8 @@ package com.codeazur.as3swf.data.abc.exporters.builders
 		
 		function get expression():IABCWriteable;
 		function set expression(value:IABCWriteable):void;
+		
+		function get includeKeyword():Boolean;
+		function set includeKeyword(value:Boolean):void;
 	}
 }

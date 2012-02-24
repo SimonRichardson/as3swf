@@ -16,8 +16,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	public class JSLocalVariableBuilder extends JSConsumableBlock implements IABCVariableBuilder {
 
 		private var _variable:ABCQualifiedName;
+		private var _includeKeyword:Boolean;
 
 		public function JSLocalVariableBuilder() {
+			_includeKeyword = true;
 		}
 		
 		public static function create(variable:ABCQualifiedName, expression:IABCWriteable):JSLocalVariableBuilder {
@@ -34,10 +36,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		override public function write(data : ByteArray) : void {
-			JSReservedKind.VAR.write(data);
-			JSTokenKind.SPACE.write(data);
+			if(includeKeyword) {
+				JSReservedKind.VAR.write(data);
+				JSTokenKind.SPACE.write(data);
+			}
 			
-			data.writeUTF(_variable.fullName);
+			data.writeUTF(variable.fullName);
 			
 			if(right) {
 				JSTokenKind.EQUALS.write(data);
@@ -55,10 +59,15 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public function get expression() : IABCWriteable { return right; }
 		public function set expression(value : IABCWriteable) : void { right = value; }
 		
+		public function get includeKeyword() : Boolean { return _includeKeyword; }
+		public function set includeKeyword(value : Boolean) : void { _includeKeyword = value; }
+		
 		override public function get name():String { return "JSLocalVariableBuilder"; }
 		
 		override public function toString(indent:uint=0):String {
 			return ABC.toStringCommon(name, indent);
 		}
+
+		
 	}
 }

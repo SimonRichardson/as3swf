@@ -108,8 +108,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.SETLOCAL_1:
 						const localQName:ABCQualifiedName = JSLocalVariableBuilder.createLocalQName(0);
 						const localVariable:IABCVariableBuilder = JSLocalVariableBuilder.create(localQName, stack.pop().writeable);
+						localVariable.includeKeyword = insertLocal(localVariable);
 						
-						insertLocal(localVariable);
 						stack.add(localVariable);
 						break;
 					
@@ -176,8 +176,23 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			return result;
 		}
 		
-		private function insertLocal(local:IABCVariableBuilder):void {
-			_scopeParameters.push(ABCParameter.create(local.variable, local.variable.fullName));
+		private function insertLocal(local:IABCVariableBuilder):Boolean {
+			var exists:Boolean = false;
+			
+			const total:uint = _scopeParameters.length;
+			for(var i:uint=0; i<total; i++) {
+				const abcParameter:ABCParameter = _scopeParameters[i];
+				if(abcParameter.qname.fullName == local.variable.fullName) {
+					exists = true;
+					break;
+				}
+			}
+			
+			if(!exists) {
+				_scopeParameters.push(ABCParameter.create(local.variable, local.variable.fullName));
+			}
+			
+			return !exists;
 		}
 		
 		private function createMethodArguments(stack:JSStack, attribute:ABCOpcodeAttribute):Vector.<IABCArgumentBuilder> {
