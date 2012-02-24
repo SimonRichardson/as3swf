@@ -42,6 +42,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.formatters
 							break;
 						
 						case JSSourceTokenKind.WORD:
+							if(block.tail.tail.value == "}") {
+								block.add("\n", indent);
+							}
 							block.add(token.chars);
 							break;
 						
