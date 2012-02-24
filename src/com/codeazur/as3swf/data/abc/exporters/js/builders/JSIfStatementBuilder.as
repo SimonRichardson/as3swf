@@ -10,14 +10,16 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	 */
 	public class JSIfStatementBuilder implements IABCIfStatementBuilder {
 
-		public var writeable:IABCWriteable;
+		public var statement:IABCWriteable;
+		public var content:IABCWriteable;
 
 		public function JSIfStatementBuilder() {
 		}
 		
-		public static function create(writeable:IABCWriteable):JSIfStatementBuilder {
+		public static function create(statement:IABCWriteable, content:IABCWriteable):JSIfStatementBuilder {
 			const builder:JSIfStatementBuilder = new JSIfStatementBuilder();
-			builder.writeable = writeable;
+			builder.statement = statement;
+			builder.content = content;
 			return builder;
 		}
 
@@ -25,10 +27,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			JSReservedKind.IF.write(data);
 			JSTokenKind.LEFT_PARENTHESES.write(data);
 			
-			writeable.write(data);
+			statement.write(data);
 			
 			JSTokenKind.RIGHT_PARENTHESES.write(data);
 			JSTokenKind.LEFT_CURLY_BRACKET.write(data);
+			
+			content.write(data);
+			
+			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
 		}
 
 		public function get name() : String { return "JSIfStatementBuilder"; }

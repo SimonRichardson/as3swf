@@ -60,75 +60,83 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			_position = 0;
 			_stack = new JSStack();
 			
-			const total:uint = _parameters.length;
-			for(var i:uint=0; i<total; i++) {
+			const parameterTotal:uint = _parameters.length;
+			for(var i:uint=0; i<parameterTotal; i++) {
 				_scopeParameters.push(_parameters[i]);
 			}
 			
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
-			if(opcodes.length > 0) {
-				statementBuilder();
+			const opcodesTotal:uint = opcodes.length;
+			if(opcodesTotal > 0) {
+				statementBuilder(0, _stack, opcodesTotal);
 			}
 			
 			_stack.write(data);
 		}
 		
-		private function statementBuilder():void {
+		private function statementBuilder(indent:uint, stack:JSStack, total:uint):void {
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
-			const total:uint = opcodes.length;
 			
 			for(; _position<total; _position++) {
 				const opcode:ABCOpcode = opcodes.getAt(_position);
 				
-				trace(opcode);
+				trace(indent, opcode);
 				
 				switch(opcode.kind) {
 					case ABCOpcodeKind.GETLOCAL_0:
-						_stack.add(getLocal(0));
+						stack.add(getLocal(0));
 						break;
 					
 					case ABCOpcodeKind.GETLOCAL_1:
-						_stack.add(getLocal(1));
+						stack.add(getLocal(1));
 						break;	
 					
 					case ABCOpcodeKind.PUSHSCOPE:
-						_stack.add(JSConsumableBlock.create(_stack.pop().writeable));
+						stack.add(JSConsumableBlock.create(stack.pop().writeable));
 						break;
 					
 					case ABCOpcodeKind.PUSHSTRING:
-						_stack.add(JSArgumentBuilderFactory.create(opcode.attribute));
+						stack.add(JSArgumentBuilderFactory.create(opcode.attribute));
 						break;
 					
 					case ABCOpcodeKind.SETLOCAL_1:
 						const localQName:ABCQualifiedName = JSLocalVariableBuilder.createLocalQName(0);
-						const localVariable:IABCVariableBuilder = JSLocalVariableBuilder.create(localQName, _stack.pop().writeable);
+						const localVariable:IABCVariableBuilder = JSLocalVariableBuilder.create(localQName, stack.pop().writeable);
 						
 						insertLocal(localVariable);
-						_stack.add(localVariable);
+						stack.add(localVariable);
 						break;
 					
 					case ABCOpcodeKind.CONSTRUCTSUPER:
 						const superMethod:IABCValueBuilder = JSValueBuilder.create(JSReservedKind.SUPER.type);
-						const superArguments:Vector.<IABCArgumentBuilder> = createMethodArguments(opcode.attribute);
+						const superArguments:Vector.<IABCArgumentBuilder> = createMethodArguments(stack, opcode.attribute);
 						
-						_stack.add(JSConsumableBlock.create(_stack.pop().writeable, JSMethodCallBuilder.create(superMethod, superArguments)));
+						stack.add(JSConsumableBlock.create(stack.pop().writeable, JSMethodCallBuilder.create(superMethod, superArguments)));
 						break;
 					
 					case ABCOpcodeKind.CALLPROPERTY:
+					case ABCOpcodeKind.CALLPROPVOID:
 						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
-						const propertyArguments:Vector.<IABCArgumentBuilder> = createMethodArguments(opcode.attribute);
+						const propertyArguments:Vector.<IABCArgumentBuilder> = createMethodArguments(stack, opcode.attribute);
 						
-						_stack.add(JSConsumableBlock.create(_stack.pop().writeable, JSMethodCallBuilder.create(propertyMethod, propertyArguments)));
+						stack.add(JSConsumableBlock.create(stack.pop().writeable, JSMethodCallBuilder.create(propertyMethod, propertyArguments)));
 						break;
 					
 					case ABCOpcodeKind.RETURNVOID:
-						_stack.add(JSConsumableBlock.create(JSReturnVoidBuilder.create()));
+						stack.add(JSConsumableBlock.create(JSReturnVoidBuilder.create()));
 						break;
 						
 					case ABCOpcodeKind.IFNE:
-						const right:IABCWriteable = _stack.pop().writeable;
-						const left:IABCWriteable = _stack.pop().writeable;
-						_stack.add(JSIfStatementBuilder.create(JSEqualityExpression.create(left, right)));
+						const right:IABCWriteable = stack.pop().writeable;
+						const left:IABCWriteable = stack.pop().writeable;
+						
+						_position++;
+						const content:JSStack = new JSStack();
+						statementBuilder(indent++, content, _position + 3);
+						_position--;
+						
+						stack.add(JSIfStatementBuilder.create(JSEqualityExpression.create(left, right), content));
+						
 						break;
 						
 					default:
@@ -159,11 +167,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			_scopeParameters.push(ABCParameter.create(local.variable, local.variable.fullName));
 		}
 		
-		private function createMethodArguments(attribute:ABCOpcodeAttribute):Vector.<IABCArgumentBuilder> {
+		private function createMethodArguments(stack:JSStack, attribute:ABCOpcodeAttribute):Vector.<IABCArgumentBuilder> {
 			const results:Vector.<IABCArgumentBuilder> = new Vector.<IABCArgumentBuilder>();
 			const total:uint = JSArgumentBuilderFactory.getNumberArguments(attribute);
 			for(var j:uint=1; j<total; j++) {
-				const writeable:IABCWriteable = _stack.pop().writeable;
+				const writeable:IABCWriteable = stack.pop().writeable;
 				
 				if(writeable is IABCArgumentBuilder) {
 					results.push(writeable);
@@ -174,7 +182,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			
 			return results;
 		}
-		
 		
 		public function get parameters():Vector.<ABCParameter> { return _parameters; }
 		public function set parameters(value:Vector.<ABCParameter>):void { _parameters = value; }
