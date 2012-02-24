@@ -1,4 +1,4 @@
-package com.codeazur.as3swf.data.abc.exporters.js.builders
+package com.codeazur.as3swf.data.abc.exporters.js
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;

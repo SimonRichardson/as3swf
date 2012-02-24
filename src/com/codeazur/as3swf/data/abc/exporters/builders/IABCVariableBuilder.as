@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.builders
 {
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -9,7 +10,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders
 		function get variable():ABCQualifiedName;
 		function set variable(value:ABCQualifiedName):void;
 		
-		function get expression():IABCExpression;
-		function set expression(value:IABCExpression):void;
+		function get expression():IABCWriteable;
+		function set expression(value:IABCWriteable):void;
 	}
 }

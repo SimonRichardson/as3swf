@@ -1,9 +1,11 @@
-package com.codeazur.as3swf.data.abc.exporters.js.builders
+package com.codeazur.as3swf.data.abc.exporters.js
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 
+	import flash.errors.IllegalOperationError;
 	import flash.utils.ByteArray;
+
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -17,12 +19,28 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			_stack = new Vector.<JSStackItem>();
 		}
 		
-		public function add(item:JSStackItem):void {
-			_stack.push(item);
+		public static function create():JSStack {
+			return new JSStack();
 		}
 		
-		public function addAt(item:JSStackItem, index:uint):void {
-			_stack.splice(index, 0, item);
+		public function add(item:IABCWriteable):JSStackItem {
+			return addAt(item, length);
+		}
+		
+		public function addAt(item:IABCWriteable, index:uint):JSStackItem {
+			const stackItem:JSStackItem = JSStackItem.create(item);
+			
+			if(index == _stack.length) {
+				_stack.push(stackItem);
+			} else if(index < _stack.length){
+				_stack.splice(index, 0, stackItem);
+			} else if(index < 0 || index > _stack.length) {
+				throw new ArgumentError("Index is out of bounds (index:" + index + ")");
+			} else {
+				throw new IllegalOperationError();
+			}
+			
+			return stackItem;
 		}
 		
 		public function getAt(index:uint):JSStackItem {
@@ -41,24 +59,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		override public function write(data:ByteArray):void {
 			const total:uint = _stack.length;
 			for(var i:uint=0; i<total; i++) {
-				_stack[i].write(data);
+				const item:JSStackItem = _stack[i];	
+				item.write(data);
 			}
-			
-			JSTokenKind.SEMI_COLON.write(data);
 		}
-		
-		public function describe():String {
-			var result:String = "";
-			const total:uint = _stack.length;
-			for(var i:uint=0; i<total; i++) {
-				result += _stack[i].writeable.name;
-				if(i < total - 1) {
-					result += ", ";
-				}
-			}
-			return result;
-		}
-		
+				
 		public function get length():uint {
 			return _stack.length;
 		}

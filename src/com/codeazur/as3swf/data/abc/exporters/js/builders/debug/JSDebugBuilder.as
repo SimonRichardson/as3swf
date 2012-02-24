@@ -38,15 +38,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.debug
 				JSAccessorBuilder.create(new <IABCWriteable>[JSThisExpression.create()]).write(data);
 				JSTokenKind.DOT.write(data);
 				
-				data.writeUTF(ABCJavascriptExporter.PRE_FIX + METHOD_NAME);
+				data.writeUTF(ABCJavascriptExporter.PREFIX + METHOD_NAME);
 				
 				JSTokenKind.LEFT_PARENTHESES.write(data);
 				
 				data.writeUTF(debug.attributes.join(","));
 				
 				JSTokenKind.RIGHT_PARENTHESES.write(data);
-				
-				JSTokenKind.SEMI_COLON.write(data);
 			} else {
 				throw new Error();
 			}

@@ -64,8 +64,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.parameters
 						
 						const ternary:IABCTernaryBuilder = JSTernaryBuilder.create(matcher, value, defaultValue);
 						ternary.write(data);
-						
-						JSTokenKind.SEMI_COLON.write(data);
 					}
 				}
 			}
