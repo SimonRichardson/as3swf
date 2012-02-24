@@ -13,7 +13,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSLocalVariableBuilder extends JSConsumedBlock implements IABCVariableBuilder {
+	public class JSLocalVariableBuilder extends JSConsumableBlock implements IABCVariableBuilder {
 
 		private var _variable:ABCQualifiedName;
 
@@ -55,7 +55,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public function get expression() : IABCWriteable { return right; }
 		public function set expression(value : IABCWriteable) : void { right = value; }
 		
-		override public function get name():String { return "JSVariableBuilder"; }
+		override public function get name():String { return "JSLocalVariableBuilder"; }
 		
 		override public function toString(indent:uint=0):String {
 			return ABC.toStringCommon(name, indent);

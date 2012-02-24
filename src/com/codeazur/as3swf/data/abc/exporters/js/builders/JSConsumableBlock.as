@@ -7,19 +7,19 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSConsumedBlock implements IABCWriteable {
+	public class JSConsumableBlock implements IABCWriteable {
 		
 		public var left:IABCWriteable;
 		public var right:IABCWriteable;
 		
 		public var terminator:Boolean;
 		
-		public function JSConsumedBlock(){
+		public function JSConsumableBlock(){
 			terminator = true;
 		}
 
-		public static function create(left:IABCWriteable, right:IABCWriteable = null):JSConsumedBlock {
-			const block:JSConsumedBlock = new JSConsumedBlock();
+		public static function create(left:IABCWriteable, right:IABCWriteable = null):JSConsumableBlock {
+			const block:JSConsumableBlock = new JSConsumableBlock();
 			block.left = left;
 			block.right = right;
 			return block; 
@@ -39,11 +39,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		protected function get hasTerminator():Boolean {
-			terminator = !(right is JSConsumedBlock && JSConsumedBlock(right).terminator);
+			terminator = !(right is JSConsumableBlock && JSConsumableBlock(right).terminator);
 			return terminator;
 		}
 		
-		public function get name():String { return "JSConsumedBlock"; }
+		public function get name():String { return "JSConsumableBlock"; }
 		
 		public function toString(indent:uint=0):String {
 			return ABC.toStringCommon(name, indent);

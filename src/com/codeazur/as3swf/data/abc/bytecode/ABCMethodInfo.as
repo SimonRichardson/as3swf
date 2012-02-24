@@ -138,6 +138,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function get hasParamNames():Boolean {
 			return ABCMethodInfoFlags.isType(flags, ABCMethodInfoFlags.HAS_PARAM_NAMES);
 		}
+		public function get needRest():Boolean {
+			return ABCMethodInfoFlags.isType(flags, ABCMethodInfoFlags.NEED_REST);
+		}
+		public function get needArguments():Boolean {
+			return ABCMethodInfoFlags.isType(flags, ABCMethodInfoFlags.NEED_ARGUMENTS);
+		}
 		
 		override public function toString(indent:uint = 0):String {
 			var str:String = super.toString(indent);

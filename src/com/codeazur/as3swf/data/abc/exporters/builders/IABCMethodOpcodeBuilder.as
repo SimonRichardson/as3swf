@@ -19,5 +19,11 @@ package com.codeazur.as3swf.data.abc.exporters.builders
 		
 		function get enableDebug():Boolean;
 		function set enableDebug(value:Boolean):void;
+		
+		function get needsRest():Boolean;
+		function set needsRest(value:Boolean):void;
+		
+		function get needsArguments():Boolean;
+		function set needsArguments(value:Boolean):void;
 	}
 }

@@ -69,7 +69,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			const methodBody:ABCMethodBody = instanceInitialiser.methodBody;
 			const returnType:IABCMultiname = instanceInitialiser.returnType;
 			
+			const needsRest:Boolean = instanceInitialiser.needRest;
+			const needsArguments:Boolean = instanceInitialiser.needArguments;
+			
 			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(args, methodBody, returnType);
+			opcode.needsRest = needsRest;
+			opcode.needsArguments = needsArguments;
 			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);

@@ -54,7 +54,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			
 			const methodBody:ABCMethodBody = methodInfo.methodBody;
 			const returnType:IABCMultiname = methodInfo.returnType;
-			
+						
 			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(parameters, methodBody, returnType);
 			opcode.write(data);
 			

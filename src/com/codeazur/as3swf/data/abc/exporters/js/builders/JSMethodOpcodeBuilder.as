@@ -12,11 +12,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.JSStack;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSEmptyExpression;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSThisExpression;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSEqualityExpression;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
+
 	import flash.utils.ByteArray;
 
 
@@ -27,17 +30,22 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	public class JSMethodOpcodeBuilder implements IABCMethodOpcodeBuilder {
 		
 		private var _parameters:Vector.<ABCParameter>;
+		private var _scopeParameters:Vector.<ABCParameter>;
+		
 		private var _methodBody:ABCMethodBody;
 		private var _returnType:IABCMultiname;
 		private var _enableDebug:Boolean;
 		
+		private var _needsRest:Boolean;
+		private var _needsArguments:Boolean;
+		
 		private var _position:int;
 		private var _stack:JSStack;
-		private var _hasRestArguments:Boolean;
 		
 		public function JSMethodOpcodeBuilder() {
 			_enableDebug = false;
-			_hasRestArguments = false;
+			
+			_scopeParameters = new Vector.<ABCParameter>();
 		}
 		
 		public static function create(parameters:Vector.<ABCParameter>, methodBody:ABCMethodBody, returnType:IABCMultiname):JSMethodOpcodeBuilder {
@@ -51,6 +59,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public function write(data : ByteArray) : void {			
 			_position = 0;
 			_stack = new JSStack();
+			
+			const total:uint = _parameters.length;
+			for(var i:uint=0; i<total; i++) {
+				_scopeParameters.push(_parameters[i]);
+			}
 			
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
 			if(opcodes.length > 0) {
@@ -67,13 +80,19 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			for(; _position<total; _position++) {
 				const opcode:ABCOpcode = opcodes.getAt(_position);
 				
+				trace(opcode);
+				
 				switch(opcode.kind) {
 					case ABCOpcodeKind.GETLOCAL_0:
-						_stack.add(JSThisExpression.create());
+						_stack.add(getLocal(0));
 						break;
-						
+					
+					case ABCOpcodeKind.GETLOCAL_1:
+						_stack.add(getLocal(1));
+						break;	
+					
 					case ABCOpcodeKind.PUSHSCOPE:
-						_stack.add(JSConsumedBlock.create(_stack.pop().writeable));
+						_stack.add(JSConsumableBlock.create(_stack.pop().writeable));
 						break;
 					
 					case ABCOpcodeKind.PUSHSTRING:
@@ -82,25 +101,34 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					
 					case ABCOpcodeKind.SETLOCAL_1:
 						const localQName:ABCQualifiedName = JSLocalVariableBuilder.createLocalQName(0);
-						_stack.add(JSLocalVariableBuilder.create(localQName, _stack.pop().writeable));
+						const localVariable:IABCVariableBuilder = JSLocalVariableBuilder.create(localQName, _stack.pop().writeable);
+						
+						insertLocal(localVariable);
+						_stack.add(localVariable);
 						break;
 					
 					case ABCOpcodeKind.CONSTRUCTSUPER:
 						const superMethod:IABCValueBuilder = JSValueBuilder.create(JSReservedKind.SUPER.type);
 						const superArguments:Vector.<IABCArgumentBuilder> = createMethodArguments(opcode.attribute);
 						
-						_stack.add(JSConsumedBlock.create(_stack.pop().writeable, JSMethodCallBuilder.create(superMethod, superArguments)));
+						_stack.add(JSConsumableBlock.create(_stack.pop().writeable, JSMethodCallBuilder.create(superMethod, superArguments)));
 						break;
 					
 					case ABCOpcodeKind.CALLPROPERTY:
 						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
 						const propertyArguments:Vector.<IABCArgumentBuilder> = createMethodArguments(opcode.attribute);
 						
-						_stack.add(JSConsumedBlock.create(_stack.pop().writeable, JSMethodCallBuilder.create(propertyMethod, propertyArguments)));
+						_stack.add(JSConsumableBlock.create(_stack.pop().writeable, JSMethodCallBuilder.create(propertyMethod, propertyArguments)));
 						break;
 					
 					case ABCOpcodeKind.RETURNVOID:
-						_stack.add(JSConsumedBlock.create(JSReturnVoidBuilder.create()));
+						_stack.add(JSConsumableBlock.create(JSReturnVoidBuilder.create()));
+						break;
+						
+					case ABCOpcodeKind.IFNE:
+						const right:IABCWriteable = _stack.pop().writeable;
+						const left:IABCWriteable = _stack.pop().writeable;
+						_stack.add(JSIfStatementBuilder.create(JSEqualityExpression.create(left, right)));
 						break;
 						
 					default:
@@ -108,6 +136,27 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 				}
 			}
+		}
+		
+		private function getLocal(index:uint):IABCArgumentBuilder {
+			var result:IABCArgumentBuilder = null;
+			if(index == 0) {
+				result = JSThisArgumentBuilder.create();
+			} else if(index < parameters.length) {
+				result = JSArgumentBuilder.create(parameters[index - 1]);
+			} else {
+				if(!(needsRest || needsArguments)) {
+					result = JSArgumentBuilder.create(_scopeParameters[index - 1]);
+				} else {
+					// Work out needs rest and needs arguments
+					throw new Error();
+				}
+			}
+			return result;
+		}
+		
+		private function insertLocal(local:IABCVariableBuilder):void {
+			_scopeParameters.push(ABCParameter.create(local.variable, local.variable.fullName));
 		}
 		
 		private function createMethodArguments(attribute:ABCOpcodeAttribute):Vector.<IABCArgumentBuilder> {
@@ -138,6 +187,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		
 		public function get enableDebug() : Boolean { return _enableDebug; }
 		public function set enableDebug(value : Boolean) : void { _enableDebug = value;	}
+		
+		public function get needsRest() : Boolean { return _needsRest; }
+		public function set needsRest(value : Boolean) : void { _needsRest = value; }
+		
+		public function get needsArguments() : Boolean { return _needsArguments; }
+		public function set needsArguments(value : Boolean) : void { _needsArguments = value; }
 		
 		public function get name():String { return "JSMethodOpcodeBuilder"; }
 		
