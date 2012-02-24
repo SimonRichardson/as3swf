@@ -15,7 +15,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 		public function JSEqualityExpression() {
 		}
 
-		public static function create(left:IABCWriteable, right:IABCWriteable = null):JSEqualityExpression {
+		public static function create(left:IABCWriteable = null, right:IABCWriteable = null):JSEqualityExpression {
 			const expression:JSEqualityExpression = new JSEqualityExpression();
 			expression.left = left;
 			expression.right = right;

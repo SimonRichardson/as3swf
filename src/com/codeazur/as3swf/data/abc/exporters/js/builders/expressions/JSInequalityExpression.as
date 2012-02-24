@@ -15,7 +15,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 		public function JSInequalityExpression() {
 		}
 
-		public static function create(left:IABCWriteable, right:IABCWriteable = null):JSInequalityExpression {
+		public static function create(left:IABCWriteable = null, right:IABCWriteable = null):JSInequalityExpression {
 			const expression:JSInequalityExpression = new JSInequalityExpression();
 			expression.left = left;
 			expression.right = right;

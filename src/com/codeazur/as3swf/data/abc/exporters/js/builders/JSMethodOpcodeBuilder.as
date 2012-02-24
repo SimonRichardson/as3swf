@@ -19,8 +19,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSEqualityExpression;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSInequalityExpression;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
-
 	import flash.utils.ByteArray;
 
 
@@ -89,6 +89,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				// trace(indent, opcode);
 				
 				switch(opcode.kind) {
+					case ABCOpcodeKind.DUP:
+						stack.add(stack.tail.clone().writeable);
+						break;
+					
 					case ABCOpcodeKind.GETLOCAL_0:
 						stack.add(getLocal(0));
 						break;
@@ -123,10 +127,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						stack.add(JSConsumableBlock.create(stack.pop().writeable, JSMethodCallBuilder.create(superMethod, superArguments)));
 						break;
 					
-					case ABCOpcodeKind.DUP:
-						stack.add(stack.tail.clone().writeable);
-						break;
-					
 					case ABCOpcodeKind.CALLPROPERTY:
 					case ABCOpcodeKind.CALLPROPVOID:
 						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
@@ -140,19 +140,26 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 						
 					case ABCOpcodeKind.IFNE:
-						const right:IABCWriteable = stack.pop().writeable;
-						const left:IABCWriteable = stack.pop().writeable;
+						stack.add(createIfStatement(stack, JSEqualityExpression.create(), opcode, indent));
+						break;
 						
-						const ifStatement:IABCExpression = JSEqualityExpression.create(left, right);
-						const ifStack:JSStack = parseInternalStack(indent, opcode);
-						
-						stack.add(JSIfStatementBuilder.create(ifStatement, ifStack));
+					case ABCOpcodeKind.IFEQ:
+						stack.add(createIfStatement(stack, JSInequalityExpression.create(), opcode, indent));
 						break;
 						
 					default:
 						break;
 				}
 			}
+		}
+		
+		private function createIfStatement(stack:JSStack, expression:JSConsumableBlock, opcode:ABCOpcode, indent:uint=0):JSIfStatementBuilder {
+			expression.right = stack.pop().writeable;
+			expression.left = stack.pop().writeable;
+						
+			const ifStack:JSStack = parseInternalStack(indent, opcode);
+						
+			return JSIfStatementBuilder.create(expression, ifStack);
 		}
 		
 		private function parseInternalStack(indent:uint, opcode:ABCOpcode):JSStack {
