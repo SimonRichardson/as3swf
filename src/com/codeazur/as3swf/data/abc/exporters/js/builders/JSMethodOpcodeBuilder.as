@@ -10,7 +10,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCExpression;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
@@ -21,6 +20,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSEqualityExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSInequalityExpression;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
+
 	import flash.utils.ByteArray;
 
 
@@ -67,7 +67,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			}
 			
 			const opcodes:ABCOpcodeSet = methodBody.opcode;
-			trace(">>> ", methodBody.opcode.jumpTargets);
 			const opcodesTotal:uint = opcodes.length;
 			if(opcodesTotal > 0) {
 				statementBuilder(0, _stack);
