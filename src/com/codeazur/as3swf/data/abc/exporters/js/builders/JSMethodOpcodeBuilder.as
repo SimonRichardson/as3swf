@@ -14,6 +14,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSEqualityExpression;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 
@@ -51,6 +52,15 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			}
 			
 			const total:uint = translateData.length;
+			if(total > 0) {
+				recursive(_stack, 0);
+			}
+			
+			_stack.write(data);
+		}
+		
+		private function recursive(stack:JSStack, indent:uint=0):void {
+			const total:uint = translateData.length;
 			for(var j:uint=0; j<total; j++) {
 				const opcodes:Vector.<ABCOpcode> = translateData.getAt(j);
 				const opcodesTotal:uint = opcodes.length;
@@ -65,18 +75,19 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const superName:Vector.<IABCWriteable> = createName(opcodes, opcode.attribute);
 						const superArguments:Vector.<IABCWriteable> = createMethodArguments(opcodes, opcode.attribute);
 						
-						_stack.add(JSNameBuilder.create(superName), JSMethodCallBuilder.create(superMethod, superArguments));
+						stack.add(JSNameBuilder.create(superName), JSMethodCallBuilder.create(superMethod, superArguments));
 						break;
 					
 					case ABCOpcodeKind.IFFALSE:
+						// stack.add(createIfStatement(stack, JSEqualityExpression.create(), opcode, indent));
 						break;
 					
 					case ABCOpcodeKind.PUSHSCOPE:
-						_stack.add(JSNameBuilder.create(consume(opcodes, 0, offset), true));
+						stack.add(JSNameBuilder.create(consume(opcodes, 0, offset), true));
 						break;
 						
 					case ABCOpcodeKind.RETURNVOID:
-						_stack.add(JSReturnVoidBuilder.create());
+						stack.add(JSReturnVoidBuilder.create());
 						break;
 					
 					case ABCOpcodeKind.DEBUG:
@@ -90,8 +101,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 				}
 			}
-			
-			_stack.write(data);
 		}
 		
 		private function consume(opcodes:Vector.<ABCOpcode>, start:uint, finish:uint):Vector.<IABCWriteable> {
