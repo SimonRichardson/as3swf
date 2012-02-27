@@ -1,8 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSThisExpression;
-	import com.codeazur.as3swf.data.abc.exporters.js.JSStackItem;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -12,11 +10,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAccessorBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.JSStack;
+	import com.codeazur.as3swf.data.abc.exporters.js.JSStackItem;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
@@ -173,13 +173,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			return JSIfStatementBuilder.create(expression, ifStack);
 		}
 		
-		private function consume(stack:JSStack):IABCWriteable {
-			const result:JSStack = new JSStack();
+		private function consume(stack:JSStack):IABCAccessorBuilder {
+			const result:Vector.<IABCWriteable> = new Vector.<IABCWriteable>();
 			
 			var index:uint = stack.length;
 			while(--index > -1) {
 				const item:JSStackItem = stack.pop();
-				result.addAt(item.writeable, 0);
+				result.unshift(item.writeable);
 				
 				// TODO: Locate more locations of when this needs to break
 				if(item.writeable is JSThisArgumentBuilder) {
@@ -187,9 +187,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				}
 			}
 			
-			trace(result);
-			
-			return result;
+			return JSAccessorBuilder.create(result);
 		}
 		
 		private function parseInternalStack(indent:uint, opcode:ABCOpcode):JSStack {
