@@ -68,8 +68,15 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						_stack.add(JSConsumableBlock.create(JSNameBuilder.create(superName), JSMethodCallBuilder.create(superMethod, superArguments)));
 						break;
 					
+					case ABCOpcodeKind.IFFALSE:
+						break;
+					
 					case ABCOpcodeKind.PUSHSCOPE:
 						_stack.add(JSNameBuilder.create(consume(opcodes, 0, offset), true));
+						break;
+						
+					case ABCOpcodeKind.RETURNVOID:
+						_stack.add(JSConsumableBlock.create(JSReturnVoidBuilder.create()));
 						break;
 					
 					case ABCOpcodeKind.DEBUG:
