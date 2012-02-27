@@ -57,7 +57,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			const translator:ABCOpcodeTranslator = ABCOpcodeTranslator.create(methodInfo);
 			translator.translate(translateData);
 			
-			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(translateData);
+			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(methodInfo, translateData);
 			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);

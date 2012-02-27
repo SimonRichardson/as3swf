@@ -2,6 +2,7 @@ package com.codeazur.as3swf.data.abc.exporters.js
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSConsumableBlock;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	import com.codeazur.utils.StringUtils;
 
@@ -11,28 +12,28 @@ package com.codeazur.as3swf.data.abc.exporters.js
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSStack extends JSStackItem implements IABCWriteable {
+	public class JSStack implements IABCWriteable {
 		
-		private static const OPTION:JSStackItem = new JSStackItem();
+		private static const OPTION:JSConsumableBlock = new JSConsumableBlock();
 		
-		private var _stack:Vector.<JSStackItem>;
+		private var _stack:Vector.<JSConsumableBlock>;
 				
 		public function JSStack() {
-			_stack = new Vector.<JSStackItem>();
+			_stack = new Vector.<JSConsumableBlock>();
 		}
 		
 		public static function create():JSStack {
 			return new JSStack();
 		}
 		
-		public function add(item:IABCWriteable):JSStackItem {
-			return addAt(item, length);
+		public function add(left:IABCWriteable, right:IABCWriteable=null):JSConsumableBlock {
+			return addAt(left, right, length);
 		}
 		
-		public function addAt(item:IABCWriteable, index:uint):JSStackItem {
-			const stackItem:JSStackItem = JSStackItem.create(item);
+		public function addAt(left:IABCWriteable, right:IABCWriteable=null, index:int=int.MAX_VALUE):JSConsumableBlock {
+			const stackItem:JSConsumableBlock = JSConsumableBlock.create(left, right);
 			
-			if(index == _stack.length) {
+			if(index == _stack.length || index == int.MAX_VALUE) {
 				_stack.push(stackItem);
 			} else if(index < _stack.length){
 				_stack.splice(index, 0, stackItem);
@@ -45,23 +46,23 @@ package com.codeazur.as3swf.data.abc.exporters.js
 			return stackItem;
 		}
 		
-		public function getAt(index:uint):JSStackItem {
+		public function getAt(index:uint):JSConsumableBlock {
 			return _stack[index];
 		}
 		
-		public function removeAt(index:uint):JSStackItem {
-			const items:Vector.<JSStackItem> = _stack.splice(index, 1);
+		public function removeAt(index:uint):JSConsumableBlock {
+			const items:Vector.<JSConsumableBlock> = _stack.splice(index, 1);
 			return items[0];
 		}
 		
-		public function pop():JSStackItem {
+		public function pop():JSConsumableBlock {
 			return _stack.pop();
 		}
 		
-		override public function write(data:ByteArray):void {
+		public function write(data:ByteArray):void {
 			const total:uint = _stack.length;
 			for(var i:uint=0; i<total; i++) {
-				const item:JSStackItem = _stack[i];	
+				const item:JSConsumableBlock = _stack[i];	
 				item.write(data);
 			}
 		}
@@ -70,8 +71,8 @@ package com.codeazur.as3swf.data.abc.exporters.js
 			return _stack.length;
 		}
 		
-		public function get tail():JSStackItem {
-			var item:JSStackItem;
+		public function get tail():JSConsumableBlock {
+			var item:JSConsumableBlock;
 			if(_stack.length < 1) {
 				item = OPTION;
 			} else {
@@ -80,9 +81,9 @@ package com.codeazur.as3swf.data.abc.exporters.js
 			return item;
 		}
 		
-		override public function get name():String { return "JSStack"; }
+		public function get name():String { return "JSStack"; }
 		
-		override public function toString(indent:uint=0):String {
+		public function toString(indent:uint=0):String {
 			var str:String = ABC.toStringCommon(name, indent);
 			
 			if(_stack.length > 0) {

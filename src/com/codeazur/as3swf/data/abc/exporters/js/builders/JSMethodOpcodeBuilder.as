@@ -65,7 +65,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const superName:Vector.<IABCWriteable> = createName(opcodes, opcode.attribute);
 						const superArguments:Vector.<IABCWriteable> = createMethodArguments(opcodes, opcode.attribute);
 						
-						_stack.add(JSConsumableBlock.create(JSNameBuilder.create(superName), JSMethodCallBuilder.create(superMethod, superArguments)));
+						_stack.add(JSNameBuilder.create(superName), JSMethodCallBuilder.create(superMethod, superArguments));
 						break;
 					
 					case ABCOpcodeKind.IFFALSE:
@@ -76,7 +76,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 						
 					case ABCOpcodeKind.RETURNVOID:
-						_stack.add(JSConsumableBlock.create(JSReturnVoidBuilder.create()));
+						_stack.add(JSReturnVoidBuilder.create());
 						break;
 					
 					case ABCOpcodeKind.DEBUG:
