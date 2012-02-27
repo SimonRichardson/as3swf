@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceType;
@@ -7,6 +8,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.ABCJavascriptExporter;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
+	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
 
@@ -65,7 +67,17 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		override public function get name():String { return "JSLocalVariableBuilder"; }
 		
 		override public function toString(indent:uint=0):String {
-			return ABC.toStringCommon(name, indent);
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "QName:";
+			str += "\n" + variable.toString(indent + 4);
+			
+			if(expression) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Expression:";
+				str += "\n" + expression.toString(indent + 4);
+			}
+			
+			return str;
 		}
 	}
 }

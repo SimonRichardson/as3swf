@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSThisExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.JSStackItem;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
@@ -173,14 +174,22 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		private function consume(stack:JSStack):IABCWriteable {
+			const result:JSStack = new JSStack();
+			
 			var index:uint = stack.length;
 			while(--index > -1) {
-				const item:JSStackItem = stack.getAt(index);
-				trace(">>", item);
+				const item:JSStackItem = stack.pop();
+				result.addAt(item.writeable, 0);
+				
+				// TODO: Locate more locations of when this needs to break
+				if(item.writeable is JSThisArgumentBuilder) {
+					break;
+				}
 			}
 			
-			// Fix this
-			return stack.pop().writeable;
+			trace(result);
+			
+			return result;
 		}
 		
 		private function parseInternalStack(indent:uint, opcode:ABCOpcode):JSStack {

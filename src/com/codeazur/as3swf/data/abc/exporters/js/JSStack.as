@@ -1,7 +1,9 @@
 package com.codeazur.as3swf.data.abc.exporters.js
 {
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
+	import com.codeazur.utils.StringUtils;
 
 	import flash.errors.IllegalOperationError;
 	import flash.utils.ByteArray;
@@ -81,7 +83,16 @@ package com.codeazur.as3swf.data.abc.exporters.js
 		override public function get name():String { return "JSStack"; }
 		
 		override public function toString(indent:uint=0):String {
-			return ABC.toStringCommon(name, indent);
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			if(_stack.length > 0) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Stack:";
+				for(var i:uint=0; i<_stack.length; i++) {
+					str += "\n" + _stack[i].toString(indent + 4);
+				}
+			}
+			
+			return str;
 		}
 	}
 }

@@ -34,7 +34,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 		public function get argument():ABCParameter { return _argument; }
 		public function set argument(value:ABCParameter) : void { _argument = value; }
 		
-		public function get name():String { return "JSMultinameParameterBuilder"; }
+		public function get name():String { return "JSMultinameArgumentBuilder"; }
 		
 		public function toString(indent:uint=0):String {
 			var str:String = ABC.toStringCommon(name, indent);
