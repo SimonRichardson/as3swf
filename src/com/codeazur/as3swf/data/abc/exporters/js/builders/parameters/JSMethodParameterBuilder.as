@@ -6,6 +6,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.parameters
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	import com.codeazur.utils.StringUtils;
+
 	import flash.utils.ByteArray;
 
 	/**
@@ -59,7 +60,16 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.parameters
 		public function get name():String { return "JSMethodParameterBuilder"; }
 		
 		public function toString(indent:uint=0):String {
-			return ABC.toStringCommon(name, indent);
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			if(parameters && parameters.length > 0) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Parameters:";
+				for(var i:uint=0; i<parameters.length; i++) {
+					str += "\n" + parameters[i].toString(indent + 4);
+				}
+			}
+			
+			return str;
 		}
 	}
 }

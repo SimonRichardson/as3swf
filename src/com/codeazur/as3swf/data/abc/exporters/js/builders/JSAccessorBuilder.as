@@ -1,8 +1,10 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAccessorBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
+	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
 	/**
@@ -36,7 +38,16 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public function get name():String { return "JSAccessorBuilder"; }
 		
 		public function toString(indent:uint=0):String {
-			return ABC.toStringCommon(name, indent);
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			if(expressions && expressions.length > 0) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Expressions:";
+				for(var i:uint=0; i<expressions.length; i++) {
+					str += "\n" + expressions[i].toString(indent + 4);
+				}
+			}
+			
+			return str;
 		}
 	}
 }

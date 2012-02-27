@@ -1,8 +1,11 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCIfStatementBuilder;
+	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
+	import com.codeazur.utils.StringUtils;
+
 	import flash.utils.ByteArray;
 
 	/**
@@ -11,15 +14,15 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	public class JSIfStatementBuilder implements IABCIfStatementBuilder {
 
 		public var statement:IABCWriteable;
-		public var content:IABCWriteable;
+		public var body:IABCWriteable;
 
 		public function JSIfStatementBuilder() {
 		}
 		
-		public static function create(statement:IABCWriteable, content:IABCWriteable):JSIfStatementBuilder {
+		public static function create(statement:IABCWriteable, body:IABCWriteable):JSIfStatementBuilder {
 			const builder:JSIfStatementBuilder = new JSIfStatementBuilder();
 			builder.statement = statement;
-			builder.content = content;
+			builder.body = body;
 			return builder;
 		}
 
@@ -32,7 +35,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			JSTokenKind.RIGHT_PARENTHESES.write(data);
 			JSTokenKind.LEFT_CURLY_BRACKET.write(data);
 			
-			content.write(data);
+			body.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
 		}
@@ -40,7 +43,17 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public function get name() : String { return "JSIfStatementBuilder"; }
 		
 		public function toString(indent : uint = 0) : String {
-			return ABC.toStringCommon(name, indent);
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "Statement:";
+			str += "\n" + statement.toString(indent + 4);
+			
+			if(body) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Body:";
+				str += "\n" + body.toString(indent + 4);
+			}
+			
+			return str;
 		}
 	}
 }

@@ -16,7 +16,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 		
 		public var string:String;
 		
-		private var _parameter:ABCParameter;
+		private var _argument:ABCParameter;
 
 		public function JSStringArgumentBuilder() {
 		}
@@ -34,8 +34,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 			JSTokenKind.DOUBLE_QUOTE.write(data);
 		}
 		
-		public function get argument():ABCParameter { return _parameter; }
-		public function set argument(value:ABCParameter) : void { _parameter = value; }
+		public function get argument():ABCParameter { return _argument; }
+		public function set argument(value:ABCParameter) : void { _argument = value; }
 		
 		public function get name():String { return "JSStringArgumentBuilder"; }
 		

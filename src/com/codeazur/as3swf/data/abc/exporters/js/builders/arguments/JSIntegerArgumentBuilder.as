@@ -15,7 +15,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 		
 		public var integer:int;
 		
-		private var _parameter:ABCParameter;
+		private var _argument:ABCParameter;
 
 		public function JSIntegerArgumentBuilder() {
 		}
@@ -31,8 +31,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 			data.writeUTF(integer.toString(10));
 		}
 		
-		public function get argument():ABCParameter { return _parameter; }
-		public function set argument(value:ABCParameter) : void { _parameter = value; }
+		public function get argument():ABCParameter { return _argument; }
+		public function set argument(value:ABCParameter) : void { _argument = value; }
 		
 		public function get name():String { return "JSIntegerArgumentBuilder"; }
 		

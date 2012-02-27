@@ -1,9 +1,12 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassPackageNameBuilder;
+	import com.codeazur.utils.StringUtils;
+
 	import flash.utils.ByteArray;
 
 	/**
@@ -57,7 +60,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public function get name():String { return "JSClassPackageNameBuilder"; }
 		
 		public function toString(indent:uint=0):String {
-			return ABC.toStringCommon(name, indent);
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "QName:";
+			str += "\n" + qname.toString(indent + 4);
+			
+			return str;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 {
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceKind;
@@ -9,6 +10,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSReservedKind;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
+	import com.codeazur.utils.StringUtils;
+
 	import flash.utils.ByteArray;
 
 
@@ -22,7 +25,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 		
 		public var start:uint;
 		
-		private var _parameter:ABCParameter;
+		private var _argument:ABCParameter;
 
 		public function JSRestArgumentBuilder() {
 		}
@@ -47,13 +50,18 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 			JSTokenKind.RIGHT_PARENTHESES.write(data);
 		}
 		
-		public function get argument():ABCParameter { return _parameter; }
-		public function set argument(value:ABCParameter) : void { _parameter = value; }
+		public function get argument():ABCParameter { return _argument; }
+		public function set argument(value:ABCParameter) : void { _argument = value; }
 		
 		public function get name():String { return "JSRestArgumentBuilder"; }
 		
 		public function toString(indent:uint=0):String {
-			return ABC.toStringCommon(name, indent);
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "Argument:";
+			str += "\n" + argument.toString(indent + 4);
+			
+			return str;
 		}
 	}
 }

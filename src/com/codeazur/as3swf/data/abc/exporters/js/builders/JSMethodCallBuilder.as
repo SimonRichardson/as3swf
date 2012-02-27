@@ -1,9 +1,11 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+
 	import com.codeazur.as3swf.data.abc.ABC;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodCallBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodCallBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
+	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
 
@@ -47,7 +49,19 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public function get name():String { return "JSMethodCallBuilder"; }
 		
 		public function toString(indent:uint=0):String {
-			return ABC.toStringCommon(name, indent);
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "Method:";
+			str += "\n" + method.toString(indent + 4);
+			
+			if(args && args.length > 0) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Arguments:";
+				for(var i:uint=0; i<args.length; i++) {
+					str += "\n" + args[i].toString(indent + 4);
+				}
+			}
+			
+			return str;
 		}
 	}
 }

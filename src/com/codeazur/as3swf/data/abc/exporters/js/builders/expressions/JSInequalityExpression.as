@@ -1,6 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 {
-	import com.codeazur.as3swf.data.abc.ABC;
+
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSConsumableBlock;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
@@ -39,9 +39,5 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 		}
 		
 		override public function get name():String { return "JSInequalityExpression"; }
-		
-		override public function toString(indent:uint=0):String {
-			return ABC.toStringCommon(name, indent);
-		}
 	}
 }

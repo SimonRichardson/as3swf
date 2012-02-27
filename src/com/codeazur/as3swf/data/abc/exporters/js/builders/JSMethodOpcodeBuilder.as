@@ -1,5 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+
+	import com.codeazur.as3swf.data.abc.exporters.js.JSStackItem;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -108,6 +110,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.PUSHINT:
 					case ABCOpcodeKind.PUSHSTRING:
 					case ABCOpcodeKind.GETLEX:
+					case ABCOpcodeKind.GETPROPERTY:
 						stack.add(JSArgumentBuilderFactory.create(opcode.attribute));
 						break;
 					
@@ -139,26 +142,45 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 						
 					case ABCOpcodeKind.IFNE:
+					case ABCOpcodeKind.IFFALSE:
 						stack.add(createIfStatement(stack, JSEqualityExpression.create(), opcode, indent));
 						break;
-						
+					
 					case ABCOpcodeKind.IFEQ:
+					case ABCOpcodeKind.IFTRUE:
 						stack.add(createIfStatement(stack, JSInequalityExpression.create(), opcode, indent));
 						break;
 						
 					default:
+						trace(opcode.kind);
 						break;
 				}
 			}
 		}
 		
 		private function createIfStatement(stack:JSStack, expression:JSConsumableBlock, opcode:ABCOpcode, indent:uint=0):JSIfStatementBuilder {
-			expression.right = stack.pop().writeable;
-			expression.left = stack.pop().writeable;
+			if(	ABCOpcodeKind.isType(opcode.kind, ABCOpcodeKind.IFNE) ||
+				ABCOpcodeKind.isType(opcode.kind, ABCOpcodeKind.IFEQ)
+				) {
+				expression.right = consume(stack);
+			}
+			
+			expression.left = consume(stack);
 						
 			const ifStack:JSStack = parseInternalStack(indent, opcode);
 						
 			return JSIfStatementBuilder.create(expression, ifStack);
+		}
+		
+		private function consume(stack:JSStack):IABCWriteable {
+			var index:uint = stack.length;
+			while(--index > -1) {
+				const item:JSStackItem = stack.getAt(index);
+				trace(">>", item);
+			}
+			
+			// Fix this
+			return stack.pop().writeable;
 		}
 		
 		private function parseInternalStack(indent:uint, opcode:ABCOpcode):JSStack {
