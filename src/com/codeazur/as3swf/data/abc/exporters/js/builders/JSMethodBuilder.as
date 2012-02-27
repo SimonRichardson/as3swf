@@ -2,11 +2,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
-	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodNameBuilder;
@@ -15,6 +13,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.parameters.JSMethodOptionalParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.parameters.JSMethodParameterBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
+	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslator;
+
 	import flash.utils.ByteArray;
 
 	/**
@@ -52,10 +53,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			const optionalParameterBuilder:IABCMethodOptionalParameterBuilder = JSMethodOptionalParameterBuilder.create(parameters);
 			optionalParameterBuilder.write(data);
 			
-			const methodBody:ABCMethodBody = methodInfo.methodBody;
-			const returnType:IABCMultiname = methodInfo.returnType;
-						
-			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(parameters, methodBody, returnType);
+			const translateData:ABCOpcodeTranslateData = ABCOpcodeTranslateData.create();
+			const translator:ABCOpcodeTranslator = ABCOpcodeTranslator.create(methodInfo);
+			translator.translate(translateData);
+			
+			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(translateData);
 			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);

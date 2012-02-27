@@ -2,7 +2,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAccessorBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCNameBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	import com.codeazur.utils.StringUtils;
 
@@ -10,18 +10,21 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSAccessorBuilder implements IABCAccessorBuilder
+	public class JSNameBuilder implements IABCNameBuilder
 	{
-
+		
+		public var terminator:Boolean;
 		public var expressions:Vector.<IABCWriteable>;
 
-		public function JSAccessorBuilder() {
+		public function JSNameBuilder() {
+			terminator = false;
 		}
 		
-		public static function create(expressions:Vector.<IABCWriteable>):JSAccessorBuilder {
-			const builder:JSAccessorBuilder = new JSAccessorBuilder();
-			builder.expressions = expressions;
-			return builder;
+		public static function create(expressions:Vector.<IABCWriteable>, terminator:Boolean=false):JSNameBuilder {
+			const instance:JSNameBuilder = new JSNameBuilder();
+			instance.expressions = expressions;
+			instance.terminator = terminator;
+			return instance;
 		}
 
 		public function write(data : ByteArray) : void {
@@ -32,6 +35,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				if(i < total - 1) {
 					JSTokenKind.DOT.write(data);
 				}
+			}
+			
+			if(terminator) {
+				JSTokenKind.SEMI_COLON.write(data);
 			}
 		}
 		

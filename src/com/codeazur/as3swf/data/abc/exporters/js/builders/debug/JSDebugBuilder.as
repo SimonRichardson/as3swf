@@ -6,7 +6,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.debug
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDebugAttribute;
 	import com.codeazur.as3swf.data.abc.exporters.ABCJavascriptExporter;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCDebugBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSAccessorBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSNameBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSThisExpression;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
@@ -35,7 +35,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.debug
 			if(attribute is ABCOpcodeDebugAttribute) {
 				const debug:ABCOpcodeDebugAttribute = ABCOpcodeDebugAttribute(attribute);
 				
-				JSAccessorBuilder.create(new <IABCWriteable>[JSThisExpression.create()]).write(data);
+				JSNameBuilder.create(new <IABCWriteable>[JSThisExpression.create()]).write(data);
 				JSTokenKind.DOT.write(data);
 				
 				data.writeUTF(ABCJavascriptExporter.PREFIX + METHOD_NAME);
