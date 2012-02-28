@@ -18,7 +18,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSStringArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSEqualityExpression;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 
@@ -97,10 +96,16 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						stack.add(JSNameBuilder.create(propertyName), JSMethodCallBuilder.create(propertyMethod, propertyArguments)).terminator = true;
 						break;
 					
+					case ABCOpcodeKind.IFEQ:
+						const ifEqExpr:JSConsumableBlock = createIfStatementExpression(kind, opcodes);
+						const ifEqBody:JSStack = parseInternalStack(opcode, indent);
+						stack.add(JSIfStatementBuilder.create(ifEqExpr, ifEqBody));
+						break;
+					
 					case ABCOpcodeKind.IFNE:
-						const ifStatementExpr:JSConsumableBlock = createIfStatementExpression(JSEqualityExpression.create(), opcodes);
-						const ifStatementBody:JSStack = parseInternalStack(opcode, indent);
-						stack.add(JSIfStatementBuilder.create(ifStatementExpr, ifStatementBody));
+						const ifNeExpr:JSConsumableBlock = createIfStatementExpression(kind, opcodes);
+						const ifNeBody:JSStack = parseInternalStack(opcode, indent);
+						stack.add(JSIfStatementBuilder.create(ifNeExpr, ifNeBody));
 						break;
 					
 					case ABCOpcodeKind.GETLOCAL_0:
@@ -238,19 +243,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			return consume(opcodes, total - numArguments, total);
 		}
 		
-		private function createIfStatementExpression(expression:JSConsumableBlock, opcodes:Vector.<ABCOpcode>):JSConsumableBlock {
+		private function createIfStatementExpression(kind:ABCOpcodeKind, opcodes:Vector.<ABCOpcode>):JSConsumableBlock {
 			const items:Vector.<IABCWriteable> = consume(opcodes, 0, opcodes.length - 1);
-			if(expression is JSEqualityExpression) {
-				if(items.length == 2) {
-					expression.left = items[0];
-					expression.right = items[1];
-				} else {
-					throw new Error();
-				}
-			} else {
-				throw new Error();
-			}
-			return expression;
+			return JSIfStatementFactory.create(kind, items);
 		}
 		
 		private function parseInternalStack(opcode:ABCOpcode, indent:uint):JSStack {
