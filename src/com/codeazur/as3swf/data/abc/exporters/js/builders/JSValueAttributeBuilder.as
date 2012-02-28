@@ -32,9 +32,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				const mname:ABCOpcodeMultinameUIntAttribute = ABCOpcodeMultinameUIntAttribute(attribute);
 				const qname:ABCQualifiedName = mname.multiname.toQualifiedName();
 				
-				if( ABCQualifiedNameType.isType(qname, ABCQualifiedNameType.APPLY) ||
-					ABCQualifiedNameType.isType(qname, ABCQualifiedNameType.TO_STRING)) {
-					
+				if(ABCQualifiedNameType.isBuiltin(qname)) {
 					data.writeUTF(qname.label);
 				} else {
 					data.writeUTF(qname.fullName);
