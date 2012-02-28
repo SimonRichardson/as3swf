@@ -78,8 +78,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						stack.add(JSNameBuilder.create(superName), JSMethodCallBuilder.create(superMethod, superArguments));
 						break;
 					
+					case ABCOpcodeKind.IFNE:
 					case ABCOpcodeKind.IFFALSE:
-						// stack.add(createIfStatement(stack, JSEqualityExpression.create(), opcode, indent));
+						trace(opcodes);
 						break;
 					
 					case ABCOpcodeKind.PUSHSCOPE:
@@ -113,6 +114,18 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				switch(kind) {
 					case ABCOpcodeKind.GETLOCAL_0:
 						result.push(getLocal(0));
+						break;
+						
+					case ABCOpcodeKind.GETLOCAL_1:
+						result.push(getLocal(1));
+						break;
+					
+					case ABCOpcodeKind.GETLOCAL_2:
+						result.push(getLocal(2));
+						break;
+					
+					case ABCOpcodeKind.GETLOCAL_3:
+						result.push(getLocal(3));
 						break;
 						
 					default:

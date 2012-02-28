@@ -37,26 +37,41 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 				const kind:ABCOpcodeKind = opcode.kind;
 				
 				switch(kind) {
+					case ABCOpcodeKind.CALLPROPERTY:
 					case ABCOpcodeKind.DUP:
 					case ABCOpcodeKind.GETLOCAL_0:
 					case ABCOpcodeKind.GETLOCAL_1:
+					case ABCOpcodeKind.GETLOCAL_2:
+					case ABCOpcodeKind.GETLOCAL_3:
 					case ABCOpcodeKind.PUSHBYTE:
+					case ABCOpcodeKind.PUSHFALSE:
+					case ABCOpcodeKind.PUSHTRUE:
 						_opcodes.push(opcode);
 						break;
 					
-					case ABCOpcodeKind.CALLPROPERTY:
 					case ABCOpcodeKind.CONSTRUCTSUPER:
-					case ABCOpcodeKind.PUSHSCOPE:
+					case ABCOpcodeKind.IFEQ:
+					case ABCOpcodeKind.IFFALSE:
+					case ABCOpcodeKind.IFGE:
+					case ABCOpcodeKind.IFGT:
+					case ABCOpcodeKind.IFLE:
+					case ABCOpcodeKind.IFLT:
+					case ABCOpcodeKind.IFNE:
+					case ABCOpcodeKind.IFNGE:
+					case ABCOpcodeKind.IFNGT:
+					case ABCOpcodeKind.IFNLE:
+					case ABCOpcodeKind.IFNLT:
+					case ABCOpcodeKind.IFSTRICTEQ:
+					case ABCOpcodeKind.IFSTRICTNE:
+					case ABCOpcodeKind.IFTRUE:
 						data.add(consume(opcode));
 						break;
-					
-					case ABCOpcodeKind.IFFALSE:
-						const tail:Vector.<ABCOpcode> = data.pop();
-						tail.push(opcode);
 						
-						data.add(tail);
+					case ABCOpcodeKind.POP:
+					case ABCOpcodeKind.PUSHSCOPE:
+						data.add(consume());
 						break;
-					
+						
 					case ABCOpcodeKind.DEBUG:
 					case ABCOpcodeKind.DEBUGFILE:
 					case ABCOpcodeKind.DEBUGLINE:
@@ -79,9 +94,11 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 			}
 		}
 		
-		private function consume(opcode:ABCOpcode):Vector.<ABCOpcode> {
+		private function consume(opcode:ABCOpcode=null):Vector.<ABCOpcode> {
 			const result:Vector.<ABCOpcode> = _opcodes.slice();
-			result.push(opcode);
+			if(opcode) {
+				result.push(opcode);
+			}
 			
 			_opcodes.length = 0;
 			
