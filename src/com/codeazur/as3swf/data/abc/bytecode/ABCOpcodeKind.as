@@ -234,6 +234,25 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			return result;
 		}
+		
+		public static function isComparisonType(kind:ABCOpcodeKind):Boolean {
+			var result:Boolean;
+			switch(kind) {
+				case EQUALS:
+				case GREATEREQUALS:
+				case GREATERTHAN:
+				case LESSEQUALS:
+				case LESSTHAN:
+				case STRICTEQUALS:
+					result = true;
+					break;
+					
+				default:
+					result = false;
+					break;
+			}
+			return result;
+		}
 				
 		public function get type():uint { return _type; }
 		public function get name():String { return "ABCOpcodeKind"; }

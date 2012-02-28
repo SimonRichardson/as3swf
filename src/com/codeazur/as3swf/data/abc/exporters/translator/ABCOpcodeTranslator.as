@@ -1,11 +1,11 @@
 package com.codeazur.as3swf.data.abc.exporters.translator
 {
 
-	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -42,6 +42,8 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.DEBUGFILE:
 					case ABCOpcodeKind.DEBUGLINE:
 					case ABCOpcodeKind.DUP:
+					case ABCOpcodeKind.GREATERTHAN:
+					case ABCOpcodeKind.GREATEREQUALS:
 					case ABCOpcodeKind.EQUALS:
 					case ABCOpcodeKind.GETLOCAL_0:
 					case ABCOpcodeKind.GETLOCAL_1:
@@ -147,10 +149,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 						const tail:Vector.<ABCOpcode> = data.tail;
 						const last:ABCOpcode = tail[tail.length - 1];
 						
-						if( ABCOpcodeKind.isIfType(last.kind) && 
-							(	containsKind(tail, ABCOpcodeKind.EQUALS) || 
-								containsKind(tail, ABCOpcodeKind.STRICTEQUALS))
-								) {
+						if(ABCOpcodeKind.isIfType(last.kind) && containsComparison(tail)) {
 							const previous:Vector.<ABCOpcode> = data.pop();
 							var index:int = previous.length;
 							while(--index>-1) {
@@ -162,12 +161,12 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 			}
 		}
 		
-		private function containsKind(haystack:Vector.<ABCOpcode>, kind:ABCOpcodeKind):Boolean {
+		private function containsComparison(haystack:Vector.<ABCOpcode>):Boolean {
 			var result:Boolean = false;
 			
 			const total:uint = haystack.length;
 			for(var i:uint=0; i<total; i++) {
-				if(haystack[i].kind == kind) {
+				if(ABCOpcodeKind.isComparisonType(haystack[i].kind)) {
 					result = true;
 					break;
 				}
