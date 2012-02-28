@@ -49,9 +49,11 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.GETLOCAL_1:
 					case ABCOpcodeKind.GETLOCAL_2:
 					case ABCOpcodeKind.GETLOCAL_3:
+					case ABCOpcodeKind.GETPROPERTY:
 					case ABCOpcodeKind.GETSUPER:
 					case ABCOpcodeKind.PUSHBYTE:
 					case ABCOpcodeKind.PUSHFALSE:
+					case ABCOpcodeKind.PUSHNULL:
 					case ABCOpcodeKind.PUSHSTRING:
 					case ABCOpcodeKind.PUSHTRUE:
 					case ABCOpcodeKind.STRICTEQUALS:
@@ -74,6 +76,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.IFSTRICTEQ:
 					case ABCOpcodeKind.IFSTRICTNE:
 					case ABCOpcodeKind.IFTRUE:
+					case ABCOpcodeKind.RETURNVALUE:
 					case ABCOpcodeKind.SETLOCAL_0:
 					case ABCOpcodeKind.SETLOCAL_1:
 					case ABCOpcodeKind.SETLOCAL_2:
@@ -103,6 +106,12 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.COERCE_O:
 					case ABCOpcodeKind.COERCE_S:
 					case ABCOpcodeKind.COERCE_U:
+					case ABCOpcodeKind.CONVERT_B:
+					case ABCOpcodeKind.CONVERT_D:
+					case ABCOpcodeKind.CONVERT_I:
+					case ABCOpcodeKind.CONVERT_O:
+					case ABCOpcodeKind.CONVERT_S:
+					case ABCOpcodeKind.CONVERT_U:
 					case ABCOpcodeKind.FINDPROPSTRICT:
 						// Do nothing here
 						break;
