@@ -39,10 +39,12 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 				switch(kind) {
 					case ABCOpcodeKind.CALLPROPERTY:
 					case ABCOpcodeKind.DUP:
+					case ABCOpcodeKind.EQUALS:
 					case ABCOpcodeKind.GETLOCAL_0:
 					case ABCOpcodeKind.GETLOCAL_1:
 					case ABCOpcodeKind.GETLOCAL_2:
 					case ABCOpcodeKind.GETLOCAL_3:
+					case ABCOpcodeKind.GETSUPER:
 					case ABCOpcodeKind.PUSHBYTE:
 					case ABCOpcodeKind.PUSHFALSE:
 					case ABCOpcodeKind.PUSHSTRING:
@@ -70,6 +72,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.SETLOCAL_1:
 					case ABCOpcodeKind.SETLOCAL_2:
 					case ABCOpcodeKind.SETLOCAL_3:
+						consumeTail(data, opcode);
 						data.add(consume(opcode));
 						break;
 						
@@ -83,7 +86,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.DEBUGLINE:
 						data.add(consume(opcode));
 						break;
-					
+						
 					case ABCOpcodeKind.RETURNVOID:
 						if(_opcodes.length > 0) {
 							data.add(consume());
@@ -120,6 +123,54 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 			}
 			
 			_opcodes.length = 0;
+			
+			return result;
+		}
+		
+		private function consumeTail(data:ABCOpcodeTranslateData, opcode:ABCOpcode):void {
+			const kind:ABCOpcodeKind = opcode.kind;
+			switch(kind) {
+				case ABCOpcodeKind.IFEQ:
+				case ABCOpcodeKind.IFFALSE:
+				case ABCOpcodeKind.IFGE:
+				case ABCOpcodeKind.IFGT:
+				case ABCOpcodeKind.IFLE:
+				case ABCOpcodeKind.IFLT:
+				case ABCOpcodeKind.IFNE:
+				case ABCOpcodeKind.IFNGE:
+				case ABCOpcodeKind.IFNGT:
+				case ABCOpcodeKind.IFNLE:
+				case ABCOpcodeKind.IFNLT:
+				case ABCOpcodeKind.IFSTRICTEQ:
+				case ABCOpcodeKind.IFSTRICTNE:
+				case ABCOpcodeKind.IFTRUE:
+					if(data.tail) {
+						
+						const tail:Vector.<ABCOpcode> = data.tail;
+						const last:ABCOpcode = tail[tail.length - 1];
+						
+						if(ABCOpcodeKind.isIfType(last.kind) && containsKind(tail, ABCOpcodeKind.EQUALS)) {
+							const previous:Vector.<ABCOpcode> = data.pop();
+							var index:int = previous.length;
+							while(--index>-1) {
+								_opcodes.unshift(previous[index]);
+							}
+						}
+					}
+					break;
+			}
+		}
+		
+		private function containsKind(haystack:Vector.<ABCOpcode>, kind:ABCOpcodeKind):Boolean {
+			var result:Boolean = false;
+			
+			const total:uint = haystack.length;
+			for(var i:uint=0; i<total; i++) {
+				if(haystack[i].kind == kind) {
+					result = true;
+					break;
+				}
+			}
 			
 			return result;
 		}

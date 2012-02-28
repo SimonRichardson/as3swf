@@ -2,10 +2,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
+
 	import flash.utils.ByteArray;
 
 	/**
@@ -28,10 +30,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		public function write(data:ByteArray):void {
-			if(attribute is ABCOpcodeMultinameUIntAttribute) {
-				const mname:ABCOpcodeMultinameUIntAttribute = ABCOpcodeMultinameUIntAttribute(attribute);
-				const qname:ABCQualifiedName = mname.multiname.toQualifiedName();
-				
+			const qname:ABCQualifiedName = getQName(attribute);
+			if(qname) {
 				if(ABCQualifiedNameType.isBuiltin(qname)) {
 					data.writeUTF(qname.label);
 				} else {
@@ -40,6 +40,16 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			} else {
 				throw new Error();
 			}
+		}
+		
+		private function getQName(attribute:ABCOpcodeAttribute):ABCQualifiedName {
+			var result:ABCQualifiedName;
+			if(attribute is ABCOpcodeMultinameAttribute) {
+				result = ABCOpcodeMultinameAttribute(attribute).multiname.toQualifiedName();
+			} else if(attribute is ABCOpcodeMultinameUIntAttribute) {
+				result = ABCOpcodeMultinameUIntAttribute(attribute).multiname.toQualifiedName();
+			} 
+			return result;
 		}
 		
 		public function get value():* { return _value; }

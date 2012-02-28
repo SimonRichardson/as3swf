@@ -21,7 +21,9 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 		}
 		
 		public function add(items:Vector.<ABCOpcode>):void {
-			_items.push(items);
+			if(items && items.length > 0) {
+				_items.push(items);
+			}
 		}
 		
 		public function getAt(index:uint):Vector.<ABCOpcode> {
@@ -32,9 +34,8 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 			return _items.pop();
 		}
 		
-		public function get length():uint {
-			return _items.length;
-		}
+		public function get tail():Vector.<ABCOpcode> { return _items.length > 0 ? _items[_items.length - 1] : null; }
+		public function get length():uint { return _items.length; }
 		
 		public function get name():String { return "ABCOpcodeTranslateData"; }
 		

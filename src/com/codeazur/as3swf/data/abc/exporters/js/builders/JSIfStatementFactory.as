@@ -3,6 +3,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSEqualityExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSInequalityExpression;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSLogicalAndExpression;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -11,37 +12,44 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		
 		public static function create(kind:ABCOpcodeKind, items:Vector.<IABCWriteable>):JSConsumableBlock {
 			const expression:JSConsumableBlock = createExpression(kind);
-			switch(kind) {
-				case ABCOpcodeKind.IFEQ:
-					if(items.length == 2) {
-						expression.left = items[0];
-						expression.right = items[1];
-					} else {
-						throw new Error();
-					}
-					break;
-					
-				case ABCOpcodeKind.IFNE:
-					if(items.length == 2) {
-						expression.left = items[0];
-						expression.right = items[1];
-					} else {
-						throw new Error();
-					}
-					break;
-					
-				default:
-					throw new Error();
+			
+			const total:uint = items.length;
+			if(total == 2) {
+				expression.left = items[0];
+				expression.right = items[1];
+			} else if(total == 1) {
+				expression.left = items[0];
+			} else {
+				throw new Error();
 			}
+			
 			return expression;
 		}
 		
-		public static function createExpression(kind:ABCOpcodeKind):JSConsumableBlock {
+		public static function make(statements:Vector.<IABCWriteable>):JSConsumableBlock {
+			const root:JSConsumableBlock = new JSConsumableBlock();
+			
+			var block:JSConsumableBlock = root;
+			const total:uint = statements.length;
+			for(var i:uint=0; i<total; i++) {
+				block.left = statements[i];
+				if(i < total - 1) {
+					block.right = new JSLogicalAndExpression();
+					block = block.right as JSConsumableBlock;
+				} 
+			}
+			
+			return root;
+		}
+		
+		private static function createExpression(kind:ABCOpcodeKind):JSConsumableBlock {
 			switch(kind) {
 				case ABCOpcodeKind.IFEQ:
+				case ABCOpcodeKind.IFTRUE:
 					return JSInequalityExpression.create();
 					
 				case ABCOpcodeKind.IFNE:
+				case ABCOpcodeKind.IFFALSE:
 					return JSEqualityExpression.create();
 					
 				default:

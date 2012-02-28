@@ -97,15 +97,22 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 					
 					case ABCOpcodeKind.IFEQ:
-						const ifEqExpr:JSConsumableBlock = createIfStatementExpression(kind, opcodes);
-						const ifEqBody:JSStack = parseInternalStack(opcode, indent);
-						stack.add(JSIfStatementBuilder.create(ifEqExpr, ifEqBody));
-						break;
-					
+					case ABCOpcodeKind.IFFALSE:
+					case ABCOpcodeKind.IFGE:
+					case ABCOpcodeKind.IFGT:
+					case ABCOpcodeKind.IFLE:
+					case ABCOpcodeKind.IFLT:
 					case ABCOpcodeKind.IFNE:
-						const ifNeExpr:JSConsumableBlock = createIfStatementExpression(kind, opcodes);
-						const ifNeBody:JSStack = parseInternalStack(opcode, indent);
-						stack.add(JSIfStatementBuilder.create(ifNeExpr, ifNeBody));
+					case ABCOpcodeKind.IFNGE:
+					case ABCOpcodeKind.IFNGT:
+					case ABCOpcodeKind.IFNLE:
+					case ABCOpcodeKind.IFNLT:
+					case ABCOpcodeKind.IFSTRICTEQ:
+					case ABCOpcodeKind.IFSTRICTNE:
+					case ABCOpcodeKind.IFTRUE:
+						const ifExpr:JSConsumableBlock = createIfStatementExpression(opcodes);
+						const ifBody:JSStack = parseInternalStack(opcode, indent);
+						stack.add(JSIfStatementBuilder.create(ifExpr, ifBody));
 						break;
 					
 					case ABCOpcodeKind.GETLOCAL_0:
@@ -143,15 +150,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			for(var i:uint=start; i<finish; i++) {
 				const opcode:ABCOpcode = opcodes[i];
 				const kind:ABCOpcodeKind = opcode.kind;
-				
+							
 				switch(kind) {
 					case ABCOpcodeKind.CALLPROPERTY:
 						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
 						const propertyArguments:Vector.<IABCWriteable> = consumeMethodArguments(result, opcode.attribute);
 						if(result.length > 0) {
 							// TODO: Should we consume the whole results
-							const tail:IABCWriteable = result.pop();
-							result.push(JSConsumableBlock.create(tail, JSMethodCallBuilder.create(propertyMethod, propertyArguments)));
+							result.push(JSConsumableBlock.create(result.pop(), JSMethodCallBuilder.create(propertyMethod, propertyArguments)));
 						} else {
 							result.push(JSMethodCallBuilder.create(propertyMethod, propertyArguments));
 						}
@@ -171,6 +177,35 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					
 					case ABCOpcodeKind.GETLOCAL_3:
 						result.push(getLocal(3));
+						break;
+						
+					case ABCOpcodeKind.GETSUPER:
+						const superProperty:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
+						if(result.length > 0) {
+							// TODO: Should we consume the whole results
+							result.push(JSConsumableBlock.create(result.pop(), JSConsumableBlock.create(JSValueBuilder.create(JSReservedKind.SUPER.type), superProperty)));
+						} else {
+							result.push(JSConsumableBlock.create(JSValueBuilder.create(JSReservedKind.SUPER.type), superProperty));
+						}
+						break;
+						
+					case ABCOpcodeKind.IFEQ:
+					case ABCOpcodeKind.IFFALSE:
+					case ABCOpcodeKind.IFGE:
+					case ABCOpcodeKind.IFGT:
+					case ABCOpcodeKind.IFLE:
+					case ABCOpcodeKind.IFLT:
+					case ABCOpcodeKind.IFNE:
+					case ABCOpcodeKind.IFNGE:
+					case ABCOpcodeKind.IFNGT:
+					case ABCOpcodeKind.IFNLE:
+					case ABCOpcodeKind.IFNLT:
+					case ABCOpcodeKind.IFSTRICTEQ:
+					case ABCOpcodeKind.IFSTRICTNE:
+					case ABCOpcodeKind.IFTRUE:
+						// consume everything until another if statement or end of items
+						const ifExpression:Vector.<IABCWriteable> = result.splice(0, result.length);
+						result.push(JSIfStatementFactory.create(kind, ifExpression));
 						break;
 					
 					case ABCOpcodeKind.PUSHSTRING:
@@ -243,9 +278,26 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			return consume(opcodes, total - numArguments, total);
 		}
 		
-		private function createIfStatementExpression(kind:ABCOpcodeKind, opcodes:Vector.<ABCOpcode>):JSConsumableBlock {
-			const items:Vector.<IABCWriteable> = consume(opcodes, 0, opcodes.length - 1);
-			return JSIfStatementFactory.create(kind, items);
+		private function createIfStatementExpression(opcodes:Vector.<ABCOpcode>):JSConsumableBlock {
+			const items:Vector.<IABCWriteable> = new Vector.<IABCWriteable>();
+			
+			const total:uint = opcodes.length;
+			
+			var previous:uint = 0;
+			for(var i:uint=0; i<total; i++) {
+				const opcode:ABCOpcode = opcodes[i];
+				if(ABCOpcodeKind.isIfType(opcode.kind)) {
+					const statement:Vector.<IABCWriteable> = consume(opcodes, previous, i + 1);
+					if(statement.length == 1) {
+						items.push(statement[0]);
+					} else {
+						throw new Error();
+					}
+					previous = i + 1;
+				}
+			}
+						
+			return JSIfStatementFactory.make(items);
 		}
 		
 		private function parseInternalStack(opcode:ABCOpcode, indent:uint):JSStack {

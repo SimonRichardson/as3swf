@@ -207,6 +207,33 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			return result;
 		}
+		
+		public static function isIfType(kind:ABCOpcodeKind):Boolean {
+			var result:Boolean;
+			switch(kind) {
+				case IFEQ:
+				case IFFALSE:
+				case IFGE:
+				case IFGT:
+				case IFLE:
+				case IFLT:
+				case IFNE:
+				case IFNGE:
+				case IFNGT:
+				case IFNLE:
+				case IFNLT:
+				case IFSTRICTEQ:
+				case IFSTRICTNE:
+				case IFTRUE:
+					result = true;
+					break;
+					
+				default:
+					result = false;
+					break;
+			}
+			return result;
+		}
 				
 		public function get type():uint { return _type; }
 		public function get name():String { return "ABCOpcodeKind"; }
