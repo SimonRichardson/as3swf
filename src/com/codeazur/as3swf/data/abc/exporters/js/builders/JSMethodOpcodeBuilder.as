@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -18,6 +19,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSStringArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSFalseExpression;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSNullExpression;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSTrueExpression;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 
@@ -88,6 +92,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						stack.add(JSNameBuilder.create(superName), JSMethodCallBuilder.create(superMethod, superArguments)).terminator = true;
 						break;
 					
+					case ABCOpcodeKind.CALLPROPERTY:
 					case ABCOpcodeKind.CALLPROPVOID:
 						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
 						const propertyName:Vector.<IABCWriteable> = createName(opcodes, opcode.attribute);
@@ -208,6 +213,26 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						result.push(JSIfStatementFactory.create(kind, ifExpression));
 						break;
 					
+					case ABCOpcodeKind.PUSHFALSE:
+						result.push(JSFalseExpression.create());
+						break;
+						
+					case ABCOpcodeKind.PUSHTRUE:
+						result.push(JSTrueExpression.create());
+						break;
+						
+					case ABCOpcodeKind.PUSHNULL:
+						result.push(JSNullExpression.create());
+						break;
+					
+					case ABCOpcodeKind.PUSHBYTE:
+					case ABCOpcodeKind.PUSHINT:
+					case ABCOpcodeKind.PUSHSTRING:
+					case ABCOpcodeKind.GETLEX:
+					case ABCOpcodeKind.GETPROPERTY:
+						result.push(JSArgumentBuilderFactory.create(opcode.attribute));
+						break;
+					
 					case ABCOpcodeKind.PUSHSTRING:
 						const stringAttribute:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(opcode.attribute); 
 						result.push(JSStringArgumentBuilder.create(stringAttribute.string));
@@ -287,13 +312,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			for(var i:uint=0; i<total; i++) {
 				const opcode:ABCOpcode = opcodes[i];
 				if(ABCOpcodeKind.isIfType(opcode.kind)) {
-					const statement:Vector.<IABCWriteable> = consume(opcodes, previous, i + 1);
+					const index:uint = i + 1;
+					const statement:Vector.<IABCWriteable> = consume(opcodes, previous, index);
 					if(statement.length == 1) {
 						items.push(statement[0]);
 					} else {
 						throw new Error();
 					}
-					previous = i + 1;
+					previous = index;
 				}
 			}
 						

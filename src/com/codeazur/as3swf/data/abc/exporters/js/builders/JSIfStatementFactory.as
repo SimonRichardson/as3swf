@@ -27,7 +27,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		public static function make(statements:Vector.<IABCWriteable>):JSConsumableBlock {
-			const root:JSConsumableBlock = new JSConsumableBlock();
+			const root:JSConsumableBlock = new JSLogicalAndExpression();
 			
 			var block:JSConsumableBlock = root;
 			const total:uint = statements.length;
