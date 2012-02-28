@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.translator
 {
 
+	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
 	/**
@@ -38,7 +39,17 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 		public function get name():String { return "ABCOpcodeTranslateData"; }
 		
 		public function toString(indent:uint=0):String {
-			return ABC.toStringCommon(name, indent);
+			var str:String = ABC.toStringCommon(name, indent);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "Data:";
+			for(var i:uint=0; i<_items.length; i++) {
+				str += "\n" + StringUtils.repeat(indent + 4) + "Block:";
+				for(var j:uint=0; j<_items[i].length; j++) {
+					str += "\n" + _items[i][j].kind.toString(indent + 6);
+				}
+			}
+			
+			return str;
 		}
 	}
 }

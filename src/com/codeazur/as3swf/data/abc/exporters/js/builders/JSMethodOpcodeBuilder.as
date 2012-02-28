@@ -259,6 +259,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			
 			_position++;
 			recursive(stack, indent + 1, opcodes.getJumpTarget(opcode));
+			_position--;
 			
 			return stack;
 		}

@@ -36,11 +36,8 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 				const opcode:ABCOpcode = opcodes.getAt(i);
 				const kind:ABCOpcodeKind = opcode.kind;
 				
-				trace(kind);
-				
 				switch(kind) {
 					case ABCOpcodeKind.CALLPROPERTY:
-					case ABCOpcodeKind.CALLPROPVOID:
 					case ABCOpcodeKind.DUP:
 					case ABCOpcodeKind.GETLOCAL_0:
 					case ABCOpcodeKind.GETLOCAL_1:
@@ -53,6 +50,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 						_opcodes.push(opcode);
 						break;
 					
+					case ABCOpcodeKind.CALLPROPVOID:
 					case ABCOpcodeKind.CONSTRUCTSUPER:
 					case ABCOpcodeKind.IFEQ:
 					case ABCOpcodeKind.IFFALSE:
@@ -111,6 +109,8 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 						break;
 				}
 			}
+			
+			trace(data);
 		}
 		
 		private function consume(opcode:ABCOpcode=null):Vector.<ABCOpcode> {
