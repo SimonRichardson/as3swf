@@ -26,9 +26,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 				left.write(data);
 			} else {
 				left.write(data);
-				
 				JSOperatorKind.LOGICAL_AND.write(data);
-			
 				right.write(data);
 			}
 		}

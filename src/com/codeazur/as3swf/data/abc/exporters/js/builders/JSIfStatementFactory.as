@@ -1,7 +1,9 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSEqualityExpression;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSGreaterThanExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSInequalityExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSLogicalAndExpression;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
@@ -51,9 +53,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				case ABCOpcodeKind.IFNE:
 				case ABCOpcodeKind.IFFALSE:
 					return JSEqualityExpression.create();
-					
+				
+				case ABCOpcodeKind.IFNGT:
+					return JSGreaterThanExpression.create();
+				
 				default:
-					throw new Error();
+					throw new Error(kind);
 			}
 		}
 	}

@@ -10,28 +10,24 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSEqualityExpression extends JSConsumableBlock implements IABCExpression {
+	public class JSGreaterThanExpression extends JSConsumableBlock implements IABCExpression {
 
-		public function JSEqualityExpression() {
+		public function JSGreaterThanExpression() {
 		}
 
-		public static function create(left:IABCWriteable = null, right:IABCWriteable = null):JSEqualityExpression {
-			const expression:JSEqualityExpression = new JSEqualityExpression();
+		public static function create(left:IABCWriteable = null, right:IABCWriteable = null):JSGreaterThanExpression {
+			const expression:JSGreaterThanExpression = new JSGreaterThanExpression();
 			expression.left = left;
 			expression.right = right;
 			return expression;
 		}
 
 		override public function write(data:ByteArray):void {
-			if(!right) {
-				left.write(data);
-			} else {
-				left.write(data);
-				JSOperatorKind.STRICT_EQUALITY.write(data);
-				right.write(data);
-			}
+			left.write(data);
+			JSOperatorKind.GREATER_THAN.write(data);
+			right.write(data);
 		}
 		
-		override public function get name():String { return "JSEqualityExpression"; }
+		override public function get name():String { return "JSGreaterThanExpression"; }
 	}
 }
