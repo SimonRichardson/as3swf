@@ -52,6 +52,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.PUSHFALSE:
 					case ABCOpcodeKind.PUSHSTRING:
 					case ABCOpcodeKind.PUSHTRUE:
+					case ABCOpcodeKind.STRICTEQUALS:
 						_opcodes.push(opcode);
 						break;
 					
@@ -146,7 +147,10 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 						const tail:Vector.<ABCOpcode> = data.tail;
 						const last:ABCOpcode = tail[tail.length - 1];
 						
-						if(ABCOpcodeKind.isIfType(last.kind) && containsKind(tail, ABCOpcodeKind.EQUALS)) {
+						if( ABCOpcodeKind.isIfType(last.kind) && 
+							(	containsKind(tail, ABCOpcodeKind.EQUALS) || 
+								containsKind(tail, ABCOpcodeKind.STRICTEQUALS))
+								) {
 							const previous:Vector.<ABCOpcode> = data.pop();
 							var index:int = previous.length;
 							while(--index>-1) {
