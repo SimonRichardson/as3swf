@@ -38,6 +38,9 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 				
 				switch(kind) {
 					case ABCOpcodeKind.CALLPROPERTY:
+					case ABCOpcodeKind.DEBUG:
+					case ABCOpcodeKind.DEBUGFILE:
+					case ABCOpcodeKind.DEBUGLINE:
 					case ABCOpcodeKind.DUP:
 					case ABCOpcodeKind.EQUALS:
 					case ABCOpcodeKind.GETLOCAL_0:
@@ -80,13 +83,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.PUSHSCOPE:
 						data.add(consume());
 						break;
-						
-					case ABCOpcodeKind.DEBUG:
-					case ABCOpcodeKind.DEBUGFILE:
-					case ABCOpcodeKind.DEBUGLINE:
-						data.add(consume(opcode));
-						break;
-						
+					
 					case ABCOpcodeKind.RETURNVOID:
 						if(_opcodes.length > 0) {
 							data.add(consume());
