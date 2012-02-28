@@ -24,10 +24,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			_includeKeyword = true;
 		}
 		
-		public static function create(variable:ABCQualifiedName, expression:IABCWriteable):JSLocalVariableBuilder {
+		public static function create(variable:ABCQualifiedName, expressions:Vector.<IABCWriteable>):JSLocalVariableBuilder {
 			const builder:JSLocalVariableBuilder = new JSLocalVariableBuilder();
 			builder.variable = variable;
-			builder.right = expression;
+			builder.right = JSNameBuilder.create(expressions, true);
 			return builder;
 		}
 		
@@ -48,10 +48,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			if(right) {
 				JSTokenKind.EQUALS.write(data);
 				right.write(data);
-			}
-			
-			if(hasTerminator) {
-				JSTokenKind.SEMI_COLON.write(data);
 			}
 		}
 		

@@ -16,7 +16,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public var terminator:Boolean;
 		
 		public function JSConsumableBlock(){
-			terminator = true;
+			terminator = false;
 		}
 
 		public static function create(left:IABCWriteable, right:IABCWriteable = null):JSConsumableBlock {
@@ -40,7 +40,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		protected function get hasTerminator():Boolean {
-			terminator = !(right is JSConsumableBlock && JSConsumableBlock(right).terminator);
 			return terminator;
 		}
 		

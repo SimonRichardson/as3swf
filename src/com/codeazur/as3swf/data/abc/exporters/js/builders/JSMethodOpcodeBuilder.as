@@ -1,18 +1,22 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.JSStack;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSStringArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSEqualityExpression;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
@@ -29,6 +33,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		private var _translateData:ABCOpcodeTranslateData;
 		
 		private var _stack:JSStack;
+		private var _position:uint;
 		private var _arguments:Vector.<ABCParameter>;
 		
 		public function JSMethodOpcodeBuilder() {
@@ -53,17 +58,23 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			
 			const total:uint = translateData.length;
 			if(total > 0) {
+				_position = 0;
 				recursive(_stack, 0);
 			}
 			
 			_stack.write(data);
 		}
 		
-		private function recursive(stack:JSStack, indent:uint=0):void {
+		private function recursive(stack:JSStack, indent:uint=0, tail:ABCOpcode = null):void {
 			const total:uint = translateData.length;
-			for(var j:uint=0; j<total; j++) {
-				const opcodes:Vector.<ABCOpcode> = translateData.getAt(j);
+			for(; _position<total; _position++) {
+				
+				const opcodes:Vector.<ABCOpcode> = translateData.getAt(_position);
 				const opcodesTotal:uint = opcodes.length;
+				
+				if(tail && (opcodes.length > 0 && opcodes[0] == tail)) {
+					return;
+				}
 				
 				// Get the tail items so that we know what to do with the item
 				const offset:int = opcodesTotal - 1;
@@ -75,20 +86,37 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const superName:Vector.<IABCWriteable> = createName(opcodes, opcode.attribute);
 						const superArguments:Vector.<IABCWriteable> = createMethodArguments(opcodes, opcode.attribute);
 						
-						stack.add(JSNameBuilder.create(superName), JSMethodCallBuilder.create(superMethod, superArguments));
+						stack.add(JSNameBuilder.create(superName), JSMethodCallBuilder.create(superMethod, superArguments)).terminator = true;
+						break;
+					
+					case ABCOpcodeKind.CALLPROPVOID:
+						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
+						const propertyName:Vector.<IABCWriteable> = createName(opcodes, opcode.attribute);
+						const propertyArguments:Vector.<IABCWriteable> = createMethodArguments(opcodes, opcode.attribute);
+						
+						stack.add(JSNameBuilder.create(propertyName), JSMethodCallBuilder.create(propertyMethod, propertyArguments)).terminator = true;
 						break;
 					
 					case ABCOpcodeKind.IFNE:
-					case ABCOpcodeKind.IFFALSE:
-						trace(opcodes);
+						const ifStatementExpr:JSConsumableBlock = createIfStatementExpression(JSEqualityExpression.create(), opcodes);
+						const ifStatementBody:JSStack = parseInternalStack(opcode, indent);
+						stack.add(JSIfStatementBuilder.create(ifStatementExpr, ifStatementBody));
 						break;
 					
-					case ABCOpcodeKind.PUSHSCOPE:
-						stack.add(JSNameBuilder.create(consume(opcodes, 0, offset), true));
+					case ABCOpcodeKind.GETLOCAL_0:
+						stack.add(JSNameBuilder.create(consume(opcodes, 0, offset + 1), true));
+						break;
+					
+					case ABCOpcodeKind.SETLOCAL_1:
+						const localQName:ABCQualifiedName = JSLocalVariableBuilder.createLocalQName(0);
+						const localVariable:IABCVariableBuilder = JSLocalVariableBuilder.create(localQName, consume(opcodes, 0, offset));
+						localVariable.includeKeyword = addLocal(localVariable);
+						
+						stack.add(localVariable);
 						break;
 						
 					case ABCOpcodeKind.RETURNVOID:
-						stack.add(JSReturnVoidBuilder.create());
+						stack.add(JSReturnVoidBuilder.create()).terminator = true;
 						break;
 					
 					case ABCOpcodeKind.DEBUG:
@@ -98,7 +126,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 					
 					default:
-						trace(kind);
+						trace(">>", kind);
 						break;
 				}
 			}
@@ -112,6 +140,18 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				const kind:ABCOpcodeKind = opcode.kind;
 				
 				switch(kind) {
+					case ABCOpcodeKind.CALLPROPERTY:
+						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
+						const propertyArguments:Vector.<IABCWriteable> = consumeMethodArguments(result, opcode.attribute);
+						if(result.length > 0) {
+							// TODO: Should we consume the whole results
+							const tail:IABCWriteable = result.pop();
+							result.push(JSConsumableBlock.create(tail, JSMethodCallBuilder.create(propertyMethod, propertyArguments)));
+						} else {
+							result.push(JSMethodCallBuilder.create(propertyMethod, propertyArguments));
+						}
+						break;
+						
 					case ABCOpcodeKind.GETLOCAL_0:
 						result.push(getLocal(0));
 						break;
@@ -127,13 +167,25 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.GETLOCAL_3:
 						result.push(getLocal(3));
 						break;
+					
+					case ABCOpcodeKind.PUSHSTRING:
+						const stringAttribute:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(opcode.attribute); 
+						result.push(JSStringArgumentBuilder.create(stringAttribute.string));
+						break;
 						
 					default:
+						trace(">>>", kind);
 						break;
 				}
 			}
 			
 			return result;
+		}
+		
+		private function consumeMethodArguments(items:Vector.<IABCWriteable>, attribute:ABCOpcodeAttribute):Vector.<IABCWriteable> {
+			const total:int = items.length - 1;
+			const numArguments:uint = JSArgumentBuilderFactory.getNumberArguments(attribute);
+			return items.splice(total - numArguments, numArguments);
 		}
 		
 		private function getLocal(index:uint):IABCArgumentBuilder {
@@ -155,6 +207,25 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			return result;
 		}
 		
+		private function addLocal(local:IABCVariableBuilder):Boolean {
+			var exists:Boolean = false;
+			
+			const total:uint = _arguments.length;
+			for(var i:uint=0; i<total; i++) {
+				const abcParameter:ABCParameter = _arguments[i];
+				if(abcParameter.qname.fullName == local.variable.fullName) {
+					exists = true;
+					break;
+				}
+			}
+			
+			if(!exists) {
+				_arguments.push(ABCParameter.create(local.variable, local.variable.fullName));
+			}
+			
+			return !exists;
+		}
+		
 		private function createName(opcodes:Vector.<ABCOpcode>, attribute:ABCOpcodeAttribute):Vector.<IABCWriteable> {
 			const total:int = opcodes.length - 1;
 			const numArguments:uint = JSArgumentBuilderFactory.getNumberArguments(attribute);
@@ -165,6 +236,31 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			const total:int = opcodes.length - 1;
 			const numArguments:uint = JSArgumentBuilderFactory.getNumberArguments(attribute);
 			return consume(opcodes, total - numArguments, total);
+		}
+		
+		private function createIfStatementExpression(expression:JSConsumableBlock, opcodes:Vector.<ABCOpcode>):JSConsumableBlock {
+			const items:Vector.<IABCWriteable> = consume(opcodes, 0, opcodes.length - 1);
+			if(expression is JSEqualityExpression) {
+				if(items.length == 2) {
+					expression.left = items[0];
+					expression.right = items[1];
+				} else {
+					throw new Error();
+				}
+			} else {
+				throw new Error();
+			}
+			return expression;
+		}
+		
+		private function parseInternalStack(opcode:ABCOpcode, indent:uint):JSStack {
+			const stack:JSStack = JSStack.create();
+			const opcodes:ABCOpcodeSet = methodInfo.methodBody.opcode;
+			
+			_position++;
+			recursive(stack, indent + 1, opcodes.getJumpTarget(opcode));
+			
+			return stack;
 		}
 		
 		public function get methodInfo():ABCMethodInfo { return _methodInfo; }

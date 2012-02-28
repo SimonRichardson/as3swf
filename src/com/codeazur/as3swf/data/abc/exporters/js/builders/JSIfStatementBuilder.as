@@ -35,7 +35,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			JSTokenKind.RIGHT_PARENTHESES.write(data);
 			JSTokenKind.LEFT_CURLY_BRACKET.write(data);
 			
-			body.write(data);
+			if(body) {
+				body.write(data);
+			}
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
 		}

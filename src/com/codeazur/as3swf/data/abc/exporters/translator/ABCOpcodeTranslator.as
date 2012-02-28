@@ -36,8 +36,11 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 				const opcode:ABCOpcode = opcodes.getAt(i);
 				const kind:ABCOpcodeKind = opcode.kind;
 				
+				trace(kind);
+				
 				switch(kind) {
 					case ABCOpcodeKind.CALLPROPERTY:
+					case ABCOpcodeKind.CALLPROPVOID:
 					case ABCOpcodeKind.DUP:
 					case ABCOpcodeKind.GETLOCAL_0:
 					case ABCOpcodeKind.GETLOCAL_1:
@@ -45,6 +48,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.GETLOCAL_3:
 					case ABCOpcodeKind.PUSHBYTE:
 					case ABCOpcodeKind.PUSHFALSE:
+					case ABCOpcodeKind.PUSHSTRING:
 					case ABCOpcodeKind.PUSHTRUE:
 						_opcodes.push(opcode);
 						break;
@@ -64,6 +68,10 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.IFSTRICTEQ:
 					case ABCOpcodeKind.IFSTRICTNE:
 					case ABCOpcodeKind.IFTRUE:
+					case ABCOpcodeKind.SETLOCAL_0:
+					case ABCOpcodeKind.SETLOCAL_1:
+					case ABCOpcodeKind.SETLOCAL_2:
+					case ABCOpcodeKind.SETLOCAL_3:
 						data.add(consume(opcode));
 						break;
 						
@@ -79,11 +87,22 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 						break;
 					
 					case ABCOpcodeKind.RETURNVOID:
+						if(_opcodes.length > 0) {
+							data.add(consume());
+						}
+						
 						data.add(new <ABCOpcode>[opcode]);
 						break;
-						
+					
+					case ABCOpcodeKind.COERCE:
+					case ABCOpcodeKind.COERCE_A:
+					case ABCOpcodeKind.COERCE_B:
+					case ABCOpcodeKind.COERCE_D:
+					case ABCOpcodeKind.COERCE_I:
+					case ABCOpcodeKind.COERCE_O:
+					case ABCOpcodeKind.COERCE_S:
+					case ABCOpcodeKind.COERCE_U:
 					case ABCOpcodeKind.FINDPROPSTRICT:
-					case ABCOpcodeKind.POP:
 						// Do nothing here
 						break;
 						
