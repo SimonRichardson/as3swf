@@ -162,7 +162,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.CALLPROPERTY:
 						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
 						const propertyArguments:Vector.<IABCWriteable> = consumeMethodArguments(result, opcode.attribute);
-						trace(">>>>>", propertyArguments);
 						if(result.length > 0) {
 							// TODO: Should we consume the whole results
 							result.push(JSConsumableBlock.create(result.pop(), JSMethodCallBuilder.create(propertyMethod, propertyArguments)));

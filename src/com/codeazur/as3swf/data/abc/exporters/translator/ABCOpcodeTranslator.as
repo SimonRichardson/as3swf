@@ -54,6 +54,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.NOT:
 					case ABCOpcodeKind.PUSHBYTE:
 					case ABCOpcodeKind.PUSHFALSE:
+					case ABCOpcodeKind.PUSHINT:
 					case ABCOpcodeKind.PUSHNULL:
 					case ABCOpcodeKind.PUSHSTRING:
 					case ABCOpcodeKind.PUSHTRUE:
