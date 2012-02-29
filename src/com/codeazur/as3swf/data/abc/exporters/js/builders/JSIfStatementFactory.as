@@ -13,19 +13,22 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	public class JSIfStatementFactory {
 		
 		public static function create(kind:ABCOpcodeKind, items:Vector.<IABCWriteable>):JSConsumableBlock {
-			const expression:JSConsumableBlock = createExpression(kind);
+			trace(items);
+			return null;
 			
-			const total:uint = items.length;
-			if(total == 2) {
-				expression.left = items[0];
-				expression.right = items[1];
-			} else if(total == 1) {
-				expression.left = items[0];
-			} else {
-				throw new Error();
-			}
-			
-			return expression;
+//			const expression:JSConsumableBlock = createExpression(kind);
+//			
+//			const total:uint = items.length;
+//			if(total == 2) {
+//				expression.left = items[0];
+//				expression.right = items[1];
+//			} else if(total == 1) {
+//				expression.left = items[0];
+//			} else {
+//				//throw new Error();
+//			}
+//			
+//			return expression;
 		}
 		
 		public static function make(statements:Vector.<IABCWriteable>):JSConsumableBlock {

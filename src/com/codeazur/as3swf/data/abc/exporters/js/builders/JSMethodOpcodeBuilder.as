@@ -8,7 +8,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
@@ -17,7 +16,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.JSStack;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSStringArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSOperatorExpressionFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSPrimaryExpressionFactory;
@@ -51,7 +49,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 
 		public function write(data : ByteArray) : void {
-			
 			const parameters:Vector.<ABCParameter> = methodInfo.parameters;
 			const parameterTotal:uint = parameters.length;
 			for(var i:uint=0; i<parameterTotal; i++) {
@@ -207,14 +204,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.IFSTRICTEQ:
 					case ABCOpcodeKind.IFSTRICTNE:
 					case ABCOpcodeKind.IFTRUE:
-						// consume everything until another if statement or end of items
-						const ifExpression:Vector.<IABCWriteable> = result.splice(0, result.length);
-						result.push(JSIfStatementFactory.create(kind, ifExpression));
+						result.push(JSIfStatementFactory.create(kind, result.splice(0, result.length)));
 						break;
 						
 					case ABCOpcodeKind.EQUALS:
 					case ABCOpcodeKind.NOT:
-						result.push(JSOperatorExpressionFactory.create(opcode.kind));
+						result.push(JSOperatorExpressionFactory.create(opcode.kind, result.splice(0, result.length)));
 						break;
 					
 					case ABCOpcodeKind.PUSHFALSE:
@@ -228,12 +223,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.PUSHSTRING:
 					case ABCOpcodeKind.GETLEX:
 					case ABCOpcodeKind.GETPROPERTY:
-						result.push(JSArgumentBuilderFactory.create(opcode.attribute));
-						break;
-					
 					case ABCOpcodeKind.PUSHSTRING:
-						const stringAttribute:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(opcode.attribute); 
-						result.push(JSStringArgumentBuilder.create(stringAttribute.string));
+						result.push(JSArgumentBuilderFactory.create(opcode.attribute));
 						break;
 					
 					case ABCOpcodeKind.DEBUG:

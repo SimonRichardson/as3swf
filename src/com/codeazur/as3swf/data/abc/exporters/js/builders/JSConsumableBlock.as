@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCConsumableBlock;
 	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
@@ -8,10 +9,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSConsumableBlock implements IABCWriteable {
+	public class JSConsumableBlock implements IABCConsumableBlock {
 		
-		public var left:IABCWriteable;
-		public var right:IABCWriteable;
+		private var _left:IABCWriteable;
+		private var _right:IABCWriteable;
 		
 		public var terminator:Boolean;
 		
@@ -39,9 +40,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			}
 		}
 		
-		protected function get hasTerminator():Boolean {
-			return terminator;
-		}
+		protected function get hasTerminator():Boolean { return terminator; }
+		
+		public function get left() : IABCWriteable { return _left; }
+		public function set left(value : IABCWriteable) : void { _left = value; }
+
+		public function get right() : IABCWriteable { return _right; }
+		public function set right(value : IABCWriteable) : void { _right = value; }
 		
 		public function get name():String { return "JSConsumableBlock"; }
 		
@@ -52,7 +57,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			str += "\n" + left.toString(indent + 4);
 			
 			if(right) {
-				str += "\n" + StringUtils.repeat(indent + 2) + "Left:";
+				str += "\n" + StringUtils.repeat(indent + 2) + "Right:";
 				str += "\n" + right.toString(indent + 4);
 			}
 			
