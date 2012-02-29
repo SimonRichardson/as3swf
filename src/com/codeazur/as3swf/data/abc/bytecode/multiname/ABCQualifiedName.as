@@ -44,7 +44,13 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			return result;
 		}
 		
-		override public function toQualifiedName():ABCQualifiedName { return this; }
+		override public function toQualifiedName():ABCQualifiedName { 
+			const qname:ABCQualifiedName = new ABCQualifiedName();
+			qname.label = label;
+			qname.kind = kind;
+			qname.ns = ns.clone();
+			return qname; 
+		}
 		
 		override public function toString(indent:uint = 0) : String {
 			return ABC.toStringCommon(name, indent) + 

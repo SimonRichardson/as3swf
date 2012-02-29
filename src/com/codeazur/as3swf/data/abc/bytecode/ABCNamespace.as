@@ -26,6 +26,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return ABCNamespaceType.getType(type);
 		}
 		
+		public function clone():ABCNamespace {
+			return new ABCNamespace(kind, value);
+		}
+		
 		public function get name():String { return "ABCNamespace"; }
 		
 		public function toString(indent:uint = 0):String {

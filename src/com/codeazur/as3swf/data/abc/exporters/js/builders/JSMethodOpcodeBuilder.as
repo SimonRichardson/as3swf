@@ -122,11 +122,15 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 					
 					case ABCOpcodeKind.SETLOCAL_1:
-						const localQName:ABCQualifiedName = JSLocalVariableBuilder.createLocalQName(0);
-						const localVariable:IABCVariableBuilder = JSLocalVariableBuilder.create(localQName, consume(opcodes, 0, offset));
-						localVariable.includeKeyword = addLocal(localVariable);
+						stack.add(createLocalVariable(0, opcodes, offset));
+						break;
 						
-						stack.add(localVariable);
+					case ABCOpcodeKind.SETLOCAL_2:
+						stack.add(createLocalVariable(1, opcodes, offset));
+						break;
+						
+					case ABCOpcodeKind.SETLOCAL_3:
+						stack.add(createLocalVariable(2, opcodes, offset));
 						break;
 					
 					case ABCOpcodeKind.RETURNVALUE:
@@ -336,6 +340,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			_position--;
 			
 			return stack;
+		}
+		
+		private function createLocalVariable(index:uint, opcodes:Vector.<ABCOpcode>, offset:uint):IABCVariableBuilder {
+			const localQName:ABCQualifiedName = JSLocalVariableBuilder.createLocalQName(index);
+			const localVariable:IABCVariableBuilder = JSLocalVariableBuilder.create(localQName, consume(opcodes, 0, offset));
+			localVariable.includeKeyword = addLocal(localVariable);
+						
+			return localVariable;
 		}
 		
 		public function get methodInfo():ABCMethodInfo { return _methodInfo; }

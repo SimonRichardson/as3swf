@@ -42,6 +42,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			 return _types[type];
 		}
 		
+		public static function isType(type:ABCNamespaceKind, kind:ABCNamespaceKind):Boolean {
+			 return type == kind;
+		}
+		
 		public function get type():uint { return _type; }
 		public function get name():String { return "ABCNamespaceKind"; }
 		
