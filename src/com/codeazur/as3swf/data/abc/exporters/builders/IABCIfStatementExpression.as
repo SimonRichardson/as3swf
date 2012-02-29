@@ -9,5 +9,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders
 		
 		function get statement():IABCWriteable;
 		function set statement(value:IABCWriteable):void;
+		
+		function get type():ABCIfStatementType;
 	}
 }

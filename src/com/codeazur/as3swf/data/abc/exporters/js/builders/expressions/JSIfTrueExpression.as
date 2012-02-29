@@ -1,6 +1,8 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 {
 
+	import com.codeazur.as3swf.data.abc.exporters.builders.ABCIfStatementType;
+
 	import flash.utils.ByteArray;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -19,5 +21,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 		}
 
 		override public function get name() : String { return "JSIfTrueExpression"; }
+		override public function get type():ABCIfStatementType { return ABCIfStatementType.TRUE; }
 	}
 }

@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 {
 
+	import com.codeazur.as3swf.data.abc.exporters.builders.ABCIfStatementType;
 	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCIfStatementExpression;
@@ -21,6 +22,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 
 		public function get statement():IABCWriteable { return _statement; }
 		public function set statement(value:IABCWriteable):void { _statement = value; }
+		
+		public function get type():ABCIfStatementType { return null; }
 		
 		public function get name():String { return "JSIfExpression"; }
 		
