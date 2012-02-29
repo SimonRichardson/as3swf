@@ -16,6 +16,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.JSStack;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentsBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSOperatorExpressionFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSPrimaryExpressionFactory;
@@ -130,7 +131,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					
 					case ABCOpcodeKind.RETURNVALUE:
 						const returnValue:Vector.<IABCWriteable> = consume(opcodes, 0, offset);
-						// stack.add(JSReturnBuilder.create(JSNameBuilder.create(returnValue))).terminator = true;
+						stack.add(JSReturnBuilder.create(JSNameBuilder.create(returnValue))).terminator = true;
 						break;
 					
 					case ABCOpcodeKind.RETURNVOID:
@@ -263,9 +264,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			} else {
 				if(!(methodInfo.needRest || methodInfo.needArguments)) {
 					result = JSArgumentBuilder.create(_arguments[index - 1]);
+				} else if(methodInfo.needRest){
+					result = JSArgumentsBuilder.create(index - 1);
 				} else {
-					// Work out needs rest and needs arguments
-					//throw new Error();
+					throw new Error();
 				}
 			}
 			
