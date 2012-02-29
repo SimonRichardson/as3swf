@@ -162,6 +162,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.CALLPROPERTY:
 						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
 						const propertyArguments:Vector.<IABCWriteable> = consumeMethodArguments(result, opcode.attribute);
+						trace(">>>>>", propertyArguments);
 						if(result.length > 0) {
 							// TODO: Should we consume the whole results
 							result.push(JSConsumableBlock.create(result.pop(), JSMethodCallBuilder.create(propertyMethod, propertyArguments)));
@@ -249,9 +250,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		private function consumeMethodArguments(items:Vector.<IABCWriteable>, attribute:ABCOpcodeAttribute):Vector.<IABCWriteable> {
-			const total:int = items.length - 1;
 			const numArguments:uint = JSArgumentBuilderFactory.getNumberArguments(attribute);
-			return items.splice(total - numArguments, numArguments);
+			return items.splice(items.length - numArguments, numArguments);
 		}
 		
 		private function getLocal(index:uint):IABCArgumentBuilder {
@@ -259,7 +259,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			
 			if(index == 0) {
 				result = JSThisArgumentBuilder.create();
-			} else if(index < methodInfo.parameters.length) {
+			} else if(index <= methodInfo.parameters.length) {
 				result = JSArgumentBuilder.create(_arguments[index - 1]);
 			} else {
 				if(!(methodInfo.needRest || methodInfo.needArguments)) {
