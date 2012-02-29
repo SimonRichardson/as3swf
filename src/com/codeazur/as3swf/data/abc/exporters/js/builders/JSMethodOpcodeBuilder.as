@@ -265,7 +265,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				if(!(methodInfo.needRest || methodInfo.needArguments)) {
 					result = JSArgumentBuilder.create(_arguments[index - 1]);
 				} else if(methodInfo.needRest){
-					result = JSArgumentsBuilder.create(index - 1);
+					result = JSArgumentsBuilder.create();
 				} else {
 					throw new Error();
 				}
