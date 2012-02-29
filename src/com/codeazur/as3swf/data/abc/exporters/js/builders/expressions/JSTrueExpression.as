@@ -2,14 +2,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCExpression;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCPrimaryExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSReservedKind;
 
 	import flash.utils.ByteArray;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSTrueExpression implements IABCExpression {
+	public class JSTrueExpression implements IABCPrimaryExpression {
 
 		public function JSTrueExpression() {
 		}

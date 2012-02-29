@@ -1,7 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 {
 
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCExpression;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCOperatorExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSConsumableBlock;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSOperatorKind;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
@@ -10,7 +10,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSInequalityExpression extends JSConsumableBlock implements IABCExpression {
+	public class JSInequalityExpression extends JSConsumableBlock implements IABCOperatorExpression {
 
 		public function JSInequalityExpression() {
 		}

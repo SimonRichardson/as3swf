@@ -19,9 +19,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSStringArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSFalseExpression;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSNullExpression;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSTrueExpression;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSOperatorExpressionFactory;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSPrimaryExpressionFactory;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 
@@ -116,7 +115,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.IFSTRICTNE:
 					case ABCOpcodeKind.IFTRUE:
 						const ifExpr:JSConsumableBlock = createIfStatementExpression(opcodes);
-						const ifBody:JSStack = parseInternalStack(opcode, indent);
+						const ifBody:JSStack = parseInternalBlock(opcode, indent);
 						stack.add(JSIfStatementBuilder.create(ifExpr, ifBody));
 						break;
 					
@@ -212,19 +211,18 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const ifExpression:Vector.<IABCWriteable> = result.splice(0, result.length);
 						result.push(JSIfStatementFactory.create(kind, ifExpression));
 						break;
+						
+					case ABCOpcodeKind.EQUALS:
+					case ABCOpcodeKind.NOT:
+						result.push(JSOperatorExpressionFactory.create(opcode.kind));
+						break;
 					
 					case ABCOpcodeKind.PUSHFALSE:
-						result.push(JSFalseExpression.create());
-						break;
-						
-					case ABCOpcodeKind.PUSHTRUE:
-						result.push(JSTrueExpression.create());
-						break;
-						
 					case ABCOpcodeKind.PUSHNULL:
-						result.push(JSNullExpression.create());
+					case ABCOpcodeKind.PUSHTRUE:
+						result.push(JSPrimaryExpressionFactory.create(opcode.kind));
 						break;
-					
+						
 					case ABCOpcodeKind.PUSHBYTE:
 					case ABCOpcodeKind.PUSHINT:
 					case ABCOpcodeKind.PUSHSTRING:
@@ -236,6 +234,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.PUSHSTRING:
 						const stringAttribute:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(opcode.attribute); 
 						result.push(JSStringArgumentBuilder.create(stringAttribute.string));
+						break;
+					
+					case ABCOpcodeKind.DEBUG:
+					case ABCOpcodeKind.DEBUGFILE:
+					case ABCOpcodeKind.DEBUGLINE:
+						// do nothing here
 						break;
 						
 					default:
@@ -326,7 +330,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			return JSIfStatementFactory.make(items);
 		}
 		
-		private function parseInternalStack(opcode:ABCOpcode, indent:uint):JSStack {
+		private function parseInternalBlock(opcode:ABCOpcode, indent:uint):JSStack {
 			const stack:JSStack = JSStack.create();
 			const opcodes:ABCOpcodeSet = methodInfo.methodBody.opcode;
 			
