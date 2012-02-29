@@ -10,13 +10,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSLogicalNotExpression extends JSConsumableBlock implements IABCExpression {
+	public class JSLogicalOrExpression extends JSConsumableBlock implements IABCExpression {
 
-		public function JSLogicalNotExpression() {
+		public function JSLogicalOrExpression() {
 		}
 
-		public static function create(left:IABCWriteable = null, right:IABCWriteable = null):JSLogicalNotExpression {
-			const expression:JSLogicalNotExpression = new JSLogicalNotExpression();
+		public static function create(left:IABCWriteable = null, right:IABCWriteable = null):JSLogicalOrExpression {
+			const expression:JSLogicalOrExpression = new JSLogicalOrExpression();
 			expression.left = left;
 			expression.right = right;
 			return expression;
@@ -27,11 +27,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 				left.write(data);
 			} else {
 				left.write(data);
-				JSOperatorKind.LOGICAL_NOT.write(data);
+				JSOperatorKind.LOGICAL_OR.write(data);
 				right.write(data);
 			}
 		}
 		
-		override public function get name():String { return "JSLogicalNotExpression"; }
+		override public function get name():String { return "JSLogicalOrExpression"; }
 	}
 }

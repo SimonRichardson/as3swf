@@ -20,7 +20,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 		}
 
 		override public function write(data : ByteArray) : void {
-			JSOperatorKind.LOGICAL_NOT.write(data);
+			// JSOperatorKind.LOGICAL_NOT.write(data);
 			JSTokenKind.LEFT_PARENTHESES.write(data);
 			
 			statement.write(data);

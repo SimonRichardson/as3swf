@@ -11,7 +11,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSIfTrueExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSInequalityExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSLogicalAndExpression;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSLogicalNotExpression;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSLogicalOrExpression;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -62,7 +62,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			const type0:ABCIfStatementType = IABCIfStatementExpression(itemA).type;
 			const type1:ABCIfStatementType = IABCIfStatementExpression(itemB).type;
 				
-			return (ABCIfStatementType.equals(type0, type1)) ? new JSLogicalAndExpression() : new JSLogicalNotExpression();
+			return (ABCIfStatementType.equals(type0, type1)) ? new JSLogicalAndExpression() : new JSLogicalOrExpression();
 		}
 		
 		private static function createExpression(kind:ABCOpcodeKind):IABCIfStatementExpression {
