@@ -5,12 +5,16 @@ package com.codeazur.as3swf.data.abc.exporters
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassStaticBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSClassBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSClassStaticBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSMethodBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
+	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
 
@@ -44,16 +48,27 @@ package com.codeazur.as3swf.data.abc.exporters
 				classBuilder.instanceInfo = instanceInfo;
 				classBuilder.write(data);
 				
+				const methodInfoSet:uint = abcData.methodInfoSet.length;
+				if(methodInfoSet > 0) {
+					JSTokenKind.COMMA.write(data);
+				}
+				
 				// methods
 				// TODO : Make sure we only output the right methods for the class
-//				const methodInfoSet:uint = abcData.methodInfoSet.length;
-//				for(var j:uint=0; j<methodInfoSet; j++) {
-//					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
-//					if(!StringUtils.isEmpty(methodInfo.methodName) && !methodInfo.isConstructor) {
-//						const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
-//						methodBuilder.write(data);
-//					}
-//				}
+				var methodTotal:uint = methodInfoSet - 1;
+				for(var j:uint=0; j<methodInfoSet; j++) {
+					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
+					if(!StringUtils.isEmpty(methodInfo.methodName) && !methodInfo.isConstructor) {
+						const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
+						methodBuilder.write(data);
+						
+						if(j < methodTotal) {
+							JSTokenKind.COMMA.write(data);
+						}
+					} else if(methodInfo.isConstructor) {
+						methodTotal--;
+					}
+				}
 
 				// statics
 				if(classInfo.traits.length > 0) {

@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCBuilder;
 
@@ -9,22 +10,22 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	 */
 	public class JSReturnBuilder implements IABCBuilder
 	{
-		public var useSpace:Boolean;
+		
+		public var expressions:IABCWriteable;
 		
 		public function JSReturnBuilder() {
-			useSpace = true;
 		}
 		
-		public static function create():JSReturnBuilder {
-			return new JSReturnBuilder();
+		public static function create(expressions:IABCWriteable):JSReturnBuilder {
+			const instance:JSReturnBuilder = new JSReturnBuilder();
+			instance.expressions = expressions;
+			return instance;
 		}
 
 		public function write(data : ByteArray) : void {
 			JSReservedKind.RETURN.write(data);
-			
-			if(useSpace) {
-				JSTokenKind.SPACE.write(data);
-			}
+			JSTokenKind.SPACE.write(data);
+			expressions.write(data);
 		}
 		
 		public function get name():String { return "JSReturnBuilder"; }

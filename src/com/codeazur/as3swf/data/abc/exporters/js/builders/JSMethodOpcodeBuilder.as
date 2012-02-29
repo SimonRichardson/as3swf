@@ -127,7 +127,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						
 						stack.add(localVariable);
 						break;
-						
+					
+					case ABCOpcodeKind.RETURNVALUE:
+						const returnValue:Vector.<IABCWriteable> = consume(opcodes, 0, offset);
+						// stack.add(JSReturnBuilder.create(JSNameBuilder.create(returnValue))).terminator = true;
+						break;
+					
 					case ABCOpcodeKind.RETURNVOID:
 						stack.add(JSReturnVoidBuilder.create()).terminator = true;
 						break;
@@ -260,7 +265,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					result = JSArgumentBuilder.create(_arguments[index - 1]);
 				} else {
 					// Work out needs rest and needs arguments
-					throw new Error();
+					//throw new Error();
 				}
 			}
 			

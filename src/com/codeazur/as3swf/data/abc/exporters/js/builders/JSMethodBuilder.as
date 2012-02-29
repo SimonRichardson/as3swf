@@ -61,7 +61,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
-			JSTokenKind.COMMA.write(data);
 		}
 		
 		public function get methodInfo():ABCMethodInfo { return _methodInfo; }
