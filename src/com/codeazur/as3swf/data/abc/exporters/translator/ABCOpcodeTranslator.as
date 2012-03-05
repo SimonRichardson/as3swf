@@ -41,10 +41,10 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.DEBUG:
 					case ABCOpcodeKind.DEBUGFILE:
 					case ABCOpcodeKind.DEBUGLINE:
-					case ABCOpcodeKind.DUP:
 					case ABCOpcodeKind.GREATERTHAN:
 					case ABCOpcodeKind.GREATEREQUALS:
 					case ABCOpcodeKind.EQUALS:
+					case ABCOpcodeKind.GETLEX:
 					case ABCOpcodeKind.GETLOCAL_0:
 					case ABCOpcodeKind.GETLOCAL_1:
 					case ABCOpcodeKind.GETLOCAL_2:
@@ -60,6 +60,10 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.PUSHTRUE:
 					case ABCOpcodeKind.STRICTEQUALS:
 						_opcodes.push(opcode);
+						break;
+						
+					case ABCOpcodeKind.DUP:
+						_opcodes.push(_opcodes.slice(_opcodes.length - 1)[0]);
 						break;
 					
 					case ABCOpcodeKind.CALLPROPVOID:
@@ -119,7 +123,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 						break;
 						
 					default:
-						trace(kind);
+						trace(kind, opcode);
 						break;
 				}
 			}

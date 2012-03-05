@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters
 {
 
+	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
@@ -49,22 +50,21 @@ package com.codeazur.as3swf.data.abc.exporters
 				classBuilder.write(data);
 				
 				const methodInfoSet:uint = abcData.methodInfoSet.length;
-				if(methodInfoSet > 0) {
-					JSTokenKind.COMMA.write(data);
-				}
 				
 				// methods
 				// TODO : Make sure we only output the right methods for the class
 				var methodTotal:uint = methodInfoSet - 1;
 				for(var j:uint=0; j<methodInfoSet; j++) {
 					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
-					if(!StringUtils.isEmpty(methodInfo.methodName) && !methodInfo.isConstructor) {
+					
+					if(	!(StringUtils.isEmpty(methodInfo.methodName) || 
+						  ABCNamespaceType.isTypeByValue(methodInfo.methodName, ABCNamespaceType.ASTERISK)) && 
+						  !methodInfo.isConstructor) {
+						
+						JSTokenKind.COMMA.write(data);
+						
 						const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
 						methodBuilder.write(data);
-						
-						if(j < methodTotal) {
-							JSTokenKind.COMMA.write(data);
-						}
 					} else if(methodInfo.isConstructor) {
 						methodTotal--;
 					}

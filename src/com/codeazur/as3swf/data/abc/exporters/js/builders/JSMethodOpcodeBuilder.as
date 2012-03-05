@@ -115,7 +115,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const ifExpr:JSConsumableBlock = createIfStatementExpression(opcodes);
 						const ifBody:JSStack = parseInternalBlock(opcode, indent);
 						stack.add(JSIfStatementBuilder.create(ifExpr, ifBody));
-						break;
+						break;			
 					
 					case ABCOpcodeKind.GETLOCAL_0:
 						stack.add(JSNameBuilder.create(consume(opcodes, 0, offset + 1), true));
@@ -235,6 +235,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.GETPROPERTY:
 					case ABCOpcodeKind.PUSHSTRING:
 						result.push(JSArgumentBuilderFactory.create(opcode.attribute));
+						break;
+					
+					case ABCOpcodeKind.DUP:
+						throw new Error('Invalid duplication (expected=null, recieved=' + kind + ")");
 						break;
 					
 					case ABCOpcodeKind.DEBUG:

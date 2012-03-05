@@ -23,6 +23,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return _types[type]; 
 		}
 		
+		public static function isType(type:ABCNamespaceType, kind:ABCNamespaceType):Boolean {
+			return type.ns.kind == type.ns.kind && type.ns.value == type.ns.value;
+		}
+		
+		public static function isTypeByValue(value:String, kind:ABCNamespaceType):Boolean {
+			return kind.ns.value == value;
+		}
+		
 		public function get ns():ABCNamespace { return _ns; }
 		public function get name():String { return "ABCNamespaceType"; }
 		
