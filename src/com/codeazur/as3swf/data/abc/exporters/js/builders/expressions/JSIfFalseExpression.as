@@ -2,7 +2,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 {
 
 	import com.codeazur.as3swf.data.abc.exporters.builders.ABCIfStatementType;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSOperatorKind;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 
 	import flash.utils.ByteArray;
@@ -20,7 +19,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 		}
 
 		override public function write(data : ByteArray) : void {
-			// JSOperatorKind.LOGICAL_NOT.write(data);
 			JSTokenKind.LEFT_PARENTHESES.write(data);
 			
 			statement.write(data);
