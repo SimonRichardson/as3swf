@@ -365,7 +365,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			const opcodes:ABCOpcodeSet = methodInfo.methodBody.opcode;
 						
 			_position++;
-			trace(">>>>>>>>>", opcodes.getJumpTarget(opcode));
 			recursive(stack, indent + 1, opcodes.getJumpTarget(opcode));
 			_position--;
 			

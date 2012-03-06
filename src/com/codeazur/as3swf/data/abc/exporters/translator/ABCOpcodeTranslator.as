@@ -148,8 +148,9 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 			if(opcode) {
 				const length:uint = result.length;
 				if(length > 0) {
-					if(ABCOpcodeKind.isType(result[length - 1].kind, ABCOpcodeKind.JUMP)) {
-						result.splice(length - 1, 0, opcode);
+					var index:int = indexOfKind(result, ABCOpcodeKind.JUMP);
+					if(index > -1) {
+						result.push(opcode, result.splice(index, 1)[0]);
 					} else {
 						result.push(opcode);
 					}
@@ -181,11 +182,12 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 				case ABCOpcodeKind.IFSTRICTNE:
 				case ABCOpcodeKind.IFTRUE:
 					if(data.tail) {
-						
 						const tail:Vector.<ABCOpcode> = data.tail;
 						const last:ABCOpcode = tail[tail.length - 1];
 						
 						if(ABCOpcodeKind.isIfType(last.kind) && containsComparison(tail)) {
+							consumeBlock(data);
+						} else if(ABCOpcodeKind.isType(last.kind, ABCOpcodeKind.JUMP) && containsComparison(tail)) {
 							consumeBlock(data);
 						}
 						
@@ -223,6 +225,20 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 			for(var i:uint=0; i<total; i++) {
 				if(ABCOpcodeKind.isComparisonType(haystack[i].kind)) {
 					result = true;
+					break;
+				}
+			}
+			
+			return result;
+		}
+		
+		private function indexOfKind(haystack:Vector.<ABCOpcode>, kind:ABCOpcodeKind):int {
+			var result:int = -1;
+			
+			const total:uint = haystack.length;
+			for(var i:uint=0; i<total; i++) {
+				if(ABCOpcodeKind.isType(haystack[i].kind, kind)) {
+					result = i;
 					break;
 				}
 			}
