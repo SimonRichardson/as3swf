@@ -82,6 +82,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.IFSTRICTEQ:
 					case ABCOpcodeKind.IFSTRICTNE:
 					case ABCOpcodeKind.IFTRUE:
+					case ABCOpcodeKind.JUMP:
 					case ABCOpcodeKind.RETURNVALUE:
 					case ABCOpcodeKind.SETLOCAL_0:
 					case ABCOpcodeKind.SETLOCAL_1:

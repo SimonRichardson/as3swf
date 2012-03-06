@@ -28,10 +28,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		public function write(data:ByteArray):void {
+			const position:int = data.position;
 			left.write(data);
 			
 			if(right) {
-				JSTokenKind.DOT.write(data);
+				// Don't do this if we've not got a valid update in the left hand side
+				if(position != data.position) {
+					JSTokenKind.DOT.write(data);
+				}
 				right.write(data);
 			}
 			

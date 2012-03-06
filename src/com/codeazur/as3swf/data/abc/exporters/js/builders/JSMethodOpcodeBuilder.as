@@ -95,6 +95,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const propertyName:Vector.<IABCWriteable> = createName(opcodes, opcode.attribute);
 						const propertyArguments:Vector.<IABCWriteable> = createMethodArguments(opcodes, opcode.attribute);
 						
+						trace(">>", propertyName);
+						
 						stack.add(JSNameBuilder.create(propertyName), JSMethodCallBuilder.create(propertyMethod, propertyArguments)).terminator = true;
 						break;
 					
