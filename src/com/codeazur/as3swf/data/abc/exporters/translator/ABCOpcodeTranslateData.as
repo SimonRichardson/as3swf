@@ -1,6 +1,9 @@
 package com.codeazur.as3swf.data.abc.exporters.translator
 {
 
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeIntegerAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -46,7 +49,16 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 			for(var i:uint=0; i<_items.length; i++) {
 				str += "\n" + StringUtils.repeat(indent + 4) + "Block:";
 				for(var j:uint=0; j<_items[i].length; j++) {
-					str += "\n" + _items[i][j].kind.toString(indent + 6);
+					const kind:ABCOpcodeKind = _items[i][j].kind;
+					if(ABCOpcodeKind.isType(kind, ABCOpcodeKind.DEBUGLINE)) {
+						const intAttr:IABCOpcodeIntegerAttribute = IABCOpcodeIntegerAttribute(_items[i][j].attribute);
+						str += "\n" + kind.toString(indent + 6) + " (line=" + intAttr.integer + ")";
+					} else if(ABCOpcodeKind.isType(kind, ABCOpcodeKind.PUSHSTRING)) {
+					 	const strAttr:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(_items[i][j].attribute);
+						str += "\n" + kind.toString(indent + 6) + " (string=" + strAttr.string + ")";
+					} else {
+						str += "\n" + kind.toString(indent + 6);
+					}
 				}
 			}
 			

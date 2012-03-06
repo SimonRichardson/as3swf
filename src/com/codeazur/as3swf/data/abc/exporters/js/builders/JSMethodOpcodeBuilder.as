@@ -72,9 +72,16 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				const opcodes:Vector.<ABCOpcode> = translateData.getAt(_position);
 				const opcodesTotal:uint = opcodes.length;
 				
-				if(tail && (opcodes.length > 0 && opcodes[0] == tail)) {
-					return;
-				}
+				if(tail) {
+					if(opcodes.indexOf(tail) > -1) {
+						return;
+					} else if(ABCOpcodeKind.isType(opcodes[opcodes.length - 1].kind, ABCOpcodeKind.JUMP)) {
+						const next:Vector.<ABCOpcode> = translateData.getAt(_position + 1);
+						if(next.indexOf(tail) > -1) {
+							return;
+						}
+					} 
+				} 
 				
 				// Get the tail items so that we know what to do with the item
 				const offset:int = opcodesTotal - 1;
@@ -117,8 +124,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 						
 					case ABCOpcodeKind.JUMP:
+						const jumpcode:ABCOpcode = opcodes.length > 2 ? opcodes[opcodes.length - 2] : opcodes[opcodes.length - 1];
 						const jumpExpr:JSConsumableBlock = createIfStatementExpression(opcodes);
-						const jumpBody:JSStack = parseInternalBlock(opcode, indent);
+						const jumpBody:JSStack = parseInternalBlock(jumpcode, indent);
 						stack.add(JSIfStatementBuilder.create(kind, jumpExpr, jumpBody));
 						break;
 				
@@ -345,9 +353,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		private function parseInternalBlock(opcode:ABCOpcode, indent:uint):JSStack {
 			const stack:JSStack = JSStack.create();
 			const opcodes:ABCOpcodeSet = methodInfo.methodBody.opcode;
-			
+						
 			_position++;
-			trace(">>>>>", opcodes.getJumpTarget(opcode));
+			trace(">>>>>>>>>", opcodes.getJumpTarget(opcode));
 			recursive(stack, indent + 1, opcodes.getJumpTarget(opcode));
 			_position--;
 			
