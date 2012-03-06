@@ -6,18 +6,23 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	 */
 	public class JSTokenKind {
 		
+		public static const ASTERISK:JSTokenKind = new JSTokenKind("*");
 		public static const AMPERSAND:JSTokenKind = new JSTokenKind("&");
+		public static const BACK_SLASH:JSTokenKind = new JSTokenKind("\\");
 		public static const COLON:JSTokenKind = new JSTokenKind(":");
 		public static const COMMA:JSTokenKind = new JSTokenKind(",");
 		public static const DOT:JSTokenKind = new JSTokenKind(".");
 		public static const DOUBLE_QUOTE:JSTokenKind = new JSTokenKind("\"");
 		public static const EQUALS:JSTokenKind = new JSTokenKind("=");
 		public static const EXCLAMATION_MARK:JSTokenKind = new JSTokenKind("!");
+		public static const FORWARD_SLASH:JSTokenKind = new JSTokenKind("/");
 		public static const LEFT_ANGLE_BRACKET : JSTokenKind = new JSTokenKind("<");
 		public static const LEFT_CURLY_BRACKET:JSTokenKind = new JSTokenKind("{");
 		public static const LEFT_PARENTHESES:JSTokenKind = new JSTokenKind("(");
 		public static const LEFT_SQUARE_BRACKET:JSTokenKind = new JSTokenKind("[");
 		public static const PIPE:JSTokenKind = new JSTokenKind("|");
+		public static const PLUS_SIGN:JSTokenKind = new JSTokenKind("+");
+		public static const MINUS_SIGN:JSTokenKind = new JSTokenKind("-");
 		public static const QUESTION_MARK:JSTokenKind = new JSTokenKind("?");
 		public static const RIGHT_ANGLE_BRACKET : JSTokenKind = new JSTokenKind(">");
 		public static const RIGHT_CURLY_BRACKET:JSTokenKind = new JSTokenKind("}");

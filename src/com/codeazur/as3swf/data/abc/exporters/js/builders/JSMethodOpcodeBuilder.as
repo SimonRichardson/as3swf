@@ -230,8 +230,16 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						result.push(JSIfStatementFactory.create(kind, result.splice(0, result.length)));
 						break;
 	
+					case ABCOpcodeKind.ADD:
+					case ABCOpcodeKind.ADD_D:
+					case ABCOpcodeKind.ADD_I:
+					case ABCOpcodeKind.DIVIDE:
 					case ABCOpcodeKind.EQUALS:
+					case ABCOpcodeKind.MULTIPLY:
+					case ABCOpcodeKind.MULTIPLY_I:
 					case ABCOpcodeKind.NOT:
+					case ABCOpcodeKind.SUBTRACT:
+					case ABCOpcodeKind.SUBTRACT_I:
 						result.push(JSOperatorExpressionFactory.create(opcode.kind, result.splice(0, result.length)));
 						break;
 					
@@ -242,6 +250,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 						
 					case ABCOpcodeKind.PUSHBYTE:
+					case ABCOpcodeKind.PUSHDECIMAL:
+					case ABCOpcodeKind.PUSHDOUBLE:
 					case ABCOpcodeKind.PUSHINT:
 					case ABCOpcodeKind.PUSHSTRING:
 					case ABCOpcodeKind.GETLEX:

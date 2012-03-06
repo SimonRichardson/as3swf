@@ -1,9 +1,9 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 {
 
-	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCOperatorExpression;
+	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -14,8 +14,22 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 			var expression:IABCOperatorExpression;
 			
 			switch(kind) {
+				case ABCOpcodeKind.ADD:
+				case ABCOpcodeKind.ADD_D:
+				case ABCOpcodeKind.ADD_I:
+					expression = new JSAddExpression();
+					break;
+				
+				case ABCOpcodeKind.DIVIDE:
+					expression = new JSDivideExpression();
+					break;
+					
 				case ABCOpcodeKind.EQUALS:
 					expression = new JSEqualityExpression();
+					break;
+					
+				case ABCOpcodeKind.MULTIPLY:
+					expression = new JSMultiplyExpression();
 					break;
 					
 				case ABCOpcodeKind.NOT:
@@ -28,6 +42,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 						expression.right = equality.right;
 						infix = true;
 					}
+					break;
+				
+				case ABCOpcodeKind.SUBTRACT:
+				case ABCOpcodeKind.SUBTRACT_I:
+					expression = new JSSubtractExpression();
 					break;
 				
 				default:

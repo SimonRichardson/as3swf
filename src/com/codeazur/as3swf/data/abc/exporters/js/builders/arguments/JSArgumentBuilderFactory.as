@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 {
 
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDoubleAttribute;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSReservedKind;
 	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceKind;
@@ -49,6 +50,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 			} else if(attribute is ABCOpcodeStringAttribute) {
 				const strAttr:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(attribute);
 				builder = JSStringArgumentBuilder.create(strAttr.string);
+				
+			} else if(attribute is ABCOpcodeDoubleAttribute) {
+				const doubleAttr:ABCOpcodeDoubleAttribute = ABCOpcodeDoubleAttribute(attribute);
+				builder = JSFloatArgumentBuilder.create(doubleAttr.double);
 				
 			} else {
 				throw new Error(attribute);

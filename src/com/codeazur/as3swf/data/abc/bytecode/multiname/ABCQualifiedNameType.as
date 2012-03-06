@@ -7,12 +7,14 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 	 */
 	public class ABCQualifiedNameType {
 		
+		public static const FLOAT:ABCQualifiedNameType = new ABCQualifiedNameType(ABCQualifiedName.create(FLOAT_NAME, ABCNamespace.create(ABCNamespaceKind.PACKAGE_NAMESPACE.type, "")));
 		public static const INT:ABCQualifiedNameType = new ABCQualifiedNameType(ABCQualifiedName.create(INT_NAME, ABCNamespace.create(ABCNamespaceKind.PACKAGE_NAMESPACE.type, "")));
 		public static const STRING:ABCQualifiedNameType = new ABCQualifiedNameType(ABCQualifiedName.create(STRING_NAME, ABCNamespace.create(ABCNamespaceKind.PACKAGE_NAMESPACE.type, "")));
 		public static const UINT:ABCQualifiedNameType = new ABCQualifiedNameType(ABCQualifiedName.create(UINT_NAME, ABCNamespace.create(ABCNamespaceKind.PACKAGE_NAMESPACE.type, "")));
 		
 		public static const BUILTIN_NAME:String = "http://adobe.com/AS3/2006/builtin";
 		
+		private static const FLOAT_NAME:String = "Number";
 		private static const INT_NAME:String = "int";
 		private static const STRING_NAME:String = "String";
 		private static const UINT_NAME:String = "uint";

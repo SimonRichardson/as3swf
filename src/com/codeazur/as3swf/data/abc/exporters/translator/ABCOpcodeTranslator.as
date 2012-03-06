@@ -37,10 +37,14 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 				const kind:ABCOpcodeKind = opcode.kind;
 				
 				switch(kind) {
+					case ABCOpcodeKind.ADD:
+					case ABCOpcodeKind.ADD_D:
+					case ABCOpcodeKind.ADD_I:
 					case ABCOpcodeKind.CALLPROPERTY:
 					case ABCOpcodeKind.DEBUG:
 					case ABCOpcodeKind.DEBUGFILE:
 					case ABCOpcodeKind.DEBUGLINE:
+					case ABCOpcodeKind.DIVIDE:
 					case ABCOpcodeKind.GREATERTHAN:
 					case ABCOpcodeKind.GREATEREQUALS:
 					case ABCOpcodeKind.EQUALS:
@@ -51,14 +55,20 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.GETLOCAL_3:
 					case ABCOpcodeKind.GETPROPERTY:
 					case ABCOpcodeKind.GETSUPER:
+					case ABCOpcodeKind.MULTIPLY:
+					case ABCOpcodeKind.MULTIPLY_I:
 					case ABCOpcodeKind.NOT:
 					case ABCOpcodeKind.PUSHBYTE:
+					case ABCOpcodeKind.PUSHDECIMAL:
+					case ABCOpcodeKind.PUSHDOUBLE:
 					case ABCOpcodeKind.PUSHFALSE:
 					case ABCOpcodeKind.PUSHINT:
 					case ABCOpcodeKind.PUSHNULL:
 					case ABCOpcodeKind.PUSHSTRING:
 					case ABCOpcodeKind.PUSHTRUE:
 					case ABCOpcodeKind.STRICTEQUALS:
+					case ABCOpcodeKind.SUBTRACT:
+					case ABCOpcodeKind.SUBTRACT_I:
 						_opcodes.push(opcode);
 						break;
 						
