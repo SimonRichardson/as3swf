@@ -15,6 +15,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public static const CONSTRUCTOR:JSReservedKind = new JSReservedKind("constructor");
 		public static const CONTINUE:JSReservedKind = new JSReservedKind("continue");
 		public static const DEFAULT:JSReservedKind = new JSReservedKind("default");
+		public static const ELSE:JSReservedKind = new JSReservedKind("else");
 		public static const EXTENDS:JSReservedKind = new JSReservedKind("extend");
 		public static const FALSE:JSReservedKind = new JSReservedKind("false");
 		public static const FOR:JSReservedKind = new JSReservedKind("for");

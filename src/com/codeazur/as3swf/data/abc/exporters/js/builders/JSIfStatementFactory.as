@@ -37,7 +37,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			var result:JSConsumableBlock;
 			 
 			const total:uint = statements.length;
-			if(total == 1) {
+			if(total == 0) {
+				result = null;
+			} else if(total == 1) {
 				result = JSConsumableBlock.create(statements[0]);
 			} else if(total > 1) {
 				result = createLogicalExpression(statements[0], statements[1]);

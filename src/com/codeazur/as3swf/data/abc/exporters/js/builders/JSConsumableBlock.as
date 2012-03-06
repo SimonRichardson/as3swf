@@ -29,6 +29,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		
 		public function write(data:ByteArray):void {
 			const position:int = data.position;
+			
 			left.write(data);
 			
 			if(right) {

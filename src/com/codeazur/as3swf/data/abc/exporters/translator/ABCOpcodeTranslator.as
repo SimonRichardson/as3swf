@@ -134,10 +134,20 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 		
 		private function consume(opcode:ABCOpcode=null):Vector.<ABCOpcode> {
 			const result:Vector.<ABCOpcode> = _opcodes.slice();
+						
 			if(opcode) {
-				result.push(opcode);
+				const length:uint = result.length;
+				if(length > 0) {
+					if(ABCOpcodeKind.isType(result[length - 1].kind, ABCOpcodeKind.JUMP)) {
+						result.splice(length - 1, 0, opcode);
+					} else {
+						result.push(opcode);
+					}
+				} else {
+					result.push(opcode);
+				}
 			}
-			
+						
 			_opcodes.length = 0;
 			
 			return result;
@@ -145,7 +155,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 		
 		private function consumeTail(data:ABCOpcodeTranslateData, opcode:ABCOpcode):void {
 			const kind:ABCOpcodeKind = opcode.kind;
-			switch(kind) {
+			switch(kind) {			
 				case ABCOpcodeKind.IFEQ:
 				case ABCOpcodeKind.IFFALSE:
 				case ABCOpcodeKind.IFGE:
@@ -166,14 +176,33 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 						const last:ABCOpcode = tail[tail.length - 1];
 						
 						if(ABCOpcodeKind.isIfType(last.kind) && containsComparison(tail)) {
-							const previous:Vector.<ABCOpcode> = data.pop();
-							var index:int = previous.length;
-							while(--index>-1) {
-								_opcodes.unshift(previous[index]);
-							}
+							consumeBlock(data);
 						}
+						
+						consumeJump(data);
 					}
 					break;
+			}
+		}
+		
+		private function consumeJump(data:ABCOpcodeTranslateData):void {
+			if(data.tail){
+				const length:uint = data.tail.length;
+				if(length == 1 && ABCOpcodeKind.isType(data.tail[length - 1].kind, ABCOpcodeKind.JUMP)) {
+					consumeBlock(data, true);
+				}
+			}
+		}
+		
+		private function consumeBlock(data:ABCOpcodeTranslateData, insertAtTail:Boolean=false):void {
+			const previous:Vector.<ABCOpcode> = data.pop();
+			var index:int = previous.length;
+			while(--index>-1) {
+				if(insertAtTail) {
+					_opcodes.push(previous[index]);
+				} else {
+					_opcodes.unshift(previous[index]);
+				}
 			}
 		}
 		

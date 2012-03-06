@@ -94,9 +94,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
 						const propertyName:Vector.<IABCWriteable> = createName(opcodes, opcode.attribute);
 						const propertyArguments:Vector.<IABCWriteable> = createMethodArguments(opcodes, opcode.attribute);
-						
-						trace(">>", propertyName);
-						
 						stack.add(JSNameBuilder.create(propertyName), JSMethodCallBuilder.create(propertyMethod, propertyArguments)).terminator = true;
 						break;
 					
@@ -116,9 +113,15 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.IFTRUE:
 						const ifExpr:JSConsumableBlock = createIfStatementExpression(opcodes);
 						const ifBody:JSStack = parseInternalBlock(opcode, indent);
-						stack.add(JSIfStatementBuilder.create(ifExpr, ifBody));
-						break;			
-					
+						stack.add(JSIfStatementBuilder.create(kind, ifExpr, ifBody));
+						break;
+						
+					case ABCOpcodeKind.JUMP:
+						const jumpExpr:JSConsumableBlock = createIfStatementExpression(opcodes);
+						const jumpBody:JSStack = parseInternalBlock(opcode, indent);
+						stack.add(JSIfStatementBuilder.create(kind, jumpExpr, jumpBody));
+						break;
+				
 					case ABCOpcodeKind.GETLOCAL_0:
 						stack.add(JSNameBuilder.create(consume(opcodes, 0, offset + 1), true));
 						break;
@@ -218,7 +221,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.IFTRUE:
 						result.push(JSIfStatementFactory.create(kind, result.splice(0, result.length)));
 						break;
-						
+	
 					case ABCOpcodeKind.EQUALS:
 					case ABCOpcodeKind.NOT:
 						result.push(JSOperatorExpressionFactory.create(opcode.kind, result.splice(0, result.length)));
@@ -331,9 +334,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						throw new Error();
 					}
 					previous = index;
+				} else if(ABCOpcodeKind.isType(opcode.kind, ABCOpcodeKind.JUMP)) {
+					continue;
 				}
 			}
-						
+			
 			return JSIfStatementFactory.make(items);
 		}
 		
@@ -342,6 +347,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			const opcodes:ABCOpcodeSet = methodInfo.methodBody.opcode;
 			
 			_position++;
+			trace(">>>>>", opcodes.getJumpTarget(opcode));
 			recursive(stack, indent + 1, opcodes.getJumpTarget(opcode));
 			_position--;
 			
