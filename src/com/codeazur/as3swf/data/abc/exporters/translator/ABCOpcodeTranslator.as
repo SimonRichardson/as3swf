@@ -37,6 +37,22 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 				const kind:ABCOpcodeKind = opcode.kind;
 				
 				switch(kind) {
+					case ABCOpcodeKind.COERCE:
+					case ABCOpcodeKind.COERCE_A:
+					case ABCOpcodeKind.COERCE_B:
+					case ABCOpcodeKind.COERCE_D:
+					case ABCOpcodeKind.COERCE_I:
+					case ABCOpcodeKind.COERCE_O:
+					case ABCOpcodeKind.COERCE_S:
+					case ABCOpcodeKind.COERCE_U:
+					case ABCOpcodeKind.CONVERT_B:
+					case ABCOpcodeKind.CONVERT_D:
+					case ABCOpcodeKind.CONVERT_I:
+					case ABCOpcodeKind.CONVERT_O:
+					case ABCOpcodeKind.CONVERT_S:
+					case ABCOpcodeKind.CONVERT_U:
+					case ABCOpcodeKind.FINDPROPSTRICT:
+						// The above codes can be ignored if outputting to JS
 					case ABCOpcodeKind.ADD:
 					case ABCOpcodeKind.ADD_D:
 					case ABCOpcodeKind.ADD_I:
@@ -115,24 +131,6 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 						data.add(new <ABCOpcode>[opcode]);
 						break;
 					
-					case ABCOpcodeKind.COERCE:
-					case ABCOpcodeKind.COERCE_A:
-					case ABCOpcodeKind.COERCE_B:
-					case ABCOpcodeKind.COERCE_D:
-					case ABCOpcodeKind.COERCE_I:
-					case ABCOpcodeKind.COERCE_O:
-					case ABCOpcodeKind.COERCE_S:
-					case ABCOpcodeKind.COERCE_U:
-					case ABCOpcodeKind.CONVERT_B:
-					case ABCOpcodeKind.CONVERT_D:
-					case ABCOpcodeKind.CONVERT_I:
-					case ABCOpcodeKind.CONVERT_O:
-					case ABCOpcodeKind.CONVERT_S:
-					case ABCOpcodeKind.CONVERT_U:
-					case ABCOpcodeKind.FINDPROPSTRICT:
-						// Do nothing here
-						break;
-						
 					default:
 						trace(kind, opcode);
 						break;
@@ -184,6 +182,17 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					if(data.tail) {
 						const tail:Vector.<ABCOpcode> = data.tail;
 						const last:ABCOpcode = tail[tail.length - 1];
+						
+						const methodBody:ABCMethodBody = methodInfo.methodBody;
+						const opcodes:ABCOpcodeSet = methodBody.opcode;
+						if(tail.length > 1) {
+							const preTail:ABCOpcode = tail[tail.length - 2];
+							if(ABCOpcodeKind.isIfType(preTail.kind) && opcodes.getJumpTarget(preTail)) {
+								trace(">>>>>>>>", preTail.kind, opcodes.getJumpTarget(preTail));
+								consumeBlock(data);
+								return;
+							}
+						}
 						
 						if(ABCOpcodeKind.isIfType(last.kind) && containsComparison(tail)) {
 							consumeBlock(data);

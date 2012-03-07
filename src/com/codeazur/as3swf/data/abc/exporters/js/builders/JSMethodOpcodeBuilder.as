@@ -269,6 +269,24 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.DEBUGLINE:
 						// do nothing here
 						break;
+					
+					case ABCOpcodeKind.COERCE:
+					case ABCOpcodeKind.COERCE_A:
+					case ABCOpcodeKind.COERCE_B:
+					case ABCOpcodeKind.COERCE_D:
+					case ABCOpcodeKind.COERCE_I:
+					case ABCOpcodeKind.COERCE_O:
+					case ABCOpcodeKind.COERCE_S:
+					case ABCOpcodeKind.COERCE_U:
+					case ABCOpcodeKind.CONVERT_B:
+					case ABCOpcodeKind.CONVERT_D:
+					case ABCOpcodeKind.CONVERT_I:
+					case ABCOpcodeKind.CONVERT_O:
+					case ABCOpcodeKind.CONVERT_S:
+					case ABCOpcodeKind.CONVERT_U:
+					case ABCOpcodeKind.FINDPROPSTRICT:
+						// Ignore these for JS output.
+						break;
 						
 					default:
 						trace(">>>", kind);
