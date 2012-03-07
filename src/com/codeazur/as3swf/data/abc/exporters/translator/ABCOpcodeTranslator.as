@@ -219,6 +219,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 		}
 		
 		private function mergeBlocks(data:ABCOpcodeTranslateData):void {
+			// Merge if statements
 			var index:int = data.length;
 			while(--index > 0) {
 				const block:Vector.<ABCOpcode> = data.getAt(index);
@@ -233,6 +234,17 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 							block.push(next[i]);
 						}
 						data.removeAt(index + 1);
+					}
+				}
+				
+				if(ABCOpcodeKind.isIfType(tail.kind)) {
+					// Merge jumps
+					const previous:Vector.<ABCOpcode> = data.getAt(index - 1);
+					const jump:ABCOpcode = previous[0];
+					
+					if(previous.length == 1 && ABCOpcodeKind.isType(jump.kind, ABCOpcodeKind.JUMP)) {
+						block.push(jump);
+						data.removeAt(index - 1);
 					}
 				}
 			}
