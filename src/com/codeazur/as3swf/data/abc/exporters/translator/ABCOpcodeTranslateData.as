@@ -19,8 +19,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 		}
 		
 		public static function create():ABCOpcodeTranslateData {
-			const instance:ABCOpcodeTranslateData = new ABCOpcodeTranslateData();
-			return instance;
+			return new ABCOpcodeTranslateData();
 		}
 		
 		public function add(items:Vector.<ABCOpcode>):void {

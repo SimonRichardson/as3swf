@@ -1,6 +1,5 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
@@ -12,6 +11,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.parameters.JSMethodOptionalParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.parameters.JSMethodParameterBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.translator.JSOpcodeTranslatorOptimizer;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslator;
 
@@ -69,6 +69,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			
 			const translateData:ABCOpcodeTranslateData = ABCOpcodeTranslateData.create();
 			const translator:ABCOpcodeTranslator = ABCOpcodeTranslator.create(instanceInitialiser);
+			translator.optimizer = JSOpcodeTranslatorOptimizer.create();
 			translator.translate(translateData);
 			
 			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(instanceInitialiser, translateData);

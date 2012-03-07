@@ -12,6 +12,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 	public class ABCOpcodeTranslator {
 		
 		public var methodInfo:ABCMethodInfo;
+		public var optimizer:ABCOpcodeTranslatorOptimizer;
 		
 		private var _opcodes:Vector.<ABCOpcode>;
 		
@@ -135,6 +136,10 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 						trace(kind, opcode);
 						break;
 				}
+			}
+			
+			if(optimizer) {
+				optimizer.optimize(data);
 			}
 			
 			trace(data);
