@@ -27,7 +27,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			} else if(total == 1) {
 				expression.statement = items[0];
 			} else {
-				throw new Error();
+				throw new Error("Invalid if statement expression count (expected=1 or 2, recieved=" + total + ")");
 			}
 			
 			return expression;

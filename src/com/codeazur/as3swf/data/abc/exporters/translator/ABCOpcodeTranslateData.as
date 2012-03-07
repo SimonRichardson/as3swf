@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.translator
 {
 
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeUnsignedIntegerAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeIntegerAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
@@ -32,6 +33,10 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 			return _items[index];
 		}
 		
+		public function removeAt(index:uint):Vector.<ABCOpcode> {
+			return _items.splice(index, 1)[0];
+		}
+		
 		public function pop() : Vector.<ABCOpcode> {
 			return _items.pop();
 		}
@@ -55,6 +60,9 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					} else if(ABCOpcodeKind.isType(kind, ABCOpcodeKind.PUSHSTRING)) {
 					 	const strAttr:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(_items[i][j].attribute);
 						str += "\n" + kind.toString(indent + 6) + " (string=" + strAttr.string + ")";
+					} else if(ABCOpcodeKind.isType(kind, ABCOpcodeKind.PUSHBYTE)) {
+					 	const byteAttr:IABCOpcodeUnsignedIntegerAttribute = IABCOpcodeUnsignedIntegerAttribute(_items[i][j].attribute);
+						str += "\n" + kind.toString(indent + 6) + " (integer=" + byteAttr.unsignedInteger + ")";
 					} else {
 						str += "\n" + kind.toString(indent + 6);
 					}

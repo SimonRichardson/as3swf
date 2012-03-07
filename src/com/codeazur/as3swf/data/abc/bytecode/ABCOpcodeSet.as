@@ -134,6 +134,21 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return opcodes[index];
 		}
 		
+		public function isJumpPoint(opcode:ABCOpcode):Boolean {
+			var result:Boolean = false;
+			
+			const total:uint = jumpTargets.length;
+			for(var i:uint=0; i<total; i++) {
+				const jumpTarget:ABCOpcodeJumpTarget = jumpTargets[i];
+				if(jumpTarget.opcode == opcode) {
+					result = true;
+					break;
+				}
+			}
+			
+			return result;
+		}
+		
 		public function getJumpTarget(opcode:ABCOpcode):ABCOpcode {
 			var result:ABCOpcode = null;
 			

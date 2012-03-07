@@ -14,7 +14,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 		}
 		
 		public function optimize(data:ABCOpcodeTranslateData):void {
-			
+			// See child classes
 		}
 		
 		public function get name():String { return "ABCOpcodeTranslatorOptimizer"; }

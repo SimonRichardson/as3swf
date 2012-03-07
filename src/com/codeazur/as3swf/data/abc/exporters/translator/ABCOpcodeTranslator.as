@@ -38,6 +38,10 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 				const kind:ABCOpcodeKind = opcode.kind;
 				
 				switch(kind) {
+					case ABCOpcodeKind.ADD:
+					case ABCOpcodeKind.ADD_D:
+					case ABCOpcodeKind.ADD_I:
+					case ABCOpcodeKind.CALLPROPERTY:
 					case ABCOpcodeKind.COERCE:
 					case ABCOpcodeKind.COERCE_A:
 					case ABCOpcodeKind.COERCE_B:
@@ -52,19 +56,14 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.CONVERT_O:
 					case ABCOpcodeKind.CONVERT_S:
 					case ABCOpcodeKind.CONVERT_U:
-					case ABCOpcodeKind.FINDPROPSTRICT:
-						// The above codes can be ignored if outputting to JS
-					case ABCOpcodeKind.ADD:
-					case ABCOpcodeKind.ADD_D:
-					case ABCOpcodeKind.ADD_I:
-					case ABCOpcodeKind.CALLPROPERTY:
 					case ABCOpcodeKind.DEBUG:
 					case ABCOpcodeKind.DEBUGFILE:
 					case ABCOpcodeKind.DEBUGLINE:
 					case ABCOpcodeKind.DIVIDE:
+					case ABCOpcodeKind.EQUALS:
+					case ABCOpcodeKind.FINDPROPSTRICT:
 					case ABCOpcodeKind.GREATERTHAN:
 					case ABCOpcodeKind.GREATEREQUALS:
-					case ABCOpcodeKind.EQUALS:
 					case ABCOpcodeKind.GETLEX:
 					case ABCOpcodeKind.GETLOCAL_0:
 					case ABCOpcodeKind.GETLOCAL_1:
@@ -138,6 +137,8 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 				}
 			}
 			
+			mergeBlocks(data);
+			
 			if(optimizer) {
 				optimizer.optimize(data);
 			}
@@ -161,7 +162,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					result.push(opcode);
 				}
 			}
-						
+			
 			_opcodes.length = 0;
 			
 			return result;
@@ -188,62 +189,53 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 						const tail:Vector.<ABCOpcode> = data.tail;
 						const last:ABCOpcode = tail[tail.length - 1];
 						
-						const methodBody:ABCMethodBody = methodInfo.methodBody;
-						const opcodes:ABCOpcodeSet = methodBody.opcode;
-						if(tail.length > 1) {
-							const preTail:ABCOpcode = tail[tail.length - 2];
-							if(ABCOpcodeKind.isIfType(preTail.kind) && opcodes.getJumpTarget(preTail)) {
-								trace(">>>>>>>>", preTail.kind, opcodes.getJumpTarget(preTail));
-								consumeBlock(data);
-								return;
-							}
-						}
-						
-						if(ABCOpcodeKind.isIfType(last.kind) && containsComparison(tail)) {
-							consumeBlock(data);
-						} else if(ABCOpcodeKind.isType(last.kind, ABCOpcodeKind.JUMP) && containsComparison(tail)) {
+						const target:ABCOpcode = getJumpTarget(last);
+						if(null != target) {
+							// only do consuming on a valid jumptarget
 							consumeBlock(data);
 						}
-						
-						consumeJump(data);
 					}
 					break;
-			}
-		}
-		
-		private function consumeJump(data:ABCOpcodeTranslateData):void {
-			if(data.tail){
-				const length:uint = data.tail.length;
-				if(length == 1 && ABCOpcodeKind.isType(data.tail[length - 1].kind, ABCOpcodeKind.JUMP)) {
-					consumeBlock(data, true);
-				}
 			}
 		}
 		
 		private function consumeBlock(data:ABCOpcodeTranslateData, insertAtTail:Boolean=false):void {
 			const previous:Vector.<ABCOpcode> = data.pop();
 			var index:int = previous.length;
-			while(--index>-1) {
+			while(--index > -1) {
+				const opcode:ABCOpcode = previous[index];
+				const target:ABCOpcode = getJumpTarget(opcode);
+				if(target) {
+					data.add(previous);
+					return;			
+				}
+				
 				if(insertAtTail) {
-					_opcodes.push(previous[index]);
+					_opcodes.push(opcode);
 				} else {
-					_opcodes.unshift(previous[index]);
+					_opcodes.unshift(opcode);
 				}
 			}
 		}
 		
-		private function containsComparison(haystack:Vector.<ABCOpcode>):Boolean {
-			var result:Boolean = false;
-			
-			const total:uint = haystack.length;
-			for(var i:uint=0; i<total; i++) {
-				if(ABCOpcodeKind.isComparisonType(haystack[i].kind)) {
-					result = true;
-					break;
+		private function mergeBlocks(data:ABCOpcodeTranslateData):void {
+			var index:int = data.length;
+			while(--index > 0) {
+				const block:Vector.<ABCOpcode> = data.getAt(index);
+				const tail:ABCOpcode = block[block.length - 1];
+				const target:ABCOpcode = getJumpTarget(tail);
+				if(target) {
+					const next:Vector.<ABCOpcode> = data.getAt(index + 1);
+					const last:ABCOpcode = next[next.length - 1];
+					if(target == last) {
+						const total:uint = next.length;
+						for(var i:uint=0; i<total; i++) {
+							block.push(next[i]);
+						}
+						data.removeAt(index + 1);
+					}
 				}
 			}
-			
-			return result;
 		}
 		
 		private function indexOfKind(haystack:Vector.<ABCOpcode>, kind:ABCOpcodeKind):int {
@@ -258,6 +250,12 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 			}
 			
 			return result;
+		}
+		
+		private function getJumpTarget(opcode:ABCOpcode):ABCOpcode {
+			const methodBody:ABCMethodBody = methodInfo.methodBody;
+			const opcodes:ABCOpcodeSet = methodBody.opcode;
+			return opcodes.getJumpTarget(opcode);
 		}
 	}
 }
