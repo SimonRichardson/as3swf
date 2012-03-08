@@ -93,6 +93,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				stringPool.push(str);
 			}
 			
+			data.position = scanner.getConstantNamespace();
 			index = data.readEncodedU32();
 			sIndex = 1;
 			while(--index > 0){
@@ -107,6 +108,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				namespacePool.push(ABCNamespace.create(nsKind, nsName));
 			}
 			
+			data.position = scanner.getConstantNamespaceSet();
 			index = data.readEncodedU32();
 			sIndex = 1;
 			while(--index > 0){
@@ -125,7 +127,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				namespaceSetPool.push(nsSet);
 			}
-						
+
+			data.position = scanner.getConstantMultiname();
 			index = data.readEncodedU32();
 			sIndex = 1;
 			while(--index > 0) {

@@ -25,14 +25,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			super(abcData);
 		}
 		
-		public static function create(abcData:ABCData, methodName:String, parameters:Vector.<ABCParameter>, returnType:IABCMultiname, flags:uint):ABCMethodInfo {
-			const info:ABCMethodInfo = new ABCMethodInfo(abcData);
-			info.methodName = methodName;
-			info.parameters = parameters;
-			info.returnType = returnType;
-			info.flags = flags;
-			info.scopeName = getScopeName(methodName); 
-			return info;
+		public static function create(abcData:ABCData):ABCMethodInfo {
+			return new ABCMethodInfo(abcData);
 		}
 		
 		private static function getScopeName(methodName:String):String {
@@ -48,8 +42,26 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function parse(data:SWFData, scanner:ABCScanner):void {
-			const paramTotal:uint = parameters.length;
+			const paramTotal:uint = data.readEncodedU30();
+				
+			const returnIndex:uint = data.readEncodedU30();
+			returnType = getMultinameByIndex(returnIndex);
 			
+			parameters = new Vector.<ABCParameter>();
+			for(var j:uint=0; j<paramTotal; j++) {
+				const paramIndex:uint = data.readEncodedU30();
+				const paramMName:IABCMultiname = getMultinameByIndex(paramIndex);
+				const paramQName:IABCMultiname = paramMName.toQualifiedName();
+				
+				parameters.push(ABCParameter.create(paramQName));
+			}
+			
+			const methodIndex:uint = data.readEncodedU30();
+			methodName = getStringByIndex(methodIndex);
+			scopeName = getScopeName(methodName);
+			
+			flags = data.readUI8();
+						
 			if(hasOptional) {
 				const optionalTotal:uint = data.readEncodedU30();
 				for(var k:uint=0; k<optionalTotal; k++) {

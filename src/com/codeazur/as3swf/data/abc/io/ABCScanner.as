@@ -15,8 +15,14 @@ package com.codeazur.as3swf.data.abc.io
 		private var _constantUIntPool:Vector.<uint>;
 		private var _constantDoublePool:Vector.<uint>;
 		private var _constantStringPool:Vector.<uint>;
+		
+		private var _constantNamespace:uint;
 		private var _constantNamespacePool:Vector.<uint>;
+		
+		private var _constantNamespaceSet:uint;
 		private var _constantNamespaceSetPool:Vector.<uint>;
+		
+		private var _constantMultiname:uint;
 		private var _constantMultinamePool:Vector.<uint>;
 		
 		private var _methodInfo:uint;
@@ -93,13 +99,28 @@ package com.codeazur.as3swf.data.abc.io
 		public function getConstantStringAtIndex(index:uint):uint {
 			return _constantStringPool[index];
 		}
+		
+		
+		public function getConstantNamespace():uint	{
+			return _constantNamespace;
+		}
 
 		public function getConstantNamespaceAtIndex(index:uint):uint {
 			return _constantNamespacePool[index];
 		}
-
+		
+		
+		public function getConstantNamespaceSet():uint	{
+			return _constantNamespaceSet;
+		}
+		
 		public function getConstantNamespaceSetAtIndex(index:uint):uint	{
 			return _constantNamespaceSetPool[index];
+		}
+		
+		
+		public function getConstantMultiname():uint {
+			return _constantMultiname;
 		}
 
 		public function getConstantMultinameAtIndex(index:uint):uint {
@@ -244,6 +265,7 @@ package com.codeazur.as3swf.data.abc.io
 	    }
 	
 	    private function scanNamespaceConstants(input:SWFData):void {
+			_constantNamespace = input.position;
 	        _constantNamespacePool = new Vector.<uint>();
 			_constantNamespacePool.push(0);
 			
@@ -257,6 +279,7 @@ package com.codeazur.as3swf.data.abc.io
 	    }
 	
 	    private function scanNamespaceSetConstants(input:SWFData):void {
+			_constantNamespaceSet = input.position;
 	        _constantNamespaceSetPool = new Vector.<uint>();
 			_constantNamespaceSetPool.push(0);
 			
@@ -270,6 +293,7 @@ package com.codeazur.as3swf.data.abc.io
 	    }
 	
 	    private function scanMultinameConstants(input:SWFData):void {
+			_constantMultiname = input.position;
 	        _constantMultinamePool = new Vector.<uint>();
 			_constantMultinamePool.push(0);
 			

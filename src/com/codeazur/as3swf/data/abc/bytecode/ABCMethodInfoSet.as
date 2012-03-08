@@ -1,6 +1,5 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
@@ -24,27 +23,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			for(var i:uint=0; i<total; i++) {
 				data.position = scanner.getMethodInfoAtIndex(i);
 				
-				const paramTotal:uint = data.readEncodedU30();
-				
-				const returnIndex:uint = data.readEncodedU30();
-				const returnType:IABCMultiname = getMultinameByIndex(returnIndex);
-				
-				const parameters:Vector.<ABCParameter> = new Vector.<ABCParameter>();
-				for(var j:uint=0; j<paramTotal; j++) {
-					const paramIndex:uint = data.readEncodedU30();
-					const mname:IABCMultiname = getMultinameByIndex(paramIndex);
-					const qname:IABCMultiname = mname.toQualifiedName();
-					
-					parameters.push(ABCParameter.create(qname));
-				}
-				
-				const methodIndex:uint = data.readEncodedU30();
-				const methodName:String = getStringByIndex(methodIndex);
-				
-				const methodFlags:uint = data.readUI8();
-				
-				const info:ABCMethodInfo = ABCMethodInfo.create(abcData, methodName, parameters, returnType, methodFlags);
-				info.isValidMethodName = methodIndex > 0;
+				const info:ABCMethodInfo = ABCMethodInfo.create(abcData);
 				info.parse(data, scanner);
 				
 				methodInfos.push(info);
