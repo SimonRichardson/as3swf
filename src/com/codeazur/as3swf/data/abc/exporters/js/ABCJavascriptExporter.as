@@ -17,9 +17,8 @@ package com.codeazur.as3swf.data.abc.exporters.js
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSMethodBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	import com.codeazur.utils.StringUtils;
+	
 	import flash.utils.ByteArray;
-
-
 
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -37,9 +36,10 @@ package com.codeazur.as3swf.data.abc.exporters.js
 		}
 		
 		public function write(data:ByteArray) : void {
+			var methodOffset:int = 0;
+			
 			const classInfoTotal:uint = abcData.classInfoSet.length;
 			for(var i:uint=0; i<classInfoTotal; i++) {
-				
 				const classInfo:ABCClassInfo = abcData.classInfoSet.getAt(i);
 				const instanceInfo:ABCInstanceInfo = abcData.instanceInfoSet.getAt(i);
 				
@@ -50,14 +50,12 @@ package com.codeazur.as3swf.data.abc.exporters.js
 				classBuilder.instanceInfo = instanceInfo;
 				classBuilder.write(data);
 				
-				const methodInfoSet:uint = abcData.methodInfoSet.length;
-				
 				// methods
-				// TODO : Make sure we only output the right methods for the class
-				var methodTotal:uint = methodInfoSet - 1;
-				for(var j:uint=0; j<methodInfoSet; j++) {
-					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
-					
+				const methodTotal:uint = instanceInfo.traits.length;
+				for(var j:uint=0; j<methodTotal; j++) {
+					const methodInfoOffset:int = methodOffset + j + 2;
+					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(methodInfoOffset);
+
 					if(	!(StringUtils.isEmpty(methodInfo.methodName) || 
 						  ABCNamespaceType.isTypeByValue(methodInfo.methodName, ABCNamespaceType.ASTERISK)) && 
 						  !methodInfo.isConstructor) {
@@ -66,11 +64,10 @@ package com.codeazur.as3swf.data.abc.exporters.js
 						
 						const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
 						methodBuilder.write(data);
-					} else if(methodInfo.isConstructor) {
-						methodTotal--;
 					}
 				}
-
+				methodOffset += 3 + methodTotal;
+				
 				// statics
 				if(classInfo.traits.length > 0) {
 					
