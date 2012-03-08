@@ -1,13 +1,12 @@
-package com.codeazur.as3swf.data.abc.exporters.js
+package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSConsumableBlock;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	import com.codeazur.utils.StringUtils;
-
 	import flash.errors.IllegalOperationError;
 	import flash.utils.ByteArray;
+
 
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk

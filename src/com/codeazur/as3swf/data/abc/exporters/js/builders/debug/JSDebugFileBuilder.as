@@ -4,8 +4,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.debug
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
-	import com.codeazur.as3swf.data.abc.exporters.ABCJavascriptExporter;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCDebugBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.ABCJavascriptExporter;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSNameBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSThisExpression;
