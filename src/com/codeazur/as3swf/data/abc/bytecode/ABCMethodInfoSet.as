@@ -44,6 +44,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const methodFlags:uint = data.readUI8();
 				
 				const info:ABCMethodInfo = ABCMethodInfo.create(abcData, methodName, parameters, returnType, methodFlags);
+				info.isValidMethodName = methodIndex > 0;
 				info.parse(data, scanner);
 				
 				methodInfos.push(info);

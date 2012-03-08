@@ -24,7 +24,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 
 		public function write(data : ByteArray) : void {
 			const fullName:String = qname.fullName.replace(/:/, '.');
-			const index:uint = fullName.lastIndexOf('/');
+			const index:int = fullName.lastIndexOf('/');
 			data.writeUTF(fullName.substr(index + 1));
 		}
 		

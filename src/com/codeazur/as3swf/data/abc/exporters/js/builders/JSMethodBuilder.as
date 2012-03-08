@@ -2,7 +2,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodBuilder;
@@ -34,7 +33,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		public function write(data:ByteArray):void {
-			const qname:ABCQualifiedName = ABCQualifiedName.create(methodInfo.methodName, ABCNamespaceType.ASTERISK.ns);
+			const qname:ABCQualifiedName = methodInfo.qname;
 			const methodBuilder:IABCMethodNameBuilder = JSMethodNameBuilder.create(qname);
 			methodBuilder.write(data);
 			

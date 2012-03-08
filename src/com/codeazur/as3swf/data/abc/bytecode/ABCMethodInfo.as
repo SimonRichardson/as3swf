@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
@@ -10,6 +11,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	 */
 	public class ABCMethodInfo extends ABCSet {
 
+		public var qname:ABCQualifiedName;
 		public var methodName:String;
 		public var methodBody:ABCMethodBody;
 		public var parameters:Vector.<ABCParameter>;
@@ -17,6 +19,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var scopeName:String;
 		public var flags:uint;
 		public var isConstructor:Boolean;
+		public var isValidMethodName:Boolean;
 
 		public function ABCMethodInfo(abcData:ABCData) {
 			super(abcData);
@@ -118,7 +121,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				nameParam.label = (hasParamNames) ? paramName : "";
 			}
 			
-			if(!StringUtils.isEmpty(methodName)){
+			if(isValidMethodName && !StringUtils.isEmpty(methodName)){
 				const parts:Array = methodName.split("/");
 				if(parts.length == 2) {
 					const qname:String = parts[0];
@@ -128,6 +131,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 				} else {
 					isConstructor = false;
 				}
+			} else {
+				isConstructor = false;
 			}
 		}
 		

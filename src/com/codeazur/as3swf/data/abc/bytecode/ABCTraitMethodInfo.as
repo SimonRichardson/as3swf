@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
@@ -31,8 +32,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 		override public function read(data:SWFData, scanner:ABCScanner) : void {
 			id = data.readEncodedU30();
 			
+			const qualifiedName:ABCQualifiedName = qname.toQualifiedName();
+			
 			const index:uint = data.readEncodedU30();
 			methodInfo = getMethodInfoByIndex(index);
+			methodInfo.qname = qualifiedName;
+			methodInfo.methodName = qualifiedName.fullName;
+			methodInfo.isValidMethodName = true;
 			
 			super.read(data, scanner);
 		}
