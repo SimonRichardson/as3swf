@@ -31,7 +31,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 
 		public function write(data : ByteArray) : void {
 			const ns:ABCNamespace = qname.ns;
-			if(ABCNamespaceKind.isType(ns.kind, ABCNamespaceKind.PRIVATE_NAMESPACE)) {
+			if( ABCNamespaceKind.isType(ns.kind, ABCNamespaceKind.PRIVATE_NAMESPACE) ||
+				ABCNamespaceKind.isType(ns.kind, ABCNamespaceKind.PROTECTED_NAMESPACE)) {
 				JSReservedKind.THIS.write(data);
 				JSTokenKind.DOT.write(data);
 				JSTokenKind.UNDERSCORE.write(data);
