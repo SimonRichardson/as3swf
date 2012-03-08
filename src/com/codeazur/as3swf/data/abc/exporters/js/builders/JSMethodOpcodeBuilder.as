@@ -176,6 +176,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 							
 				switch(kind) {
 					case ABCOpcodeKind.CALLPROPERTY:
+					case ABCOpcodeKind.CONSTRUCTPROP:
 						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
 						const propertyArguments:Vector.<IABCWriteable> = consumeMethodArguments(result, opcode.attribute);
 						if(result.length > 0) {
