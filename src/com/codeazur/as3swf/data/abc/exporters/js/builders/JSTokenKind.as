@@ -30,7 +30,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public static const RIGHT_SQUARE_BRACKET:JSTokenKind = new JSTokenKind("]");
 		public static const SEMI_COLON:JSTokenKind = new JSTokenKind(";");
 		public static const SINGLE_QUOTE:JSTokenKind = new JSTokenKind("'");
-		public static const SPACE : JSTokenKind = new JSTokenKind(" ");
+		public static const SPACE:JSTokenKind = new JSTokenKind(" ");
+		public static const UNDERSCORE:JSTokenKind = new JSTokenKind("_");
 
 		private var _type:String;
 		

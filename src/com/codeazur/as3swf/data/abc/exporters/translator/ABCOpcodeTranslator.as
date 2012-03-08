@@ -95,6 +95,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					
 					case ABCOpcodeKind.CALLPROPVOID:
 					case ABCOpcodeKind.CONSTRUCTSUPER:
+					case ABCOpcodeKind.INITPROPERTY:
 					case ABCOpcodeKind.IFEQ:
 					case ABCOpcodeKind.IFFALSE:
 					case ABCOpcodeKind.IFGE:

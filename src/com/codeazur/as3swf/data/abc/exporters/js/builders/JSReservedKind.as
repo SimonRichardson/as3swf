@@ -22,6 +22,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public static const FUNCTION:JSReservedKind = new JSReservedKind("function");
 		public static const IF:JSReservedKind = new JSReservedKind("if");
 		public static const IN:JSReservedKind = new JSReservedKind("in");
+		public static const NEW:JSReservedKind = new JSReservedKind("new");
 		public static const NULL:JSReservedKind = new JSReservedKind("null");
 		public static const PROTO:JSReservedKind = new JSReservedKind("__proto__");
 		public static const PROTOTYPE:JSReservedKind = new JSReservedKind("prototype");

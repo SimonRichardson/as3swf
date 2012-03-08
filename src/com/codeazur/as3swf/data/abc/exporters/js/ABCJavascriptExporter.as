@@ -53,7 +53,7 @@ package com.codeazur.as3swf.data.abc.exporters.js
 				classBuilder.write(data);
 				
 				// methods
-				const methodTotal:uint = instanceInfo.traits.length;
+				const methodTotal:uint = instanceInfo.numMethodTraits;
 				for(var j:uint=0; j<methodTotal; j++) {
 					const methodInfoOffset:int = methodOffset + j + 2;
 					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(methodInfoOffset);

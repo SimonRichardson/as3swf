@@ -1,6 +1,5 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -8,6 +7,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
@@ -21,6 +21,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSPrimaryExpressionFactory;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
+
 	import flash.utils.ByteArray;
 
 
@@ -101,6 +102,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const propertyName:Vector.<IABCWriteable> = createName(opcodes, opcode.attribute);
 						const propertyArguments:Vector.<IABCWriteable> = createMethodArguments(opcodes, opcode.attribute);
 						stack.add(JSNameBuilder.create(propertyName), JSMethodCallBuilder.create(propertyMethod, propertyArguments)).terminator = true;
+						break;
+						
+					case ABCOpcodeKind.INITPROPERTY:
+						const propertyQName:ABCQualifiedName = ABCOpcodeMultinameAttribute(opcode.attribute).multiname.toQualifiedName();
+						stack.add(JSPropertyBuilder.create(propertyQName, consume(opcodes, 0, offset))).terminator = true;
 						break;
 					
 					case ABCOpcodeKind.IFEQ:

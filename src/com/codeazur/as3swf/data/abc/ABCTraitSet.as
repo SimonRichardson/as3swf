@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc
 {
+	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfoKind;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfoFactory;
@@ -36,6 +37,20 @@ package com.codeazur.as3swf.data.abc
 				
 				traits.push(trait); 
 			}
+		}
+		
+		public function get numMethodTraits():uint {
+			var result:uint = 0;
+			var index:int = traits.length;
+			while(--index > -1) {
+				const trait:ABCTraitInfo = traits[index];
+				if(ABCTraitInfoKind.isType(trait.kind, ABCTraitInfoKind.METHOD) || 
+					ABCTraitInfoKind.isType(trait.kind, ABCTraitInfoKind.GETTER) || 
+					ABCTraitInfoKind.isType(trait.kind, ABCTraitInfoKind.SETTER)) {
+					result++;	
+				}
+			}
+			return result;
 		}
 		
 		override public function get name() : String { return "ABCTraitSet"; }
