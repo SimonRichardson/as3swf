@@ -3,18 +3,22 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassConstructorBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOptionalParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodParameterBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.ABCJavascriptExporter;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.parameters.JSMethodOptionalParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.parameters.JSMethodParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.translator.JSOpcodeTranslatorOptimizer;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslator;
-
 	import flash.utils.ByteArray;
 
 	/**
@@ -40,7 +44,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			
 			JSTokenKind.EQUALS.write(data);
 			
-			data.writeUTF(_instanceInfo.superMultiname.fullName);
+			data.writeUTF(getSuperClassName());
 			
 			JSTokenKind.DOT.write(data);
 			JSReservedKind.EXTENDS.write(data);
@@ -76,6 +80,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
+		}
+		
+		private function getSuperClassName():String {
+			var qname:IABCMultiname = _instanceInfo.superMultiname;
+			if(ABCQualifiedNameType.isType(qname, ABCQualifiedNameType.OBJECT)) {
+				qname = ABCQualifiedName.create(ABCJavascriptExporter.FLASH_OBJECT_NAME, ABCNamespace.create(ABCNamespaceKind.PACKAGE_NAMESPACE.type, ""));
+			}
+			return qname.fullName;
 		}
 		
 		public function get qname():ABCQualifiedName { return _qname; }
