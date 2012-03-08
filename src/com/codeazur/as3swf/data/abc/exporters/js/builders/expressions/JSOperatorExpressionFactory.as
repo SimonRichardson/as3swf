@@ -20,12 +20,22 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 					expression = new JSAddExpression();
 					break;
 				
+				case ABCOpcodeKind.DECREMENT:
+				case ABCOpcodeKind.DECREMENT_I:
+					expression = new JSDecrementExpression();
+					break;
+				
 				case ABCOpcodeKind.DIVIDE:
 					expression = new JSDivideExpression();
 					break;
 					
 				case ABCOpcodeKind.EQUALS:
 					expression = new JSEqualityExpression();
+					break;
+				
+				case ABCOpcodeKind.INCREMENT:
+				case ABCOpcodeKind.INCREMENT_I:
+					expression = new JSIncrementExpression();
 					break;
 					
 				case ABCOpcodeKind.MULTIPLY:
@@ -48,7 +58,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 				case ABCOpcodeKind.SUBTRACT_I:
 					expression = new JSSubtractExpression();
 					break;
-				
+					
 				default:
 					throw new Error();
 			}

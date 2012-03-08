@@ -60,6 +60,8 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.DEBUG:
 					case ABCOpcodeKind.DEBUGFILE:
 					case ABCOpcodeKind.DEBUGLINE:
+					case ABCOpcodeKind.DECREMENT:
+					case ABCOpcodeKind.DECREMENT_I:
 					case ABCOpcodeKind.DIVIDE:
 					case ABCOpcodeKind.EQUALS:
 					case ABCOpcodeKind.FINDPROPSTRICT:
@@ -72,6 +74,8 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.GETLOCAL_3:
 					case ABCOpcodeKind.GETPROPERTY:
 					case ABCOpcodeKind.GETSUPER:
+					case ABCOpcodeKind.INCREMENT:
+					case ABCOpcodeKind.INCREMENT_I:
 					case ABCOpcodeKind.MULTIPLY:
 					case ABCOpcodeKind.MULTIPLY_I:
 					case ABCOpcodeKind.NOT:

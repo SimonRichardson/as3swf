@@ -238,8 +238,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.ADD:
 					case ABCOpcodeKind.ADD_D:
 					case ABCOpcodeKind.ADD_I:
+					case ABCOpcodeKind.DECREMENT:
+					case ABCOpcodeKind.DECREMENT_I:
 					case ABCOpcodeKind.DIVIDE:
 					case ABCOpcodeKind.EQUALS:
+					case ABCOpcodeKind.INCREMENT:
+					case ABCOpcodeKind.INCREMENT_I:
 					case ABCOpcodeKind.MULTIPLY:
 					case ABCOpcodeKind.MULTIPLY_I:
 					case ABCOpcodeKind.NOT:
