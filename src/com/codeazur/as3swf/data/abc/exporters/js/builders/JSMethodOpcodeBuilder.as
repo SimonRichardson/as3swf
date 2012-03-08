@@ -7,7 +7,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
@@ -105,7 +104,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 						
 					case ABCOpcodeKind.INITPROPERTY:
-						const propertyQName:ABCQualifiedName = ABCOpcodeMultinameAttribute(opcode.attribute).multiname.toQualifiedName();
+						const propertyQName:IABCArgumentBuilder = JSArgumentBuilderFactory.create(opcode.attribute);
 						stack.add(JSPropertyBuilder.create(propertyQName, consume(opcodes, 0, offset))).terminator = true;
 						break;
 					

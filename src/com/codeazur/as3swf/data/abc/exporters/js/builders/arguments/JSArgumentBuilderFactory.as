@@ -1,11 +1,8 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 {
-
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDoubleAttribute;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSReservedKind;
-	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDoubleAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
@@ -13,6 +10,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeUnsignedIntegerAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -35,11 +33,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 				if(mnameAttr.multiname is ABCQualifiedName) {
 					const qname:ABCQualifiedName = mnameAttr.multiname.toQualifiedName();
 					if(ABCNamespaceKind.isType(qname.ns.kind, ABCNamespaceKind.PACKAGE_NAMESPACE)) {
-						// need to inject this in front
-						if(StringUtils.isEmpty(qname.ns.value)) {
-							qname.ns.value = JSReservedKind.THIS.type; 
-							builder = JSMultinameArgumentBuilder.create(qname);
-						}
+						// Do nothing here
+					} else if(ABCNamespaceKind.isType(qname.ns.kind, ABCNamespaceKind.PRIVATE_NAMESPACE) ||
+								ABCNamespaceKind.isType(qname.ns.kind, ABCNamespaceKind.PROTECTED_NAMESPACE)) {
+						
+						qname.ns.value = JSTokenKind.UNDERSCORE.type;
+						builder = JSMultinameArgumentBuilder.create(qname);
+					} else {
+						throw new Error(attribute);
 					}
 				}
 				

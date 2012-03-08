@@ -1,12 +1,10 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCPropertyBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
-	import com.codeazur.as3swf.data.abc.ABC;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceKind;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCPropertyBuilder;
 
 	import flash.utils.ByteArray;
 	/**
@@ -15,33 +13,25 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	public class JSPropertyBuilder implements IABCPropertyBuilder
 	{
 
-		private var _qname:ABCQualifiedName;
+		private var _propertyName:IABCArgumentBuilder;
 		
 		private var _expressions:Vector.<IABCWriteable>;
 
 		public function JSPropertyBuilder() {
 		}
 		
-		public static function create(qname:ABCQualifiedName, expressions:Vector.<IABCWriteable>):JSPropertyBuilder {
+		public static function create(propertyName:IABCArgumentBuilder, expressions:Vector.<IABCWriteable>):JSPropertyBuilder {
 			const builder:JSPropertyBuilder = new JSPropertyBuilder();
-			builder.qname = qname;
+			builder.propertyName = propertyName;
 			builder.expressions = expressions;
 			return builder; 
 		}
 
 		public function write(data : ByteArray) : void {
-			const ns:ABCNamespace = qname.ns;
-			if( ABCNamespaceKind.isType(ns.kind, ABCNamespaceKind.PRIVATE_NAMESPACE) ||
-				ABCNamespaceKind.isType(ns.kind, ABCNamespaceKind.PROTECTED_NAMESPACE)) {
-				JSReservedKind.THIS.write(data);
-				JSTokenKind.DOT.write(data);
-				JSTokenKind.UNDERSCORE.write(data);
-				JSTokenKind.DOT.write(data);
-				
-				data.writeUTF(qname.label);
-			} else {
-				throw new Error();
-			}
+			JSReservedKind.THIS.write(data);
+			JSTokenKind.DOT.write(data);
+			
+			propertyName.write(data);
 			
 			if(expressions) {
 				JSTokenKind.EQUALS.write(data);
@@ -70,8 +60,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			}
 		}
 		
-		public function get qname():ABCQualifiedName { return _qname; }
-		public function set qname(value:ABCQualifiedName):void { _qname = value; }
+		public function get propertyName():IABCArgumentBuilder { return _propertyName; }
+		public function set propertyName(value:IABCArgumentBuilder):void { _propertyName = value; }
 		
 		public function get expressions():Vector.<IABCWriteable> { return _expressions; }
 		public function set expressions(value:Vector.<IABCWriteable>):void { _expressions = value; }
