@@ -11,6 +11,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		private static const _types:Dictionary = new Dictionary();
 		
 		public static const ASTERISK:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.NAMESPACE, "*"));
+		public static const SUPER:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.NAMESPACE));
 
 		private var _ns:ABCNamespace;
 

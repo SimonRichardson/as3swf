@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.js
 {
 
+	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
@@ -44,6 +45,7 @@ package com.codeazur.as3swf.data.abc.exporters.js
 			for(var i:uint=0; i<classInfoTotal; i++) {
 				const classInfo:ABCClassInfo = abcData.classInfoSet.getAt(i);
 				const instanceInfo:ABCInstanceInfo = abcData.instanceInfoSet.getAt(i);
+				const traits:Vector.<ABCTraitInfo> = instanceInfo.traits;
 				
 				// constructor
 				const classQName:ABCQualifiedName = classInfo.qname.toQualifiedName();
@@ -51,6 +53,8 @@ package com.codeazur.as3swf.data.abc.exporters.js
 				classBuilder.classInfo = classInfo;
 				classBuilder.instanceInfo = instanceInfo;
 				classBuilder.write(data);
+				
+				return;
 				
 				// methods
 				const methodTotal:uint = instanceInfo.numMethodTraits;
@@ -63,8 +67,8 @@ package com.codeazur.as3swf.data.abc.exporters.js
 						  !methodInfo.isConstructor) {
 						
 						JSTokenKind.COMMA.write(data);
-						
-						const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo);
+												
+						const methodBuilder:IABCMethodBuilder = JSMethodBuilder.create(methodInfo, traits);
 						methodBuilder.write(data);
 					}
 				}

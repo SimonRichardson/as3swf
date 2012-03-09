@@ -2,19 +2,26 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodCallBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMultinameAttributeBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCOperatorExpression;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilderFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentsBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSAttributeBuilderFactory;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSMultinameArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSOperatorExpressionFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSPrimaryExpressionFactory;
@@ -30,6 +37,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	public class JSMethodOpcodeBuilder implements IABCMethodOpcodeBuilder {
 		
 		private var _methodInfo:ABCMethodInfo;
+		private var _traits:Vector.<ABCTraitInfo>;
 		private var _translateData:ABCOpcodeTranslateData;
 		
 		private var _stack:JSStack;
@@ -41,9 +49,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			_arguments = new Vector.<ABCParameter>();
 		}
 		
-		public static function create(methodInfo:ABCMethodInfo, translateData:ABCOpcodeTranslateData):JSMethodOpcodeBuilder {
+		public static function create(methodInfo:ABCMethodInfo, traits:Vector.<ABCTraitInfo>, translateData:ABCOpcodeTranslateData):JSMethodOpcodeBuilder {
 			const builder:JSMethodOpcodeBuilder = new JSMethodOpcodeBuilder();
 			builder.methodInfo = methodInfo;
+			builder.traits = traits;
 			builder.translateData = translateData;
 			return builder;
 		}
@@ -69,7 +78,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			for(; _position<total; _position++) {
 				
 				const opcodes:Vector.<ABCOpcode> = translateData.getAt(_position);
-				const opcodesTotal:uint = opcodes.length;
 				
 				if(tail) {
 					if(opcodes.indexOf(tail) > -1) {
@@ -83,28 +91,49 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				} 
 				
 				// Get the tail items so that we know what to do with the item
-				const offset:int = opcodesTotal - 1;
-				const opcode:ABCOpcode = opcodes[offset];
+				const opcode:ABCOpcode = opcodes.pop();
+				const offset:int = opcodes.length - 1;
+				
+				const numArguments:int = JSAttributeBuilderFactory.getNumberArguments(opcode.attribute);
+				
+				var consumables:Vector.<IABCWriteable> = null;
+				
 				const kind:ABCOpcodeKind = opcode.kind;
 				switch(kind) {
 					case ABCOpcodeKind.CONSTRUCTSUPER:
-						const superMethod:IABCValueBuilder = JSValueBuilder.create(JSReservedKind.SUPER.type);
-						const superName:Vector.<IABCWriteable> = createName(opcodes, opcode.attribute);
-						const superArguments:Vector.<IABCWriteable> = createMethodArguments(opcodes, opcode.attribute);
+						consumables = consumeTail(opcodes, opcodes.length, 0);
+					
+						const superQName:ABCQualifiedName = ABCQualifiedName.create(JSReservedKind.SUPER.type, ABCNamespaceType.SUPER.ns);
+						const superName:IABCMultinameAttributeBuilder = JSMultinameArgumentBuilder.create(superQName);
+						const superArguments:Vector.<IABCWriteable> = consumables.splice(0, numArguments);
 						
-						stack.add(JSNameBuilder.create(superName), JSMethodCallBuilder.create(superMethod, superArguments)).terminator = true;
+						if(superArguments.length != numArguments) {
+							throw new Error('Super argument mismatch');
+						}
+						
+						stack.add(JSNameBuilder.create(consumables), JSMethodCallBuilder.create(superName, superArguments)).terminator = true;
 						break;
 					
 					case ABCOpcodeKind.CALLPROPERTY:
 					case ABCOpcodeKind.CALLPROPVOID:
-						const propertyMethod:IABCValueBuilder = JSValueAttributeBuilder.create(opcode.attribute);
-						const propertyName:Vector.<IABCWriteable> = createName(opcodes, opcode.attribute);
-						const propertyArguments:Vector.<IABCWriteable> = createMethodArguments(opcodes, opcode.attribute);
-						stack.add(JSNameBuilder.create(propertyName), JSMethodCallBuilder.create(propertyMethod, propertyArguments)).terminator = true;
+						consumables = consumeTail(opcodes, opcodes.length, 0);
+						
+						const propertyName:IABCMultinameAttributeBuilder = JSAttributeBuilderFactory.create(traits, opcode.attribute) as IABCMultinameAttributeBuilder;
+						if(propertyName) {
+							const propertyArguments:Vector.<IABCWriteable> = consumables.splice(0, numArguments);
+							
+							if(propertyArguments.length != numArguments) {
+								throw new Error('Property argument mismatch');
+							}
+							
+							stack.add(JSNameBuilder.create(consumables), JSMethodCallBuilder.create(propertyName, propertyArguments)).terminator = true;
+						} else {
+							throw new Error('Property name mismatch');
+						}
 						break;
 						
 					case ABCOpcodeKind.INITPROPERTY:
-						const propertyQName:IABCArgumentBuilder = JSArgumentBuilderFactory.create(opcode.attribute);
+						const propertyQName:IABCAttributeBuilder = JSAttributeBuilderFactory.create(traits, opcode.attribute);
 						stack.add(JSPropertyBuilder.create(propertyQName, consume(opcodes, 0, offset))).terminator = true;
 						break;
 					
@@ -135,7 +164,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 				
 					case ABCOpcodeKind.GETLOCAL_0:
-						stack.add(JSNameBuilder.create(consume(opcodes, 0, offset + 1), true));
+						consumables = consumeTail(opcodes, opcodes.length, 0);
+						
+						if(consumables.length > 0) {
+							throw new Error('Invalid stack length');
+						}
+						
+						stack.add(getLocal(0)).terminator = true;
 						break;
 					
 					case ABCOpcodeKind.SETLOCAL_1:
@@ -172,11 +207,129 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			}
 		}
 		
+		private function consumeTail(opcodes:Vector.<ABCOpcode>, total:int, indent:int):Vector.<IABCWriteable> {
+			const result:Vector.<IABCWriteable> = new Vector.<IABCWriteable>();
+			
+			var previous:IABCWriteable;
+			
+			var index:int = opcodes.length;
+			var end:int = (index - total) - 1;
+			while(--index > end) {
+				if(index >= opcodes.length) {
+					break;
+				}
+				
+				const opcode:ABCOpcode = opcodes.splice(index, 1)[0];
+				const kind:ABCOpcodeKind = opcode.kind;
+				const attribute:ABCOpcodeAttribute = opcode.attribute;
+				
+				opcodes.slice().reverse().forEach(function(opcode:ABCOpcode, index:int, vector:Vector.<ABCOpcode>):void { trace(opcode.kind); });
+				
+				switch(kind) {
+					case ABCOpcodeKind.ADD:
+					case ABCOpcodeKind.ADD_D:
+					case ABCOpcodeKind.ADD_I:
+					case ABCOpcodeKind.DECREMENT:
+					case ABCOpcodeKind.DECREMENT_I:
+					case ABCOpcodeKind.DIVIDE:
+					case ABCOpcodeKind.EQUALS:
+					case ABCOpcodeKind.INCREMENT:
+					case ABCOpcodeKind.INCREMENT_I:
+					case ABCOpcodeKind.MULTIPLY:
+					case ABCOpcodeKind.MULTIPLY_I:
+					case ABCOpcodeKind.NOT:
+					case ABCOpcodeKind.SUBTRACT:
+					case ABCOpcodeKind.SUBTRACT_I:
+					
+						const operatorNumArgument:int = 2;
+						const operatorArguments:Vector.<IABCWriteable> = consumeTail(opcodes, operatorNumArgument, indent+1);
+						
+						if(operatorArguments.length != operatorNumArgument) {
+							throw new Error('Operator argument count mismatch (expected=2, recieved=' + operatorArguments.length + ")");
+						}
+						
+						const operatorExpression:IABCOperatorExpression = JSOperatorExpressionFactory.create(opcode.kind, operatorArguments);
+						
+						// Back patch!
+						previous = result.length > 0 ? result[result.length - 1] : null;
+						if(previous is IABCMethodCallBuilder && isBuiltinMethod(IABCMethodCallBuilder(previous))) {
+							result.push(JSConsumableBlock.create(operatorExpression, result.pop()));
+						} else {
+							result.push(operatorExpression);
+						}
+						
+						end -= operatorNumArgument;
+						index -= operatorNumArgument;
+						break;
+					
+					case ABCOpcodeKind.CALLPROPERTY:
+					
+						const propertyMethod:IABCMultinameAttributeBuilder = JSAttributeBuilderFactory.create(traits, attribute) as IABCMultinameAttributeBuilder;
+						if(propertyMethod) {
+							
+							const propertyNumArguments:int = JSAttributeBuilderFactory.getNumberArguments(attribute);
+							const propertyArguments:Vector.<IABCWriteable> = consumeTail(opcodes, propertyNumArguments, indent+1);
+							
+							if(propertyArguments.length != propertyNumArguments) {
+								throw new Error('Argument count mismatch');
+							}
+							
+							result.push(JSMethodCallBuilder.create(propertyMethod, propertyArguments));
+							
+							index -= propertyNumArguments;
+						} else {
+							throw new Error('Unexpected method type');
+						}
+						
+						break;
+					
+					case ABCOpcodeKind.GETLOCAL_0:
+						result.push(getLocal(0));
+						break;
+					
+					case ABCOpcodeKind.PUSHBYTE:
+					case ABCOpcodeKind.PUSHDECIMAL:
+					case ABCOpcodeKind.PUSHDOUBLE:
+					case ABCOpcodeKind.PUSHINT:
+					case ABCOpcodeKind.PUSHSTRING:
+					case ABCOpcodeKind.PUSHSTRING:
+						const attributeBuilder:IABCAttributeBuilder = JSAttributeBuilderFactory.create(traits, opcode.attribute);
+						
+						// Back patch!
+						previous = result.length > 0 ? result[result.length - 1] : null;
+						if(previous is IABCMethodCallBuilder && isBuiltinMethod(IABCMethodCallBuilder(previous))) {
+							result.push(JSConsumableBlock.create(attributeBuilder, result.pop()));
+						} else {
+							result.push(attributeBuilder);
+						}
+						break;
+					
+					case ABCOpcodeKind.DEBUG:
+					case ABCOpcodeKind.DEBUGFILE:
+					case ABCOpcodeKind.DEBUGLINE:
+						// do nothing here
+						break;
+					
+					default:
+						trace(">>>>", kind);
+						break;
+				}
+			}
+			
+			return result;
+		}
+		
+		private function isBuiltinMethod(method:IABCMethodCallBuilder):Boolean {
+			return ABCQualifiedNameType.isBuiltin(method.method.multiname.toQualifiedName());
+		}
+		
 		private function consume(opcodes:Vector.<ABCOpcode>, start:uint, finish:uint):Vector.<IABCWriteable> {
 			const result:Vector.<IABCWriteable> = new Vector.<IABCWriteable>();
 			
+			// TODO: Future scan so we consume future items.
+			
 			for(var i:uint=start; i<finish; i++) {
-				const opcode:ABCOpcode = opcodes[i];
+				const opcode:ABCOpcode = opcodes.splice(i, 1)[0];
 				const kind:ABCOpcodeKind = opcode.kind;
 							
 				switch(kind) {
@@ -186,9 +339,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const propertyArguments:Vector.<IABCWriteable> = consumeMethodArguments(result, opcode.attribute);
 						if(result.length > 0) {
 							// TODO: Should we consume the whole results
-							result.push(JSConsumableBlock.create(result.pop(), JSMethodCallBuilder.create(propertyMethod, propertyArguments)));
+							//result.push(JSConsumableBlock.create(result.pop(), JSMethodCallBuilder.create(propertyMethod, propertyArguments)));
 						} else {
-							result.push(JSMethodCallBuilder.create(propertyMethod, propertyArguments));
+							//result.push(JSMethodCallBuilder.create(propertyMethod, propertyArguments));
 						}
 						break;
 						
@@ -266,7 +419,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					case ABCOpcodeKind.GETLEX:
 					case ABCOpcodeKind.GETPROPERTY:
 					case ABCOpcodeKind.PUSHSTRING:
-						result.push(JSArgumentBuilderFactory.create(opcode.attribute));
+						result.push(JSAttributeBuilderFactory.create(traits, opcode.attribute));
 						break;
 					
 					case ABCOpcodeKind.DUP:
@@ -307,12 +460,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		private function consumeMethodArguments(items:Vector.<IABCWriteable>, attribute:ABCOpcodeAttribute):Vector.<IABCWriteable> {
-			const numArguments:uint = JSArgumentBuilderFactory.getNumberArguments(attribute);
+			const numArguments:uint = JSAttributeBuilderFactory.getNumberArguments(attribute);
 			return items.splice(items.length - numArguments, numArguments);
 		}
-		
-		private function getLocal(index:uint):IABCArgumentBuilder {
-			var result:IABCArgumentBuilder = null;
+				
+		private function getLocal(index:uint):IABCAttributeBuilder {
+			var result:IABCAttributeBuilder = null;
 			
 			if(index == 0) {
 				result = JSThisArgumentBuilder.create();
@@ -352,13 +505,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		
 		private function createName(opcodes:Vector.<ABCOpcode>, attribute:ABCOpcodeAttribute):Vector.<IABCWriteable> {
 			const total:int = opcodes.length - 1;
-			const numArguments:uint = JSArgumentBuilderFactory.getNumberArguments(attribute);
-			return consume(opcodes, 0, total - numArguments);
+			const numArguments:uint = JSAttributeBuilderFactory.getNumberArguments(attribute);
+			return consume(opcodes, 0, (total - numArguments) - 1);
 		}
 		
 		private function createMethodArguments(opcodes:Vector.<ABCOpcode>, attribute:ABCOpcodeAttribute):Vector.<IABCWriteable> {
 			const total:int = opcodes.length - 1;
-			const numArguments:uint = JSArgumentBuilderFactory.getNumberArguments(attribute);
+			const numArguments:uint = JSAttributeBuilderFactory.getNumberArguments(attribute);
 			return consume(opcodes, total - numArguments, total);
 		}
 		
@@ -408,6 +561,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		
 		public function get methodInfo():ABCMethodInfo { return _methodInfo; }
 		public function set methodInfo(value:ABCMethodInfo):void { _methodInfo = value; }
+		
+		public function get traits():Vector.<ABCTraitInfo> { return _traits; }
+		public function set traits(value:Vector.<ABCTraitInfo>):void { _traits = value; }
 		
 		public function get translateData():ABCOpcodeTranslateData { return _translateData; }
 		public function set translateData(value:ABCOpcodeTranslateData):void { _translateData = value; }

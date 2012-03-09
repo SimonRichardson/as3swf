@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 {
 
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCOperatorExpression;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSConsumableBlock;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSOperatorKind;
@@ -23,9 +24,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 		}
 
 		override public function write(data:ByteArray):void {
+			JSTokenKind.LEFT_PARENTHESES.write(data);
+			
 			left.write(data);
 			JSOperatorKind.ADDITION.write(data);
-			right.write(data);			
+			right.write(data);
+			
+			JSTokenKind.RIGHT_PARENTHESES.write(data);			
 		}
 		
 		override public function get name():String { return "JSAddExpression"; }

@@ -6,7 +6,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	import com.codeazur.utils.StringUtils;
 
@@ -14,7 +14,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSArgumentsBuilder implements IABCArgumentBuilder {
+	public class JSArgumentsBuilder implements IABCAttributeBuilder {
 		
 		public var index:int;
 		

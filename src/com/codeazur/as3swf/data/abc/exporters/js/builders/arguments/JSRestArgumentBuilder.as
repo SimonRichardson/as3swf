@@ -7,7 +7,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSReservedKind;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	import com.codeazur.utils.StringUtils;
@@ -18,7 +18,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSRestArgumentBuilder implements IABCArgumentBuilder {
+	public class JSRestArgumentBuilder implements IABCAttributeBuilder {
 		
 		
 		private static const ARRAY_PROTOTYPE_CALL:IABCMultiname = ABCQualifiedName.create("call", ABCNamespace.create(ABCNamespaceKind.NAMESPACE.type, "Array.prototype.slice"));

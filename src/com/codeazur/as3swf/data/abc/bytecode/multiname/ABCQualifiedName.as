@@ -25,7 +25,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		public function get isTopLevel():Boolean {
 			return 	(ns == null) || 
 					(ns != null && ns.value == ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) ||
-					(ns != null && ns.value.length < 1);
+					(ns != null && ns.value && ns.value.length < 1);
 		}
 		
 		override public function get name():String { return "ABCQualifiedName"; }

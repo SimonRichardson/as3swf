@@ -6,6 +6,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
@@ -19,6 +20,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.translator.JSOpcodeTranslatorOptimizer;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslator;
+
 	import flash.utils.ByteArray;
 
 	/**
@@ -57,6 +59,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			JSTokenKind.LEFT_PARENTHESES.write(data);
 			
 			const instanceInitialiser:ABCMethodInfo = instanceInfo.instanceInitialiser;
+			const traits:Vector.<ABCTraitInfo> = instanceInfo.traits;
 			const parameters:Vector.<ABCParameter> = instanceInitialiser.parameters;
 			
 			const parameterBuilder:IABCMethodParameterBuilder = JSMethodParameterBuilder.create(parameters);
@@ -76,7 +79,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			translator.optimizer = JSOpcodeTranslatorOptimizer.create();
 			translator.translate(translateData);
 			
-			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(instanceInitialiser, translateData);
+			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(instanceInitialiser, traits, translateData);
 			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);

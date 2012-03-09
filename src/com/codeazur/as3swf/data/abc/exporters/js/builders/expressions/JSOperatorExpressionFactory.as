@@ -66,12 +66,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.expressions
 			if(!infix) {
 				const total:uint = items.length;
 				if(total == 2) {
-					expression.left = items[0];
-					expression.right = items[1];
+					expression.left = items[1];
+					expression.right = items[0];
 				} else if(total == 1){
 					expression.left = items[0];
 				} else {
-					throw new Error();
+					throw new Error("Total mismatch (expected=1-2, recieved=" + total + ")");
 				}
 			}
 			

@@ -1,8 +1,8 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodCallBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMultinameAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	import com.codeazur.utils.StringUtils;
 
@@ -13,13 +13,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	 */
 	public class JSMethodCallBuilder implements IABCMethodCallBuilder {
 		
-		public var method:IABCWriteable;
-		public var args:Vector.<IABCWriteable>;
+		private var _method:IABCMultinameAttributeBuilder;
+		private var _args:Vector.<IABCWriteable>;
 		
 		public function JSMethodCallBuilder() {
 		}
 		
-		public static function create(method:IABCWriteable, args:Vector.<IABCWriteable> = null):JSMethodCallBuilder {
+		public static function create(method:IABCMultinameAttributeBuilder, args:Vector.<IABCWriteable> = null):JSMethodCallBuilder {
 			const builder:JSMethodCallBuilder = new JSMethodCallBuilder();
 			builder.method = method;
 			builder.args = args;
@@ -44,6 +44,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			
 			JSTokenKind.RIGHT_PARENTHESES.write(data);
 		}
+		
+		public function get method():IABCMultinameAttributeBuilder { return _method; }
+		public function set method(value:IABCMultinameAttributeBuilder):void { _method = value; }
+		
+		public function get args():Vector.<IABCWriteable> { return _args; }
+		public function set args(value:Vector.<IABCWriteable>):void { _args = value; }
 		
 		public function get name():String { return "JSMethodCallBuilder"; }
 		

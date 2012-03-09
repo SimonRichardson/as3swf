@@ -2,7 +2,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSThisExpression;
 	import com.codeazur.utils.StringUtils;
 
@@ -10,7 +10,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSThisArgumentBuilder implements IABCArgumentBuilder {
+	public class JSThisArgumentBuilder implements IABCAttributeBuilder {
 		
 		public var expression:JSThisExpression;
 		

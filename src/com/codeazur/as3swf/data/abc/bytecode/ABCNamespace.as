@@ -15,7 +15,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			value = initValue;
 		}
 		
-		public static function create(type:uint, value:String):ABCNamespace {
+		public static function create(type:uint, value:String = ""):ABCNamespace {
 			const ns:ABCNamespace = new ABCNamespace();
 			ns.kind = ABCNamespaceKind.getType(type);
 			ns.value = ns.kind == ABCNamespaceKind.PRIVATE_NAMESPACE ? "private" : value;

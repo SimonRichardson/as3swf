@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
@@ -23,12 +24,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	public class JSMethodBuilder implements IABCMethodBuilder {
 		
 		private var _methodInfo:ABCMethodInfo;
+		private var _traits:Vector.<ABCTraitInfo>;
 		
 		public function JSMethodBuilder() {}
 		
-		public static function create(methodInfo:ABCMethodInfo):JSMethodBuilder {
+		public static function create(methodInfo:ABCMethodInfo, traits:Vector.<ABCTraitInfo>):JSMethodBuilder {
 			const builder:JSMethodBuilder = new JSMethodBuilder();
 			builder.methodInfo = methodInfo;
+			builder.traits = traits;
 			return builder; 
 		}
 		
@@ -57,7 +60,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			translator.optimizer = JSOpcodeTranslatorOptimizer.create();
 			translator.translate(translateData);
 			
-			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(methodInfo, translateData);
+			const opcode:IABCMethodOpcodeBuilder = JSMethodOpcodeBuilder.create(methodInfo, traits, translateData);
 			opcode.write(data);
 			
 			JSTokenKind.RIGHT_CURLY_BRACKET.write(data);
@@ -65,6 +68,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		
 		public function get methodInfo():ABCMethodInfo { return _methodInfo; }
 		public function set methodInfo(value:ABCMethodInfo):void { _methodInfo = value; }
+		
+		public function get traits():Vector.<ABCTraitInfo> { return _traits; }
+		public function set traits(value:Vector.<ABCTraitInfo>):void { _traits = value; }
 		
 		public function get name():String { return "JSMethodBuilder"; }
 		

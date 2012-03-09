@@ -3,14 +3,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSArgumentBuilder implements IABCArgumentBuilder
+	public class JSArgumentBuilder implements IABCAttributeBuilder
 	{
 		private var _argument:ABCParameter;
 

@@ -1,7 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 	import com.codeazur.as3swf.data.abc.ABC;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCPropertyBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
@@ -13,14 +13,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	public class JSPropertyBuilder implements IABCPropertyBuilder
 	{
 
-		private var _propertyName:IABCArgumentBuilder;
+		private var _propertyName:IABCAttributeBuilder;
 		
 		private var _expressions:Vector.<IABCWriteable>;
 
 		public function JSPropertyBuilder() {
 		}
 		
-		public static function create(propertyName:IABCArgumentBuilder, expressions:Vector.<IABCWriteable>):JSPropertyBuilder {
+		public static function create(propertyName:IABCAttributeBuilder, expressions:Vector.<IABCWriteable>):JSPropertyBuilder {
 			const builder:JSPropertyBuilder = new JSPropertyBuilder();
 			builder.propertyName = propertyName;
 			builder.expressions = expressions;
@@ -60,8 +60,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			}
 		}
 		
-		public function get propertyName():IABCArgumentBuilder { return _propertyName; }
-		public function set propertyName(value:IABCArgumentBuilder):void { _propertyName = value; }
+		public function get propertyName():IABCAttributeBuilder { return _propertyName; }
+		public function set propertyName(value:IABCAttributeBuilder):void { _propertyName = value; }
 		
 		public function get expressions():Vector.<IABCWriteable> { return _expressions; }
 		public function set expressions(value:Vector.<IABCWriteable>):void { _expressions = value; }

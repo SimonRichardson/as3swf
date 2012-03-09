@@ -43,6 +43,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.translator
 						case ABCOpcodeKind.CONVERT_U:
 						case ABCOpcodeKind.DUP:
 						case ABCOpcodeKind.FINDPROPSTRICT:
+						case ABCOpcodeKind.NEWACTIVATION:
 							// TODO: Fix jump targets.
 							block.splice(index, 1);
 							break;

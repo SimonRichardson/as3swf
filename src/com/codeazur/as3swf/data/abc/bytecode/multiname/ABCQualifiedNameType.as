@@ -32,6 +32,10 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			return name.fullName == type.type.fullName && name.kind.type == type.type.kind.type;
 		}
 		
+		public static function isNameType(name:String, type:ABCQualifiedNameType):Boolean {
+			return name == type.type.fullName;
+		}
+		
 		public static function isBuiltin(name:ABCQualifiedName):Boolean {
 			return name.ns.value == BUILTIN_NAME;
 		}

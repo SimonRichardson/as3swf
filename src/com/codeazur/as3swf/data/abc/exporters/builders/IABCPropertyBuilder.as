@@ -7,8 +7,8 @@ package com.codeazur.as3swf.data.abc.exporters.builders
 	public interface IABCPropertyBuilder extends IABCExpression
 	{
 		
-		function get propertyName():IABCArgumentBuilder;
-		function set propertyName(value:IABCArgumentBuilder):void;
+		function get propertyName():IABCAttributeBuilder;
+		function set propertyName(value:IABCAttributeBuilder):void;
 		
 		function get expressions():Vector.<IABCWriteable>;
 		function set expressions(value:Vector.<IABCWriteable>):void;
