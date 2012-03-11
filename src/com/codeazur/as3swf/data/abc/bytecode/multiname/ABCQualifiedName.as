@@ -22,17 +22,17 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			return qname;
 		}
 		
-		public function get isTopLevel():Boolean {
+		public function get hasValidNamespace():Boolean {
 			return 	(ns == null) || 
 					(ns != null && ns.value == ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) ||
-					(ns != null && ns.value && ns.value.length < 1);
+					(ns != null && ns.value != null && ns.value.length < 1);
 		}
 		
 		override public function get name():String { return "ABCQualifiedName"; }
 		override public function get fullName():String {
 			var result:String;
 			if(label != ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) {
-				if(isTopLevel) {
+				if(hasValidNamespace) {
 					result = label;
 				} else {
 					result = ns.value + "." + label;

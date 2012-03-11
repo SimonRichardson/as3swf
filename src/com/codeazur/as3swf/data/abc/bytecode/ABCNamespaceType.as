@@ -25,7 +25,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public static function isType(type:ABCNamespaceType, kind:ABCNamespaceType):Boolean {
-			return type.ns.kind == type.ns.kind && type.ns.value == type.ns.value;
+			return type.ns.kind == kind.ns.kind && type.ns.value == kind.ns.value;
 		}
 		
 		public static function isTypeByValue(value:String, kind:ABCNamespaceType):Boolean {

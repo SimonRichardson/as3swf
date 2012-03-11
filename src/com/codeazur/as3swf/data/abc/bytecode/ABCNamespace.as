@@ -10,7 +10,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var kind : ABCNamespaceKind;
 		public var value : String;
 
-		public function ABCNamespace(initKind:ABCNamespaceKind = null, initValue:String = null) {
+		public function ABCNamespace(initKind:ABCNamespaceKind = null, initValue:String = "") {
 			kind = initKind;
 			value = initValue;
 		}
