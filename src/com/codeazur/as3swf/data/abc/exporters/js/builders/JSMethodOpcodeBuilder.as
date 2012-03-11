@@ -161,111 +161,123 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		
 		private function consumeTail(opcodes:Vector.<ABCOpcode>, total:int, indent:int):Vector.<IABCWriteable> {
 			const result:Vector.<IABCWriteable> = new Vector.<IABCWriteable>();
-			
-			var previous:IABCWriteable;
-			while(opcodes.length > 0) {
-				if(result.length >= total) {
-					// Abort when we've got the total items
-					break;
-				}
-				
-				const opcode:ABCOpcode = opcodes.pop();
-				const kind:ABCOpcodeKind = opcode.kind;
-				const attribute:ABCOpcodeAttribute = opcode.attribute;
-				
-				var localIndex:int = 0;
-				var value:IABCWriteable = null;
-				var attributeBuilder:IABCAttributeBuilder;
-				// opcodes.slice().reverse().forEach(function(opcode:ABCOpcode, index:int, vector:Vector.<ABCOpcode>):void { trace(opcode.kind); });
-				
-				switch(kind) {
-					case ABCOpcodeKind.ADD:
-					case ABCOpcodeKind.ADD_D:
-					case ABCOpcodeKind.ADD_I:
-					case ABCOpcodeKind.DECREMENT:
-					case ABCOpcodeKind.DECREMENT_I:
-					case ABCOpcodeKind.DIVIDE:
-					case ABCOpcodeKind.EQUALS:
-					case ABCOpcodeKind.INCREMENT:
-					case ABCOpcodeKind.INCREMENT_I:
-					case ABCOpcodeKind.MULTIPLY:
-					case ABCOpcodeKind.MULTIPLY_I:
-					case ABCOpcodeKind.NOT:
-					case ABCOpcodeKind.SUBTRACT:
-					case ABCOpcodeKind.SUBTRACT_I:
-					
-						const operatorNumArgument:int = 2;
-						const operatorArguments:Vector.<IABCWriteable> = consumeTail(opcodes, operatorNumArgument, indent + 1);
-						
-						if(operatorArguments.length != operatorNumArgument) {
-							throw new Error('Operator argument count mismatch (expected=2, recieved=' + operatorArguments.length + ")");
-						}
-						
-						value = JSOperatorExpressionFactory.create(opcode.kind, operatorArguments);
+			if(total > 0) {
+				var previous:IABCWriteable;
+				while(opcodes.length > 0) {
+					if(result.length >= total) {
+						// Abort when we've got the total items
 						break;
+					}
 					
-					case ABCOpcodeKind.CALLPROPERTY:
+					const opcode:ABCOpcode = opcodes.pop();
+					const kind:ABCOpcodeKind = opcode.kind;
+					const attribute:ABCOpcodeAttribute = opcode.attribute;
 					
-						const propertyMethod:IABCMultinameAttributeBuilder = JSAttributeFactory.create(attribute) as IABCMultinameAttributeBuilder;
-						if(propertyMethod) {
+					var localIndex:int = 0;
+					var value:IABCWriteable = null;
+					var attributeBuilder:IABCAttributeBuilder;
+					// opcodes.slice().reverse().forEach(function(opcode:ABCOpcode, index:int, vector:Vector.<ABCOpcode>):void { trace(opcode.kind); });
+					
+					switch(kind) {
+						case ABCOpcodeKind.ADD:
+						case ABCOpcodeKind.ADD_D:
+						case ABCOpcodeKind.ADD_I:
+						case ABCOpcodeKind.DECREMENT:
+						case ABCOpcodeKind.DECREMENT_I:
+						case ABCOpcodeKind.DIVIDE:
+						case ABCOpcodeKind.EQUALS:
+						case ABCOpcodeKind.INCREMENT:
+						case ABCOpcodeKind.INCREMENT_I:
+						case ABCOpcodeKind.MULTIPLY:
+						case ABCOpcodeKind.MULTIPLY_I:
+						case ABCOpcodeKind.NOT:
+						case ABCOpcodeKind.SUBTRACT:
+						case ABCOpcodeKind.SUBTRACT_I:
+						
+							const operatorNumArgument:int = 2;
+							const operatorArguments:Vector.<IABCWriteable> = consumeTail(opcodes, operatorNumArgument, indent + 1);
 							
-							const propertyNumArguments:int = JSAttributeFactory.getNumberArguments(attribute);
-							const propertyArguments:Vector.<IABCWriteable> = consumeTail(opcodes, propertyNumArguments, indent + 1);
-							
-							if(propertyArguments.length != propertyNumArguments) {
-								throw new Error('Argument count mismatch');
+							if(operatorArguments.length != operatorNumArgument) {
+								throw new Error('Operator argument count mismatch (expected=2, recieved=' + operatorArguments.length + ")");
 							}
 							
-							result.push(JSMethodCallBuilder.create(propertyMethod, propertyArguments));
+							value = JSOperatorExpressionFactory.create(opcode.kind, operatorArguments);
+							break;
+						
+						case ABCOpcodeKind.CALLPROPERTY:
+						
+							const propertyMethod:IABCMultinameAttributeBuilder = JSAttributeFactory.create(attribute) as IABCMultinameAttributeBuilder;
+							if(propertyMethod) {
+								
+								const propertyNumArguments:int = JSAttributeFactory.getNumberArguments(attribute);
+								const propertyArguments:Vector.<IABCWriteable> = consumeTail(opcodes, propertyNumArguments, indent + 1);
+								
+								if(propertyArguments.length != propertyNumArguments) {
+									throw new Error('Argument count mismatch');
+								}
+								
+								result.push(JSMethodCallBuilder.create(propertyMethod, propertyArguments));
+							} else {
+								throw new Error('Unexpected method type');
+							}
+							
+							break;
+						
+						case ABCOpcodeKind.GETLOCAL_3:
+							localIndex++;
+						case ABCOpcodeKind.GETLOCAL_2:
+							localIndex++;
+						case ABCOpcodeKind.GETLOCAL_1:
+							localIndex++;
+						case ABCOpcodeKind.GETLOCAL_0:
+							result.push(getLocal(localIndex));
+							break;
+							
+						case ABCOpcodeKind.GETPROPERTY:
+							const accessor:Vector.<IABCWriteable> = consumeTail(opcodes, 1, indent + 1);
+							attributeBuilder = JSAttributeFactory.create(attribute);
+							value = JSConsumableBlock.create(JSNameBuilder.create(accessor), attributeBuilder);
+							break;
+						
+						case ABCOpcodeKind.NEWOBJECT:
+							const newObjectNumArguments:int = JSAttributeFactory.getNumberArguments(attribute);
+							const newObjectCosumeAmount:int = newObjectNumArguments * 2;
+							const newObjectArguments:Vector.<IABCWriteable> = consumeTail(opcodes, newObjectCosumeAmount, indent + 1);
+							if(newObjectArguments.length != newObjectCosumeAmount) {
+								throw new Error('Argument count mismatch');
+							}
+							value = JSNewObjectBuilder.create(newObjectArguments.reverse());
+							break;
+											
+						case ABCOpcodeKind.PUSHBYTE:
+						case ABCOpcodeKind.PUSHDECIMAL:
+						case ABCOpcodeKind.PUSHDOUBLE:
+						case ABCOpcodeKind.PUSHINT:
+						case ABCOpcodeKind.PUSHSTRING:
+						case ABCOpcodeKind.PUSHSTRING:
+							value = JSAttributeFactory.create(attribute);
+							break;
+						
+						case ABCOpcodeKind.DEBUG:
+						case ABCOpcodeKind.DEBUGFILE:
+						case ABCOpcodeKind.DEBUGLINE:
+							// do nothing here
+							break;
+						
+						default:
+							trace(">>>>", kind);
+							break;
+					}
+					
+					// Back patch!
+					if(value) {
+						previous = result.length > 0 ? result[result.length - 1] : null;
+						if(	previous is IABCMethodCallBuilder && 
+							ABCMultinameBuiltin.isBuiltin((IABCMethodCallBuilder(previous).method.multiname))) {
+							result.push(JSConsumableBlock.create(value, result.pop()));
 						} else {
-							throw new Error('Unexpected method type');
+							result.push(value);
 						}
-						
-						break;
-					
-					case ABCOpcodeKind.GETLOCAL_3:
-						localIndex++;
-					case ABCOpcodeKind.GETLOCAL_2:
-						localIndex++;
-					case ABCOpcodeKind.GETLOCAL_1:
-						localIndex++;
-					case ABCOpcodeKind.GETLOCAL_0:
-						result.push(getLocal(localIndex));
-						break;
-						
-					case ABCOpcodeKind.GETPROPERTY:
-						const accessor:Vector.<IABCWriteable> = consumeTail(opcodes, 1, indent + 1);
-						attributeBuilder = JSAttributeFactory.create(attribute);
-						value = JSConsumableBlock.create(JSNameBuilder.create(accessor), attributeBuilder);
-						break;
-										
-					case ABCOpcodeKind.PUSHBYTE:
-					case ABCOpcodeKind.PUSHDECIMAL:
-					case ABCOpcodeKind.PUSHDOUBLE:
-					case ABCOpcodeKind.PUSHINT:
-					case ABCOpcodeKind.PUSHSTRING:
-					case ABCOpcodeKind.PUSHSTRING:
-						value = JSAttributeFactory.create(attribute);
-						break;
-					
-					case ABCOpcodeKind.DEBUG:
-					case ABCOpcodeKind.DEBUGFILE:
-					case ABCOpcodeKind.DEBUGLINE:
-						// do nothing here
-						break;
-					
-					default:
-						trace(">>>>", kind);
-						break;
-				}
-				
-				// Back patch!
-				if(value) {
-					previous = result.length > 0 ? result[result.length - 1] : null;
-					if(previous is IABCMethodCallBuilder && isBuiltinMethod(IABCMethodCallBuilder(previous))) {
-						result.push(JSConsumableBlock.create(value, result.pop()));
-					} else {
-						result.push(value);
 					}
 				}
 			}
@@ -312,10 +324,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				throw new Error(name);
 			}
 			return builder;
-		}
-		
-		private function isBuiltinMethod(method:IABCMethodCallBuilder):Boolean {
-			return ABCMultinameBuiltin.isBuiltin(method.method.multiname);
 		}
 						
 		private function getLocal(index:uint):IABCAttributeBuilder {

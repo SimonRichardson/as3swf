@@ -55,7 +55,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 				if(mnameUIntQName) {
 					builder = JSNamespaceFactory.create(mnameUIntQName);
 				} else {
-					trace(">>>>>>>", mnameUIntQName, mnameUIntAttr.multiname);
 					throw new Error(attribute);
 				}
 				

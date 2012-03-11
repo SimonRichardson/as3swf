@@ -57,9 +57,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 				str += "\n" + StringUtils.repeat(indent + 2) + "";
 				str += "OptionalKind: ";
 				str += "\n" + optionalKind.toString(indent + 4);
-				str += "\n" + StringUtils.repeat(indent + 2) + "";
-				str += "DefaultValue: " + defaultValue;
 			}
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "";
+			str += "DefaultValue: " + defaultValue;
 			
 			return str;
 		}
