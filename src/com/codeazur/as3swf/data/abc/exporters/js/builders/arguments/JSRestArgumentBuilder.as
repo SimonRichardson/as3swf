@@ -2,17 +2,17 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespace;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSReservedKind;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	import com.codeazur.utils.StringUtils;
-
 	import flash.utils.ByteArray;
+
 
 
 	/**

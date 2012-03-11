@@ -3,7 +3,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.utils.StringUtils;
 
@@ -11,20 +11,20 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSFloatArgumentBuilder implements IABCAttributeBuilder
+	public class JSNumberArgumentBuilder implements IABCAttributeBuilder
 	{
 		
 		public var float:Number;
 		
 		private var _argument:ABCParameter;
 
-		public function JSFloatArgumentBuilder() {
+		public function JSNumberArgumentBuilder() {
 		}
 		
-		public static function create(float:Number):JSFloatArgumentBuilder {
-			const builder:JSFloatArgumentBuilder = new JSFloatArgumentBuilder();
+		public static function create(float:Number):JSNumberArgumentBuilder {
+			const builder:JSNumberArgumentBuilder = new JSNumberArgumentBuilder();
 			builder.float = float;
-			builder.argument = ABCParameter.create(ABCQualifiedNameType.FLOAT.type, "", float);
+			builder.argument = ABCParameter.create(ABCMultinameBuiltin.NUMBER, "", float);
 			return builder;
 		}
 		
@@ -35,7 +35,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 		public function get argument():ABCParameter { return _argument; }
 		public function set argument(value:ABCParameter) : void { _argument = value; }
 		
-		public function get name():String { return "JSFloatArgumentBuilder"; }
+		public function get name():String { return "JSNumberArgumentBuilder"; }
 		
 		public function toString(indent:uint=0):String {
 			var str:String = ABC.toStringCommon(name, indent);

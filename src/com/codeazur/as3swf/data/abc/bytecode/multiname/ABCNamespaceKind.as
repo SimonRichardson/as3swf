@@ -1,4 +1,4 @@
-package com.codeazur.as3swf.data.abc.bytecode
+package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
 
 	import com.codeazur.as3swf.data.abc.ABC;

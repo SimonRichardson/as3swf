@@ -1,11 +1,13 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 {
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	import com.codeazur.utils.StringUtils;
+
 	import flash.utils.ByteArray;
 
 	/**
@@ -24,7 +26,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 		public static function create(string:String):JSStringArgumentBuilder {
 			const builder:JSStringArgumentBuilder = new JSStringArgumentBuilder();
 			builder.string = string;
-			builder.argument = ABCParameter.create(ABCQualifiedNameType.STRING.type, "", string);
+			builder.argument = ABCParameter.create(ABCMultinameBuiltin.STRING, "", string);
 			return builder;
 		}
 		

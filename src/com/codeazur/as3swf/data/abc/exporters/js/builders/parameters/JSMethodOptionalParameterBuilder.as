@@ -3,8 +3,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.parameters
 
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMatcher;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOptionalParameterBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCTernaryBuilder;
@@ -58,7 +58,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.parameters
 						const defaultValue:IABCValueBuilder = JSValueBuilder.create(parameterDefaultValue, parameterQName);
 						
 						var matcher:IABCMatcher;
-						if(ABCQualifiedNameType.isType(parameterQName, ABCQualifiedNameType.STRING)){
+						if(ABCMultinameBuiltin.isType(parameterQName, ABCMultinameBuiltin.STRING)){
 							matcher = JSStringNotEmptyMatcher.create(value);	
 						} else {
 							matcher = JSNotNullMatcher.create(value);

@@ -78,6 +78,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.INCREMENT_I:
 					case ABCOpcodeKind.MULTIPLY:
 					case ABCOpcodeKind.MULTIPLY_I:
+					case ABCOpcodeKind.NEWOBJECT:
 					case ABCOpcodeKind.NOT:
 					case ABCOpcodeKind.PUSHBYTE:
 					case ABCOpcodeKind.PUSHDECIMAL:

@@ -1,25 +1,23 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceKind;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitConstInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfoKind;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodCallBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMultinameAttributeBuilder;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCOperatorExpression;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSArgumentsBuilder;
@@ -30,11 +28,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSUnsignedIntegerArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSOperatorExpressionFactory;
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSPrimaryExpressionFactory;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 
 	import flash.utils.ByteArray;
+
 
 
 	/**
@@ -301,13 +299,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			var builder:IABCAttributeBuilder = null;
 			
 			const name:String = qname.fullName; 
-			if(ABCQualifiedNameType.isNameType(name,  ABCQualifiedNameType.INT)) {
+			if(ABCMultinameBuiltin.isNameType(name, ABCMultinameBuiltin.INT)) {
 				builder = JSIntegerArgumentBuilder.create(value);
 				
-			} else if(ABCQualifiedNameType.isNameType(name,  ABCQualifiedNameType.UINT)) {
+			} else if(ABCMultinameBuiltin.isNameType(name, ABCMultinameBuiltin.UINT)) {
 				builder = JSUnsignedIntegerArgumentBuilder.create(value);
 				
-			} else if(ABCQualifiedNameType.isNameType(name,  ABCQualifiedNameType.STRING)) {
+			} else if(ABCMultinameBuiltin.isNameType(name, ABCMultinameBuiltin.STRING)) {
 				builder = JSStringArgumentBuilder.create(value);
 				
 			} else {
@@ -317,7 +315,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		private function isBuiltinMethod(method:IABCMethodCallBuilder):Boolean {
-			return ABCQualifiedNameType.isBuiltin(method.method.multiname.toQualifiedName());
+			return ABCMultinameBuiltin.isBuiltin(method.method.multiname);
 		}
 						
 		private function getLocal(index:uint):IABCAttributeBuilder {

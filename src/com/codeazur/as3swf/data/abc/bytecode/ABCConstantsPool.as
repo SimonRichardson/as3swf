@@ -6,6 +6,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameGeneric;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameLate;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamedMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespace;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceSet;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCRuntimeQualifiedName;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCRuntimeQualifiedNameLate;

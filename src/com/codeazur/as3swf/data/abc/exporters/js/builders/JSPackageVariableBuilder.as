@@ -1,15 +1,15 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 	import com.codeazur.as3swf.data.abc.ABC;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceType;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespace;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.ABCJavascriptExporter;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	import com.codeazur.utils.StringUtils;
-
 	import flash.utils.ByteArray;
+
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */

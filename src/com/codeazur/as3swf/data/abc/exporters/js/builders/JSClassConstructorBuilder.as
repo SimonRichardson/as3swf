@@ -1,15 +1,15 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespace;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassConstructorBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOptionalParameterBuilder;
@@ -20,8 +20,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.translator.JSOpcodeTranslatorOptimizer;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslator;
-
 	import flash.utils.ByteArray;
+
 
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -87,7 +87,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		
 		private function getSuperClassName():String {
 			var qname:IABCMultiname = _instanceInfo.superMultiname;
-			if(ABCQualifiedNameType.isType(qname, ABCQualifiedNameType.OBJECT)) {
+			if(ABCMultinameBuiltin.isType(qname, ABCMultinameBuiltin.OBJECT)) {
 				qname = ABCQualifiedName.create(ABCJavascriptExporter.FLASH_OBJECT_NAME, ABCNamespace.create(ABCNamespaceKind.PACKAGE_NAMESPACE.type, ""));
 			}
 			return qname.fullName;

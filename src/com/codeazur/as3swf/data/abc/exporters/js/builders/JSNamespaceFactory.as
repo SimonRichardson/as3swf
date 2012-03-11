@@ -1,8 +1,9 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespaceKind;
+
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSMultinameArgumentBuilder;
 	/**
@@ -22,7 +23,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				
 			} else if(ABCNamespaceKind.isType(qname.ns.kind, ABCNamespaceKind.NAMESPACE)) {
 				
-				if(ABCQualifiedNameType.isBuiltin(qname)) {
+				if(ABCMultinameBuiltin.isBuiltin(qname)) {
 					builder = JSMultinameArgumentBuilder.create(qname);
 				} else {
 					throw new Error(qname);

@@ -1,10 +1,11 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 {
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMultinameAttributeBuilder;
 	import com.codeazur.utils.StringUtils;
 
@@ -30,7 +31,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 		
 		public function write(data:ByteArray):void {
 			const qname:ABCQualifiedName = multiname.toQualifiedName();
-			if(qname && ABCQualifiedNameType.isBuiltin(qname)) {
+			if(qname && ABCMultinameBuiltin.isBuiltin(qname)) {
 				data.writeUTF(qname.label);
 			} else {
 				data.writeUTF(multiname.fullName);

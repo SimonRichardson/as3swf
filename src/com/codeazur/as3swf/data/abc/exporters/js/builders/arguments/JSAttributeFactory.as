@@ -36,7 +36,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 			} else if(attribute is ABCOpcodeDoubleAttribute) {
 				
 				const doubleAttr:ABCOpcodeDoubleAttribute = ABCOpcodeDoubleAttribute(attribute);
-				builder = JSFloatArgumentBuilder.create(doubleAttr.double);
+				builder = JSNumberArgumentBuilder.create(doubleAttr.double);
 				
 			} else if(attribute is ABCOpcodeMultinameAttribute) {
 				
@@ -53,6 +53,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 				if(mnameUIntAttr.multiname is ABCQualifiedName) {
 					builder = JSNamespaceFactory.create(mnameUIntAttr.multiname.toQualifiedName());
 				} else {
+					trace(mnameUIntAttr.multiname);
 					throw new Error(attribute);
 				}
 				

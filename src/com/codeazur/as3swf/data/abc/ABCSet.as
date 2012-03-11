@@ -5,8 +5,8 @@ package com.codeazur.as3swf.data.abc
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMetadata;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCNamespace;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespace;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
 	 */

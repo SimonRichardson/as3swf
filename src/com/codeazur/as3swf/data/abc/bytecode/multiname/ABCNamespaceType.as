@@ -1,4 +1,4 @@
-package com.codeazur.as3swf.data.abc.bytecode
+package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 
@@ -11,6 +11,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 		private static const _types:Dictionary = new Dictionary();
 		
 		public static const ASTERISK:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.NAMESPACE, "*"));
+		public static const BUILTIN:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.NAMESPACE, "http://adobe.com/AS3/2006/builtin"));
+		public static const FLASH_UTILS:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.PACKAGE_NAMESPACE, "flash.utils"));
+		public static const PUBLIC:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.PACKAGE_NAMESPACE));
 		public static const SUPER:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.NAMESPACE));
 
 		private var _ns:ABCNamespace;

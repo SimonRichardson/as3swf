@@ -1,8 +1,9 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 {
+
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameType;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.utils.StringUtils;
 
@@ -23,7 +24,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 		public static function create(unsignedInteger:uint):JSUnsignedIntegerArgumentBuilder {
 			const builder:JSUnsignedIntegerArgumentBuilder = new JSUnsignedIntegerArgumentBuilder();
 			builder.unsignedInteger = unsignedInteger;
-			builder.argument = ABCParameter.create(ABCQualifiedNameType.UINT.type, "", unsignedInteger);
+			builder.argument = ABCParameter.create(ABCMultinameBuiltin.UINT, "", unsignedInteger);
 			return builder;
 		}
 		
