@@ -23,7 +23,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		
 		override public function toQualifiedName():ABCQualifiedName {
 			var result:ABCQualifiedName = super.toQualifiedName();
-			if(namespaces.namespaces.length == 1) {
+			if(namespaces.namespaces.length > 0) {
 				result = ABCQualifiedName.create(name, namespaces.namespaces[0]);
 			}
 			return result;

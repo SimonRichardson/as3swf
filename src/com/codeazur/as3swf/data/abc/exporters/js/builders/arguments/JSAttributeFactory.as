@@ -41,8 +41,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 			} else if(attribute is ABCOpcodeMultinameAttribute) {
 				
 				const mnameAttr:ABCOpcodeMultinameAttribute = ABCOpcodeMultinameAttribute(attribute);
-				if(mnameAttr.multiname is ABCQualifiedName) {
-					builder = JSNamespaceFactory.create(mnameAttr.multiname.toQualifiedName());
+				const mnameQName:ABCQualifiedName = mnameAttr.multiname.toQualifiedName();
+				if(mnameQName) {
+					builder = JSNamespaceFactory.create(mnameQName);
 				} else {
 					throw new Error(attribute);
 				}
@@ -50,10 +51,11 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 			} else if(attribute is ABCOpcodeMultinameUIntAttribute) {
 				
 				const mnameUIntAttr:ABCOpcodeMultinameUIntAttribute = ABCOpcodeMultinameUIntAttribute(attribute);
-				if(mnameUIntAttr.multiname is ABCQualifiedName) {
-					builder = JSNamespaceFactory.create(mnameUIntAttr.multiname.toQualifiedName());
+				const mnameUIntQName:ABCQualifiedName = mnameUIntAttr.multiname.toQualifiedName();
+				if(mnameUIntQName) {
+					builder = JSNamespaceFactory.create(mnameUIntQName);
 				} else {
-					trace(mnameUIntAttr.multiname);
+					trace(">>>>>>>", mnameUIntQName, mnameUIntAttr.multiname);
 					throw new Error(attribute);
 				}
 				
