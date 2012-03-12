@@ -32,7 +32,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		public static function createQName(name:String):ABCQualifiedName {
-			const label:String = ABCJavascriptExporter.PACKAGE_PREFIX;
+			const label:String = ABCJavascriptExporter.NAMESPACE_PACKAGE_PREFIX;
 			const ns:ABCNamespace = ABCNamespaceType.getType(ABCNamespaceType.ASTERISK);
 			return ABCQualifiedName.create(label, ns);
 		}

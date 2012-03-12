@@ -30,9 +30,9 @@ package com.codeazur.as3swf.data.abc.exporters.js
 		
 		public static const LOCAL_PREFIX:String = "__local__";
 		
-		public static const PACKAGE_PREFIX:String = "";
-		public static const PRIVATE_PREFIX:String = "_";
-		public static const PROTECTED_PREFIX:String = "_";
+		public static const NAMESPACE_PACKAGE_PREFIX:String = "";
+		public static const NAMESPACE_PRIVATE_PREFIX:String = "_private_";
+		public static const NAMESPACE_PROTECTED_PREFIX:String = "_protected_";
 		
 		public static const FLASH_OBJECT_NAME:String = "FlashObject";
 		
