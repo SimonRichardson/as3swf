@@ -132,7 +132,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 								throw new Error('ConstructProperty argument mismatch');
 							}
 							
-							stack.add(JSConstructPropertyBuilder.create(constructName, constructArguments)).terminator = true;
+							stack.add(JSConstructPropertyBuilder.create(constructName, constructArguments.reverse())).terminator = true;
 						} else {
 							throw new Error('Construct property name mismatch');
 						}
@@ -292,6 +292,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						case ABCOpcodeKind.PUSHSTRING:
 						case ABCOpcodeKind.PUSHSTRING:
 							value = JSAttributeFactory.create(attribute);
+							break;
+						
+						case ABCOpcodeKind.PUSHFALSE:	
+						case ABCOpcodeKind.PUSHTRUE:
+						case ABCOpcodeKind.PUSHNULL:
+							value = JSAttributeFactory.create(attribute, kind);
 							break;
 						
 						case ABCOpcodeKind.DEBUG:

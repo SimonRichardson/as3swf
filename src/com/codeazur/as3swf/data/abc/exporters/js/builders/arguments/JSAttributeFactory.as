@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 {
+	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeDoubleAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
@@ -16,7 +17,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	public class JSAttributeFactory
 	{
 		
-		public static function create(attribute:ABCOpcodeAttribute):IABCAttributeBuilder {
+		public static function create(attribute:ABCOpcodeAttribute, kind:ABCOpcodeKind = null):IABCAttributeBuilder {
 			var builder:IABCAttributeBuilder = null;
 			if(attribute is IABCOpcodeIntegerAttribute) { 
 				
@@ -28,15 +29,15 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 				const uintAttr:IABCOpcodeUnsignedIntegerAttribute = IABCOpcodeUnsignedIntegerAttribute(attribute);
 				builder = JSUnsignedIntegerArgumentBuilder.create(uintAttr.unsignedInteger);
 				
-			} else if(attribute is ABCOpcodeStringAttribute) {
-				
-				const strAttr:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(attribute);
-				builder = JSStringArgumentBuilder.create(strAttr.string);
-				
 			} else if(attribute is ABCOpcodeDoubleAttribute) {
 				
 				const doubleAttr:ABCOpcodeDoubleAttribute = ABCOpcodeDoubleAttribute(attribute);
 				builder = JSNumberArgumentBuilder.create(doubleAttr.double);
+				
+			} else if(attribute is ABCOpcodeStringAttribute) {
+				
+				const strAttr:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(attribute);
+				builder = JSStringArgumentBuilder.create(strAttr.string);
 				
 			} else if(attribute is ABCOpcodeMultinameAttribute) {
 				
@@ -59,7 +60,22 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 				}
 				
 			}  else {
-				throw new Error(attribute);
+				
+				if(kind) {
+					
+					if(ABCOpcodeKind.isType(kind, ABCOpcodeKind.PUSHTRUE)) {
+						builder = JSTrueArgumentBuilder.create();
+					} else if(ABCOpcodeKind.isType(kind, ABCOpcodeKind.PUSHFALSE)) {
+						builder = JSFalseArgumentBuilder.create();
+					} else if(ABCOpcodeKind.isType(kind, ABCOpcodeKind.PUSHNULL)) {
+						builder = JSNullArgumentBuilder.create();
+					} else {
+						throw new Error(kind); 
+					}
+					
+				}else {
+					throw new Error(attribute);
+				}
 			}
 			
 			return builder;					
