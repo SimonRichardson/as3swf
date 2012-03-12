@@ -176,7 +176,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					var localIndex:int = 0;
 					var value:IABCWriteable = null;
 					var attributeBuilder:IABCAttributeBuilder;
-					// opcodes.slice().reverse().forEach(function(opcode:ABCOpcode, index:int, vector:Vector.<ABCOpcode>):void { trace(opcode.kind); });
+					
+					//opcodes.slice().reverse().forEach(function(opcode:ABCOpcode, index:int, vector:Vector.<ABCOpcode>):void { trace(opcode.kind); });
 					
 					switch(kind) {
 						case ABCOpcodeKind.ADD:
@@ -205,7 +206,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 							break;
 						
 						case ABCOpcodeKind.CALLPROPERTY:
-						
+							
+							trace(">>>>", opcode);
+							
 							const propertyMethod:IABCMultinameAttributeBuilder = JSAttributeFactory.create(attribute) as IABCMultinameAttributeBuilder;
 							if(propertyMethod) {
 								
