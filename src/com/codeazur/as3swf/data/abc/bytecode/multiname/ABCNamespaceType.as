@@ -31,6 +31,10 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			return type.ns.kind == kind.ns.kind && type.ns.value == kind.ns.value;
 		}
 		
+		public static function isTypeByNamespace(ns:ABCNamespace, kind:ABCNamespaceType):Boolean {
+			return ns.kind == kind.ns.kind && ns.value == kind.ns.value;
+		}
+		
 		public static function isTypeByValue(value:String, kind:ABCNamespaceType):Boolean {
 			return kind.ns.value == value;
 		}

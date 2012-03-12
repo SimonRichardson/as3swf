@@ -32,20 +32,25 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			var result:Boolean = false;
 			
 			const qname:ABCQualifiedName = (multiname is ABCQualifiedName) ? ABCQualifiedName(multiname) : multiname.toQualifiedName();
-			switch(qname.fullName)
-			{
-				case ANY_NAME:
-				case BOOLEAN_NAME:
-				case DICTIONARY_NAME:
-				case NUMBER_NAME:
-				case FUNCTION_NAME:
-				case INT_NAME:
-				case OBJECT_NAME:
-				case STRING_NAME:
-				case UINT_NAME:
-				case VOID_NAME:
-					result = true;
-					break;
+			if(ABCNamespaceType.isTypeByNamespace(qname.ns, ABCNamespaceType.BUILTIN)) {
+				result = true;
+				
+			} else {
+				switch(qname.fullName)
+				{
+					case ANY_NAME:
+					case BOOLEAN_NAME:
+					case DICTIONARY_NAME:
+					case NUMBER_NAME:
+					case FUNCTION_NAME:
+					case INT_NAME:
+					case OBJECT_NAME:
+					case STRING_NAME:
+					case UINT_NAME:
+					case VOID_NAME:
+						result = true;
+						break;
+				}
 			}
 			
 			return result;
