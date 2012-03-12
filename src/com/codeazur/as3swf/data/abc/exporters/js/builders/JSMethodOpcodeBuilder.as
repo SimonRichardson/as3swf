@@ -101,20 +101,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				
 				const kind:ABCOpcodeKind = opcode.kind;
 				switch(kind) {
-					case ABCOpcodeKind.CONSTRUCTSUPER:
-						const superQName:ABCQualifiedName = ABCQualifiedName.create(JSReservedKind.SUPER.type, ABCNamespaceType.SUPER.ns);
-						const superName:IABCMultinameAttributeBuilder = JSMultinameArgumentBuilder.create(superQName);
-						const superArguments:Vector.<IABCWriteable> = consumables.splice(0, numArguments);
-						
-						if(superArguments.length != numArguments) {
-							throw new Error('Super argument mismatch');
-						}
-						
-						stack.add(JSNameBuilder.create(consumables), JSMethodCallBuilder.create(superName, superArguments)).terminator = true;
-						
-						// Init private and protected values
-						initialiseTraits(stack);
-						break;
 					
 					case ABCOpcodeKind.CALLPROPERTY:
 					case ABCOpcodeKind.CALLPROPVOID:
@@ -132,6 +118,36 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						} else {
 							throw new Error('Property name mismatch');
 						}
+						break;
+					
+					case ABCOpcodeKind.CONSTRUCTPROP:
+						const constructName:IABCMultinameAttributeBuilder = JSAttributeFactory.create(opcode.attribute) as IABCMultinameAttributeBuilder;
+						if(constructName) {
+							const constructArguments:Vector.<IABCWriteable> = consumables.splice(0, numArguments);
+							
+							if(constructArguments.length != numArguments) {
+								throw new Error('ConstructProperty argument mismatch');
+							}
+							
+							stack.add(JSConstructPropertyBuilder.create(constructName, constructArguments)).terminator = true;
+						} else {
+							throw new Error('Construct property name mismatch');
+						}
+						break; 
+					
+					case ABCOpcodeKind.CONSTRUCTSUPER:
+						const superQName:ABCQualifiedName = ABCQualifiedName.create(JSReservedKind.SUPER.type, ABCNamespaceType.SUPER.ns);
+						const superName:IABCMultinameAttributeBuilder = JSMultinameArgumentBuilder.create(superQName);
+						const superArguments:Vector.<IABCWriteable> = consumables.splice(0, numArguments);
+						
+						if(superArguments.length != numArguments) {
+							throw new Error('Super argument mismatch');
+						}
+						
+						stack.add(JSNameBuilder.create(consumables), JSMethodCallBuilder.create(superName, superArguments)).terminator = true;
+						
+						// Init private and protected values
+						initialiseTraits(stack);
 						break;
 				
 					case ABCOpcodeKind.GETLOCAL_0:
@@ -207,8 +223,6 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						
 						case ABCOpcodeKind.CALLPROPERTY:
 							
-							trace(">>>>", opcode);
-							
 							const propertyMethod:IABCMultinameAttributeBuilder = JSAttributeFactory.create(attribute) as IABCMultinameAttributeBuilder;
 							if(propertyMethod) {
 								
@@ -225,6 +239,22 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 							}
 							
 							break;
+						
+						case ABCOpcodeKind.CONSTRUCTPROP:
+							const constructName:IABCMultinameAttributeBuilder = JSAttributeFactory.create(opcode.attribute) as IABCMultinameAttributeBuilder;
+							if(constructName) {
+								const constructNumArguments:int = JSAttributeFactory.getNumberArguments(attribute);
+								const constructArguments:Vector.<IABCWriteable> = consumeTail(opcodes, constructNumArguments, indent + 1);
+								
+								if(constructArguments.length != constructNumArguments) {
+									throw new Error('ConstructProperty argument mismatch');
+								}
+								
+								value = JSConstructPropertyBuilder.create(constructName, constructArguments);
+							} else {
+								throw new Error('Construct property name mismatch');
+							}
+							break; 
 						
 						case ABCOpcodeKind.GETLOCAL_3:
 							localIndex++;
