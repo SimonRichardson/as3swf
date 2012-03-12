@@ -1,6 +1,5 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -28,10 +27,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSUnsignedIntegerArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSOperatorExpressionFactory;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.variables.JSPackageVariableBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.variables.JSPrivateVariableBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.variables.JSProtectedVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 
 	import flash.utils.ByteArray;
+
 
 
 
@@ -326,15 +329,25 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					const constTrait:ABCTraitConstInfo = ABCTraitConstInfo(trait);
 					
 					const qname:ABCQualifiedName = trait.qname.toQualifiedName();
-					if(qname && ABCNamespaceKind.isType(qname.ns.kind, ABCNamespaceKind.PACKAGE_NAMESPACE)) {
-						const variable:IABCVariableBuilder = JSPackageVariableBuilder.create(qname);
+					if(qname) {
+						
+						var variable:IABCVariableBuilder;
+						if(ABCNamespaceKind.isType(qname.ns.kind, ABCNamespaceKind.PACKAGE_NAMESPACE)) {
+							variable = JSPackageVariableBuilder.create(qname);							
+						} else if(ABCNamespaceKind.isType(qname.ns.kind, ABCNamespaceKind.PRIVATE_NAMESPACE)) {
+							variable = JSPrivateVariableBuilder.create(qname);
+						} else if(ABCNamespaceKind.isType(qname.ns.kind, ABCNamespaceKind.PROTECTED_NAMESPACE)) {
+							variable = JSProtectedVariableBuilder.create(qname);
+						} else {
+							throw new Error('Missing implementation');
+						}
 						
 						const type:ABCQualifiedName = constTrait.typeMultiname.toQualifiedName();
 						variable.expression = createExpressionFromQName(type, constTrait.defaultValue);
 						
 						stack.add(JSThisArgumentBuilder.create(), variable).terminator = true;
 					} else {
-						throw new Error('Missing implementation');
+						throw new Error();
 					}
 				}
 			}

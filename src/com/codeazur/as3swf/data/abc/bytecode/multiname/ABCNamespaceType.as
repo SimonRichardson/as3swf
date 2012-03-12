@@ -13,6 +13,8 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		public static const ASTERISK:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.NAMESPACE, "*"));
 		public static const BUILTIN:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.NAMESPACE, "http://adobe.com/AS3/2006/builtin"));
 		public static const FLASH_UTILS:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.PACKAGE_NAMESPACE, "flash.utils"));
+		public static const PRIVATE:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.PRIVATE_NAMESPACE));
+		public static const PROTECTED:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.PROTECTED_NAMESPACE));
 		public static const PUBLIC:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.PACKAGE_NAMESPACE));
 		public static const SUPER:ABCNamespaceType = new ABCNamespaceType(new ABCNamespace(ABCNamespaceKind.NAMESPACE));
 

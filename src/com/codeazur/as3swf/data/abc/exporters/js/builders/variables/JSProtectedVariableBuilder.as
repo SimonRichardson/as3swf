@@ -1,4 +1,4 @@
-package com.codeazur.as3swf.data.abc.exporters.js.builders
+package com.codeazur.as3swf.data.abc.exporters.js.builders.variables
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespace;
@@ -6,25 +6,26 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.ABCJavascriptExporter;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSConsumableBlock;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSNameBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
 	import com.codeazur.utils.StringUtils;
-	import flash.utils.ByteArray;
 
+	import flash.utils.ByteArray;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSPackageVariableBuilder extends JSConsumableBlock implements IABCVariableBuilder {
+	public class JSProtectedVariableBuilder extends JSConsumableBlock implements IABCVariableBuilder {
 
 		private var _variable:ABCQualifiedName;
-		private var _includeKeyword:Boolean;
 
-		public function JSPackageVariableBuilder() {
-			_includeKeyword = false;
+		public function JSProtectedVariableBuilder() {
 		}
 		
-		public static function create(variable:ABCQualifiedName, expressions:Vector.<IABCWriteable> = null):JSPackageVariableBuilder {
-			const builder:JSPackageVariableBuilder = new JSPackageVariableBuilder();
-			builder.variable = variable;
+		public static function create(variable:ABCQualifiedName, expressions:Vector.<IABCWriteable> = null):JSProtectedVariableBuilder {
+			const builder:JSProtectedVariableBuilder = new JSProtectedVariableBuilder();
+			builder.variable = createQName(variable.label);
 			if(expressions) {
 				builder.right = JSNameBuilder.create(expressions, true);
 			}
@@ -32,9 +33,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		public static function createQName(name:String):ABCQualifiedName {
-			const label:String = ABCJavascriptExporter.NAMESPACE_PACKAGE_PREFIX;
-			const ns:ABCNamespace = ABCNamespaceType.getType(ABCNamespaceType.ASTERISK);
-			return ABCQualifiedName.create(label, ns);
+			const ns:ABCNamespace = ABCNamespaceType.getType(ABCNamespaceType.PROTECTED);
+			ns.value = ABCJavascriptExporter.NAMESPACE_PROTECTED_PREFIX;
+			return ABCQualifiedName.create(name, ns);
 		}
 		
 		override public function write(data : ByteArray) : void {			
@@ -52,10 +53,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public function get expression() : IABCWriteable { return right; }
 		public function set expression(value : IABCWriteable) : void { right = value; }
 		
-		public function get includeKeyword() : Boolean { return _includeKeyword; }
-		public function set includeKeyword(value : Boolean) : void { _includeKeyword = value; }
+		public function get includeKeyword() : Boolean { return false; }
+		public function set includeKeyword(value : Boolean) : void { throw new Error('Missing implementation'); }
 		
-		override public function get name():String { return "JSPackageVariableBuilder"; }
+		override public function get name():String { return "JSProtectedVariableBuilder"; }
 		
 		override public function toString(indent:uint=0):String {
 			var str:String = ABC.toStringCommon(name, indent);
