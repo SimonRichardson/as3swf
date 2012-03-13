@@ -42,7 +42,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			}
 		}
 		
-		public function get name():String { return "JSAccessorBuilder"; }
+		public function get name():String { return "JSNameBuilder"; }
 		
 		public function toString(indent:uint=0):String {
 			var str:String = ABC.toStringCommon(name, indent);

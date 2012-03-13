@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCApplyTypeBuilder;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -123,16 +124,33 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						}
 						break;
 					
-					case ABCOpcodeKind.CONSTRUCTPROP:
-						const constructName:IABCMultinameAttributeBuilder = JSAttributeFactory.create(opcode.attribute) as IABCMultinameAttributeBuilder;
-						if(constructName) {
-							const constructArguments:Vector.<IABCWriteable> = consumables.splice(0, numArguments);
+					case ABCOpcodeKind.CONSTRUCT:
+						const constructArguments:Vector.<IABCWriteable> = consumables.splice(0, numArguments);
 							
-							if(constructArguments.length != numArguments) {
-								throw new Error('ConstructProperty argument mismatch');
+						if(constructArguments.length != numArguments) {
+							throw new Error('Construct argument mismatch');
+						} else if(consumables.length == 0) {
+							throw new Error('Invalid construct accessor');
+						}
+						
+						if(consumables.length != 1) {
+							throw new Error('Missing implementation');
+						}
+						
+						const constructMethod:IABCApplyTypeBuilder = consumables.splice(0, 1)[0];
+						stack.add(JSConstructBuilder.create(constructMethod, constructArguments.reverse())).terminator = true;
+						break;
+					
+					case ABCOpcodeKind.CONSTRUCTPROP:
+						const constructPropName:IABCMultinameAttributeBuilder = JSAttributeFactory.create(opcode.attribute) as IABCMultinameAttributeBuilder;
+						if(constructPropName) {
+							const constructPropArguments:Vector.<IABCWriteable> = consumables.splice(0, numArguments);
+							
+							if(constructPropArguments.length != numArguments) {
+								throw new Error('Construct property argument mismatch');
 							}
 							
-							stack.add(JSConstructPropertyBuilder.create(constructName, constructArguments.reverse())).terminator = true;
+							stack.add(JSConstructPropertyBuilder.create(constructPropName, constructPropArguments.reverse())).terminator = true;
 						} else {
 							throw new Error('Construct property name mismatch');
 						}
@@ -160,7 +178,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						
 						stack.add(getLocal(0)).terminator = true;
 						break;
-										
+						
 					case ABCOpcodeKind.RETURNVOID:
 						stack.add(JSReturnVoidBuilder.create()).terminator = true;
 						break;
@@ -214,14 +232,21 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						case ABCOpcodeKind.SUBTRACT:
 						case ABCOpcodeKind.SUBTRACT_I:
 						
-							const operatorNumArgument:int = 2;
-							const operatorArguments:Vector.<IABCWriteable> = consumeTail(opcodes, operatorNumArgument, indent + 1);
+							const operatorNumArguments:int = 2;
+							const operatorArguments:Vector.<IABCWriteable> = consumeTail(opcodes, operatorNumArguments, indent + 1);
 							
-							if(operatorArguments.length != operatorNumArgument) {
+							if(operatorArguments.length != operatorNumArguments) {
 								throw new Error('Operator argument count mismatch (expected=2, recieved=' + operatorArguments.length + ")");
 							}
 							
 							value = JSOperatorExpressionFactory.create(opcode.kind, operatorArguments);
+							break;
+							
+						case ABCOpcodeKind.APPLYTYPE:
+							const applyTypeNumArguments:int =JSAttributeFactory.getNumberArguments(attribute);
+							const applyTypeArguments:Vector.<IABCWriteable> = consumeTail(opcodes, applyTypeNumArguments, indent + 1);
+							
+							value = JSApplyTypeBuilder.create(applyTypeArguments);
 							break;
 						
 						case ABCOpcodeKind.CALLPROPERTY:

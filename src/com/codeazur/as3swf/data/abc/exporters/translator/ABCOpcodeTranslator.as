@@ -41,6 +41,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.ADD:
 					case ABCOpcodeKind.ADD_D:
 					case ABCOpcodeKind.ADD_I:
+					case ABCOpcodeKind.APPLYTYPE:
 					case ABCOpcodeKind.CALLPROPERTY:
 					case ABCOpcodeKind.COERCE:
 					case ABCOpcodeKind.COERCE_A:
@@ -50,6 +51,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 					case ABCOpcodeKind.COERCE_O:
 					case ABCOpcodeKind.COERCE_S:
 					case ABCOpcodeKind.COERCE_U:
+					case ABCOpcodeKind.CONSTRUCT:
 					case ABCOpcodeKind.CONSTRUCTPROP:
 					case ABCOpcodeKind.CONVERT_B:
 					case ABCOpcodeKind.CONVERT_D:

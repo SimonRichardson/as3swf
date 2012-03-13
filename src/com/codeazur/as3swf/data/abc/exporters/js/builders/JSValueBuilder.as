@@ -1,12 +1,11 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
 	import com.codeazur.utils.StringUtils;
+
 	import flash.utils.ByteArray;
 
 
@@ -60,6 +59,5 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			
 			return str;
 		}
-		
 	}
 }
