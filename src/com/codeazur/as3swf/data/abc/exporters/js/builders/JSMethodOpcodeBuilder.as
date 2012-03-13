@@ -1,6 +1,5 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCApplyTypeBuilder;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -14,6 +13,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCApplyTypeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodCallBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodOpcodeBuilder;
@@ -28,6 +28,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSUnsignedIntegerArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.expressions.JSOperatorExpressionFactory;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.variables.JSLocalVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.variables.JSPackageVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.variables.JSPrivateVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.variables.JSProtectedVariableBuilder;
@@ -179,6 +180,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						stack.add(getLocal(0)).terminator = true;
 						break;
 						
+					case ABCOpcodeKind.SETLOCAL_1:
+						if(consumables.length < 1) {
+							throw new Error('Invalid stack length');
+						}
+						
+						stack.add(createLocalVariable(1, consumables));
+						break;
+						
 					case ABCOpcodeKind.RETURNVOID:
 						stack.add(JSReturnVoidBuilder.create()).terminator = true;
 						break;
@@ -268,17 +277,38 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 							
 							break;
 						
+						case ABCOpcodeKind.CONSTRUCT:
+							const constructNumArguments:int = JSAttributeFactory.getNumberArguments(attribute);
+							const constructArguments:Vector.<IABCWriteable> = consumeTail(opcodes, constructNumArguments, indent + 1);
+								
+							if(constructArguments.length != constructNumArguments) {
+								throw new Error('Construct argument mismatch');
+							} else if(constructArguments.length == 0) {
+								throw new Error('Invalid construct accessor');
+							}
+							
+							const constructMethodNum:int = 1;
+							const constructMethodExpression:Vector.<IABCWriteable> = consumeTail(opcodes, constructMethodNum, indent + 1);
+							
+							if(constructMethodExpression.length != constructMethodNum) {
+								throw new Error('Construct method mismatch');
+							}
+							
+							const constructMethod:IABCApplyTypeBuilder = constructMethodExpression.pop();
+							value = JSConstructBuilder.create(constructMethod, constructArguments.reverse());
+							break;
+						
 						case ABCOpcodeKind.CONSTRUCTPROP:
 							const constructName:IABCMultinameAttributeBuilder = JSAttributeFactory.create(opcode.attribute) as IABCMultinameAttributeBuilder;
 							if(constructName) {
-								const constructNumArguments:int = JSAttributeFactory.getNumberArguments(attribute);
-								const constructArguments:Vector.<IABCWriteable> = consumeTail(opcodes, constructNumArguments, indent + 1);
+								const constructPropNumArguments:int = JSAttributeFactory.getNumberArguments(attribute);
+								const constructPropArguments:Vector.<IABCWriteable> = consumeTail(opcodes, constructPropNumArguments, indent + 1);
 								
-								if(constructArguments.length != constructNumArguments) {
-									throw new Error('ConstructProperty argument mismatch');
+								if(constructPropArguments.length != constructPropNumArguments) {
+									throw new Error('Construct property argument mismatch');
 								}
 								
-								value = JSConstructPropertyBuilder.create(constructName, constructArguments);
+								value = JSConstructPropertyBuilder.create(constructName, constructPropArguments);
 							} else {
 								throw new Error('Construct property name mismatch');
 							}
@@ -421,6 +451,14 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			}
 			
 			return result;
+		}
+		
+		private function createLocalVariable(index:uint, expressions:Vector.<IABCWriteable>):IABCVariableBuilder {
+			const localQName:ABCQualifiedName = JSLocalVariableBuilder.createQName(index);
+			const localVariable:IABCVariableBuilder = JSLocalVariableBuilder.create(localQName, expressions);
+			localVariable.includeKeyword = addLocal(localVariable);
+
+			return localVariable;
 		}
 		
 		private function addLocal(local:IABCVariableBuilder):Boolean {
