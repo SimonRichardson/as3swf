@@ -185,18 +185,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					
 					case ABCOpcodeKind.GETPROPERTY:
 						const propertyAttributeBuilder:IABCAttributeBuilder = JSAttributeFactory.create(opcode.attribute);
-						// Find out if it's a late argument, if so inject the right value
-						if(propertyAttributeBuilder is JSMultinameLateArgumentBuilder) {
-							const propertyLateAttributeBuilder:JSMultinameLateArgumentBuilder = JSMultinameLateArgumentBuilder(propertyAttributeBuilder);
-							const propertyLateAcccess:IABCWriteable = consumables.shift();
-							if(propertyLateAcccess is IABCAttributeBuilder) {
-								const propertyLateBuilder:IABCAttributeBuilder = IABCAttributeBuilder(propertyLateAcccess);
-								propertyLateAttributeBuilder.argument = propertyLateBuilder.argument;
-							} else {
-								throw new Error('Missing implementation');
-							}
-						}
-						
+						patchPropertyAttribute(propertyAttributeBuilder, consumables);
 						stack.add(JSConsumableBlock.create(JSNameBuilder.create(consumables), propertyAttributeBuilder)).terminator = true;
 						break;
 					
@@ -351,8 +340,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 							break;
 							
 						case ABCOpcodeKind.GETPROPERTY:
-							const accessor:Vector.<IABCWriteable> = consumeTail(opcodes, 1, indent + 1);
+							var accessor:Vector.<IABCWriteable> = consumeTail(opcodes, 1, indent + 1);
 							attributeBuilder = JSAttributeFactory.create(attribute);
+							if(patchPropertyAttribute(attributeBuilder, accessor)) {
+								accessor = consumeTail(opcodes, 1, indent + 1);
+							}
+							
 							value = JSConsumableBlock.create(JSNameBuilder.create(accessor), attributeBuilder);
 							break;
 						
@@ -504,6 +497,26 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			}
 			
 			return !exists;
+		}
+		
+		private function patchPropertyAttribute(property:IABCAttributeBuilder, expressions:Vector.<IABCWriteable>):Boolean {
+			var result:Boolean = false;
+			
+			// Find out if it's a late argument, if so inject the right value
+			if(property is JSMultinameLateArgumentBuilder) {
+				const propertyLateAttributeBuilder:JSMultinameLateArgumentBuilder = JSMultinameLateArgumentBuilder(property);
+				const propertyLateAcccess:IABCWriteable = expressions.shift();
+				if(propertyLateAcccess is IABCAttributeBuilder) {
+					const propertyLateBuilder:IABCAttributeBuilder = IABCAttributeBuilder(propertyLateAcccess);
+					propertyLateAttributeBuilder.argument = propertyLateBuilder.argument;
+					
+					result = true;
+				} else {
+					throw new Error('Missing implementation');
+				}
+			}
+			
+			return result;
 		}
 			
 		public function get methodInfo():ABCMethodInfo { return _methodInfo; }
