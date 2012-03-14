@@ -1,49 +1,54 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMultinameAttributeBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMultinameLateAttributeBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSTokenKind;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSValueBuilder;
 	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class JSMultinameArgumentBuilder implements IABCMultinameAttributeBuilder {
+	public class JSMultinameLateArgumentBuilder implements IABCMultinameLateAttributeBuilder {
 		
 		private var _multiname:IABCMultiname;
 		private var _argument:ABCParameter;
-
-		public function JSMultinameArgumentBuilder() {
+		
+		private var _value:IABCValueBuilder;
+		
+		public function JSMultinameLateArgumentBuilder() {
+			_value = new JSValueBuilder();
 		}
 		
-		public static function create(multiname:IABCMultiname):JSMultinameArgumentBuilder {
-			const builder:JSMultinameArgumentBuilder = new JSMultinameArgumentBuilder();
+		public static function create(multiname:IABCMultiname):JSMultinameLateArgumentBuilder {
+			const builder:JSMultinameLateArgumentBuilder = new JSMultinameLateArgumentBuilder();
 			builder.multiname = multiname;
 			builder.argument = ABCParameter.create(multiname);
 			return builder;
 		}
 		
 		public function write(data:ByteArray):void {
-			const qname:ABCQualifiedName = multiname.toQualifiedName();
-			if(qname && ABCMultinameBuiltin.isBuiltin(qname)) {
-				data.writeUTF(qname.label);
-			} else {
-				data.writeUTF(multiname.fullName);
-			}
+			JSTokenKind.LEFT_SQUARE_BRACKET.write(data);
+			_value.write(data);
+			JSTokenKind.RIGHT_SQUARE_BRACKET.write(data);
 		}
 		
 		public function get multiname():IABCMultiname { return _multiname; }
 		public function set multiname(value:IABCMultiname):void { _multiname = value; }
 		
 		public function get argument():ABCParameter { return _argument; }
-		public function set argument(value:ABCParameter) : void { _argument = value; }
+		public function set argument(value:ABCParameter) : void { 
+			_argument = value;
+			
+			_value.value = _argument.defaultValue;
+			_value.qname = _argument.qname;
+		}
 		
-		public function get name():String { return "JSMultinameArgumentBuilder"; }
+		public function get name():String { return "JSMultinameLateArgumentBuilder"; }
 		
 		public function toString(indent:uint=0):String {
 			var str:String = ABC.toStringCommon(name, indent);

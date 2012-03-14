@@ -8,8 +8,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeIntegerAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeUnsignedIntegerAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameKind;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSMultinameFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.JSNamespaceFactory;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -42,11 +44,17 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 			} else if(attribute is ABCOpcodeMultinameAttribute) {
 				
 				const mnameAttr:ABCOpcodeMultinameAttribute = ABCOpcodeMultinameAttribute(attribute);
-				const mnameQName:ABCQualifiedName = mnameAttr.multiname.toQualifiedName();
-				if(mnameQName) {
-					builder = JSNamespaceFactory.create(mnameQName);
+				const mnameKind:ABCMultinameKind = mnameAttr.multiname.kind;
+				if(ABCMultinameKind.isLate(mnameKind)) {
+					builder = JSMultinameFactory.create(mnameAttr.multiname);
 				} else {
-					throw new Error(attribute);
+					
+					const mnameQName:ABCQualifiedName = mnameAttr.multiname.toQualifiedName();
+					if(mnameQName) {
+						builder = JSNamespaceFactory.create(mnameQName);
+					} else {
+						throw new Error(attribute);
+					}
 				}
 				
 			} else if(attribute is ABCOpcodeMultinameUIntAttribute) {

@@ -70,7 +70,12 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		
 		public static function isType(multiname:IABCMultiname, type:ABCQualifiedName):Boolean {
 			const qname:ABCQualifiedName = (multiname is ABCQualifiedName) ? ABCQualifiedName(multiname) : multiname.toQualifiedName();
-			return qname.label == type.label && qname.ns.kind == type.ns.kind;
+			
+			var result:Boolean = false;
+			if(qname && qname.label && qname.ns && qname.ns.kind) {
+				result = qname.label == type.label && qname.ns.kind == type.ns.kind;
+			}
+			return result;
 		}
 	}
 }

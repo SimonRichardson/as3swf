@@ -1,7 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
@@ -20,7 +20,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public var attribute:ABCOpcodeAttribute;
 		
 		private var _value:*;
-		private var _qname:ABCQualifiedName;
+		private var _qname:IABCMultiname;
 		
 		public function JSValueAttributeBuilder() {
 		}
@@ -57,8 +57,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public function get value():* { return _value; }
 		public function set value(data:*):void { _value = data; }
 		
-		public function get qname():ABCQualifiedName { return _qname; }
-		public function set qname(value:ABCQualifiedName) : void { _qname = value; }
+		public function get qname():IABCMultiname { return _qname; }
+		public function set qname(value:IABCMultiname) : void { _qname = value; }
 		
 		public function get name():String { return "JSValueAttributeBuilder"; }
 		

@@ -1,9 +1,10 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-	import com.codeazur.as3swf.data.abc.exporters.builders.IABCConsumableBlock;
-	import com.codeazur.utils.StringUtils;
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCConsumableBlock;
+	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMultinameLateAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
+	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
 	/**
@@ -34,9 +35,10 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			
 			if(right) {
 				// Don't do this if we've not got a valid update in the left hand side
-				if(position != data.position) {
+				if(!(right is IABCMultinameLateAttributeBuilder) && position != data.position) {
 					JSTokenKind.DOT.write(data);
 				}
+				
 				right.write(data);
 			}
 			

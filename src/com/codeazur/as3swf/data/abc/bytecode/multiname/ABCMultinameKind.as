@@ -45,7 +45,21 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		}
 
 		public static function getType(type:uint):ABCMultinameKind {
-			 return _types[type];
+			return _types[type];
+		}
+		
+		public static function isLate(kind:ABCMultinameKind):Boolean {
+			var result:Boolean = false;
+			
+			switch(kind) {
+				case RUNTIME_QNAME_LATE:
+				case RUNTIME_QNAME_LATE_A:
+				case MULTINAME_LATE:
+				case MULTINAME_LATE_A:
+					result = true;
+					break;
+			}
+			return result;
 		}
 		
 		public function get type():uint { return _type; }

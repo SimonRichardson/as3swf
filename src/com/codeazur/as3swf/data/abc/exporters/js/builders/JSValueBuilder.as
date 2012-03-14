@@ -1,8 +1,8 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCValueBuilder;
 	import com.codeazur.utils.StringUtils;
 
@@ -15,12 +15,12 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	public class JSValueBuilder implements IABCValueBuilder {
 		
 		private var _value:*;
-		private var _qname:ABCQualifiedName;
+		private var _qname:IABCMultiname;
 		
 		public function JSValueBuilder() {
 		}
 		
-		public static function create(value:*, qname:ABCQualifiedName = null):JSValueBuilder {
+		public static function create(value:*, qname:IABCMultiname = null):JSValueBuilder {
 			const builder:JSValueBuilder = new JSValueBuilder();
 			builder.value = value;
 			builder.qname = qname;
@@ -42,8 +42,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		public function get value():* { return _value; }
 		public function set value(data:*):void { _value = data; }
 		
-		public function get qname():ABCQualifiedName { return _qname; }
-		public function set qname(value:ABCQualifiedName) : void { _qname = value; }
+		public function get qname():IABCMultiname { return _qname; }
+		public function set qname(value:IABCMultiname) : void { _qname = value; }
 		
 		public function get name():String { return "JSValueBuilder"; }
 		

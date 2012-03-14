@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSMultinameLateArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -99,6 +100,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 					} 
 				} 
 				
+				var localIndex:int = 0;
+				
 				// Get the tail items so that we know what to do with the item
 				const opcode:ABCOpcode = opcodes.pop();
 				const numArguments:int = JSAttributeFactory.getNumberArguments(opcode.attribute);
@@ -181,18 +184,34 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						break;
 					
 					case ABCOpcodeKind.GETPROPERTY:
-						trace(opcode, consumables);
-						// const accessor:Vector.<IABCWriteable> = consumeTail(opcodes, 1, indent + 1);
-						// attributeBuilder = JSAttributeFactory.create(attribute);
-						// value = JSConsumableBlock.create(JSNameBuilder.create(accessor), attributeBuilder);
-						break;
+						const propertyAttributeBuilder:IABCAttributeBuilder = JSAttributeFactory.create(opcode.attribute);
+						// Find out if it's a late argument, if so inject the right value
+						if(propertyAttributeBuilder is JSMultinameLateArgumentBuilder) {
+							const propertyLateAttributeBuilder:JSMultinameLateArgumentBuilder = JSMultinameLateArgumentBuilder(propertyAttributeBuilder);
+							const propertyLateAcccess:IABCWriteable = consumables.shift();
+							if(propertyLateAcccess is IABCAttributeBuilder) {
+								const propertyLateBuilder:IABCAttributeBuilder = IABCAttributeBuilder(propertyLateAcccess);
+								propertyLateAttributeBuilder.argument = propertyLateBuilder.argument;
+							} else {
+								throw new Error('Missing implementation');
+							}
+						}
 						
+						stack.add(JSConsumableBlock.create(JSNameBuilder.create(consumables), propertyAttributeBuilder)).terminator = true;
+						break;
+					
+					case ABCOpcodeKind.SETLOCAL_3:
+						localIndex++;
+					case ABCOpcodeKind.SETLOCAL_2:
+						localIndex++;	
 					case ABCOpcodeKind.SETLOCAL_1:
+						localIndex++;
+					case ABCOpcodeKind.SETLOCAL_0:
 						if(consumables.length < 1) {
 							throw new Error('Invalid stack length');
 						}
 						
-						stack.add(createLocalVariable(1, consumables));
+						stack.add(createLocalVariable(localIndex, consumables));
 						break;
 						
 					case ABCOpcodeKind.RETURNVOID:

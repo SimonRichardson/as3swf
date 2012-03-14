@@ -1,7 +1,6 @@
 package com.codeazur.as3swf.data.abc.exporters.builders
 {
-
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -10,7 +9,7 @@ package com.codeazur.as3swf.data.abc.exporters.builders
 		function get value():*;
 		function set value(data:*):void;
 		
-		function get qname():ABCQualifiedName;
-		function set qname(value:ABCQualifiedName):void;
+		function get qname():IABCMultiname;
+		function set qname(value:IABCMultiname):void;
 	}
 }
