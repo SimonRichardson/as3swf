@@ -1,8 +1,8 @@
 package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
 	 */
@@ -30,6 +30,23 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 				"QName: " + qname + ", " + 
 				(null != params ? "Params: " + params + ", " : "") +
 				"Kind: " + kind;
+			var str:String = super.toString(indent);
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "QName: ";
+			str += "\n" + qname.toString(indent + 4);
+			
+			if(params) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Params: ";
+				
+				for(var i:int=0; i<params.length; i++) {
+					 str += "\n" + params[i].toString(indent + 4);
+				}
+			}
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "Kind: ";
+			str += "\n" + kind.toString(indent + 4);
+			
+			return str;
 		}
 		
 	}

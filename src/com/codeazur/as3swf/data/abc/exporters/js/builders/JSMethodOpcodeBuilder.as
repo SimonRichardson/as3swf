@@ -179,6 +179,13 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						
 						stack.add(getLocal(0)).terminator = true;
 						break;
+					
+					case ABCOpcodeKind.GETPROPERTY:
+						trace(opcode, consumables);
+						// const accessor:Vector.<IABCWriteable> = consumeTail(opcodes, 1, indent + 1);
+						// attributeBuilder = JSAttributeFactory.create(attribute);
+						// value = JSConsumableBlock.create(JSNameBuilder.create(accessor), attributeBuilder);
+						break;
 						
 					case ABCOpcodeKind.SETLOCAL_1:
 						if(consumables.length < 1) {
