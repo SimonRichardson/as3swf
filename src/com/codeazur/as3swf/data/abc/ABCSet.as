@@ -80,8 +80,16 @@ package com.codeazur.as3swf.data.abc
 			return abcData.constantPool.getNamespaceByIndex(index);
 		}
 		
+		protected function getMethodInfoIndex(value:ABCMethodInfo):int {
+			return abcData.methodInfoSet.indexOf(value);
+		}
+		
 		protected function getMethodInfoByIndex(index:uint):ABCMethodInfo {
 			return abcData.methodInfoSet.getAt(index);
+		}
+		
+		protected function getMetadataIndex(value:ABCMetadata):int {
+			return abcData.metadataSet.indexOf(value);
 		}
 		
 		protected function getMetadataByIndex(index:uint):ABCMetadata {

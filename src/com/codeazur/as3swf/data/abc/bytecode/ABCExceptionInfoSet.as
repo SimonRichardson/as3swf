@@ -22,13 +22,23 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return new ABCExceptionInfoSet(abcData);
 		}
 		
-		public function parse(data:SWFData, scanner:ABCScanner):void {
+		public function read(data:SWFData, scanner:ABCScanner):void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++){
 				const exception:ABCExceptionInfo = ABCExceptionInfo.create(abcData);
-				exception.parse(data, scanner);
+				exception.read(data, scanner);
 				
 				exceptions.push(exception);
+			}
+		}
+		
+		public function write(bytes:SWFData):void {
+			const total:uint = exceptions.length;
+			bytes.writeEncodedU32(total);
+			
+			for(var i:uint=0; i<total; i++){
+				const exception:ABCExceptionInfo = exceptions[i];
+				exception.write(bytes);
 			}
 		}
 		

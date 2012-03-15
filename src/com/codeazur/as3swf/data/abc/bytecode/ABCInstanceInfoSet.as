@@ -33,14 +33,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const mnameIndex:uint = data.readEncodedU30();
 				const mname:IABCMultiname = getMultinameByIndex(mnameIndex);
 				
-				const instanceQName:IABCMultiname = mname.toQualifiedName();
-				
 				const superMNameIndex:uint = data.readEncodedU30();
 				const superMName:IABCMultiname = getMultinameByIndex(superMNameIndex);
 				
 				const flags:uint = data.readUI8();
 				
-				const instanceInfo:ABCInstanceInfo = ABCInstanceInfo.create(abcData, instanceQName, superMName, flags);
+				const instanceInfo:ABCInstanceInfo = ABCInstanceInfo.create(abcData, mname, superMName, flags);
 				const instanceTraitPositions:Vector.<uint> = scanner.getInstanceTraitInfoAtIndex(i);
 				instanceInfo.read(data, scanner, instanceTraitPositions);
 				
@@ -49,7 +47,19 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function write(bytes:SWFData):void {
+			const total:uint = instanceInfos.length;
+			bytes.writeEncodedU32(total);
 			
+			for(var i:uint=0; i<total; i++) {
+				const instanceInfo:ABCInstanceInfo = instanceInfos[i];
+				
+				bytes.writeEncodedU32(getMultinameIndex(instanceInfo.qname));
+				bytes.writeEncodedU32(getMultinameIndex(instanceInfo.superMultiname));
+				
+				bytes.writeUI8(instanceInfo.flags);
+				
+				instanceInfo.write(bytes);
+			}
 		}
 		
 		public function getAt(index:uint):ABCInstanceInfo {

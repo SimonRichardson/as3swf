@@ -43,6 +43,10 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			_name = name;
 			_types[_type] = this;
 		}
+		
+		public static function isType(type:ABCMultinameKind, kind:ABCMultinameKind):Boolean {
+			return type.type == kind.type && type.name == kind.name;
+		}
 
 		public static function getType(type:uint):ABCMultinameKind {
 			return _types[type];

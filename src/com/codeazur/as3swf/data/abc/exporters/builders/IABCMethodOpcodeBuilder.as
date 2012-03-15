@@ -1,7 +1,7 @@
 package com.codeazur.as3swf.data.abc.exporters.builders
 {
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk

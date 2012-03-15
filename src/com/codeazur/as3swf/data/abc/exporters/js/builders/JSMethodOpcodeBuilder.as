@@ -1,19 +1,18 @@
 package com.codeazur.as3swf.data.abc.exporters.js.builders
 {
-	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSMultinameLateArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitConstInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfoKind;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitConstInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoKind;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCApplyTypeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCAttributeBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCMethodCallBuilder;
@@ -25,6 +24,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSAttributeFactory;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSIntegerArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSMultinameArgumentBuilder;
+	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSMultinameLateArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSStringArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSThisArgumentBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.arguments.JSUnsignedIntegerArgumentBuilder;
@@ -35,8 +35,8 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 	import com.codeazur.as3swf.data.abc.exporters.js.builders.variables.JSProtectedVariableBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.translator.ABCOpcodeTranslateData;
 	import com.codeazur.as3swf.data.abc.io.IABCWriteable;
-
 	import flash.utils.ByteArray;
+
 
 
 

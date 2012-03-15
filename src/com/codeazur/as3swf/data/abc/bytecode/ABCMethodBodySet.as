@@ -40,7 +40,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function write(bytes:SWFData):void {
+			const total:uint = methodBodies.length;
+			bytes.writeEncodedU32(total);
 			
+			for(var i:uint=0; i<total; i++) {
+				const methodBody:ABCMethodBody = methodBodies[i];
+				methodBody.write(bytes);
+			}
 		}
 		
 		override public function get name():String { return "ABCMethodBodySet"; }

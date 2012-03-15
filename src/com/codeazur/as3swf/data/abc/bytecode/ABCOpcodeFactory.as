@@ -11,6 +11,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 
 		public static function create(abcData : ABCData, kind : uint) : ABCOpcode {
 			const kindType : ABCOpcodeKind = ABCOpcodeKind.getType(kind);
+			if(!kindType) {
+				throw new Error('Invalid kind type (recieved=' + kind + ')');
+			}
 			const attribute : ABCOpcodeAttribute = ABCOpcodeAttributeFactory.create(abcData, kindType);
 			return ABCOpcode.create(abcData, kindType, attribute);
 		}

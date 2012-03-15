@@ -3,6 +3,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameKind;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
 	import com.codeazur.utils.StringUtils;
 	/**
@@ -42,6 +43,25 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function getAt(index:uint):ABCMethodInfo {
 			return methodInfos[index];
+		}
+		
+		public function indexOf(value:ABCMethodInfo):int {
+			var index:int = -1;
+			
+			const total:uint = methodInfos.length;
+			for(var i:uint=0; i<total; i++) {
+				const info:ABCMethodInfo = methodInfos[i];
+				if( info.methodName == value.methodName && 
+					info.flags == value.flags &&
+					info.parameters.length == value.parameters.length && 
+					ABCMultinameKind.isType(info.returnType.kind, value.returnType.kind)) {
+					
+					index = i;
+					break;
+				}
+			}
+			
+			return index;
 		}
 		
 		override public function get name():String { return "ABCMethodInfoSet"; }

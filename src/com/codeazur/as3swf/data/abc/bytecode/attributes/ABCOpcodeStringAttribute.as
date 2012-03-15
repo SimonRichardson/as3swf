@@ -23,6 +23,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			string = getStringByIndex(index);
 		}
 		
+		override public function write(bytes : SWFData) : void {
+			bytes.writeEncodedU32(getStringIndex(string));
+		}
+		
 		override public function get name():String { return "ABCOpcodeStringAttribute"; }
 		
 		override public function toString(indent:uint = 0) : String {

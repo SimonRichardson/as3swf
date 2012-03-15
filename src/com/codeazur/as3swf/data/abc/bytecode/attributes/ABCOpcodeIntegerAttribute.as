@@ -23,6 +23,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			_integer = getIntegerByIndex(index);
 		}
 		
+		override public function write(bytes : SWFData) : void {
+			bytes.writeEncodedU32(getIntegerIndex(integer));
+		}
+		
 		public function get integer():int { return _integer; }
 		override public function get name():String { return "ABCOpcodeIntegerAttribute"; }
 		

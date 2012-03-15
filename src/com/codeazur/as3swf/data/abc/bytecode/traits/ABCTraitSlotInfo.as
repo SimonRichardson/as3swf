@@ -1,7 +1,9 @@
-package com.codeazur.as3swf.data.abc.bytecode
+package com.codeazur.as3swf.data.abc.bytecode.traits
 {
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCConstantKind;
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
 	import com.codeazur.utils.StringUtils;
 
@@ -46,6 +48,19 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			
 			super.read(data, scanner);
+		}
+		
+		override public function write(bytes : SWFData) : void
+		{
+			bytes.writeEncodedU32(id);
+			bytes.writeEncodedU32(getMultinameIndex(typeMultiname));
+			bytes.writeEncodedU32(valueIndex);
+			
+			if(valueIndex > 0) {
+				bytes.writeUI8(valueKind.type);
+			}
+			
+			super.write(bytes);
 		}
 		
 		public function get hasDefaultValue():Boolean { return valueIndex > 0; }

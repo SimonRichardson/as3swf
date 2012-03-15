@@ -22,6 +22,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			_unsignedInteger = data.readEncodedU30();
 		}
 		
+		override public function write(bytes : SWFData) : void {
+			bytes.writeEncodedU32(unsignedInteger);
+		}
+		
 		public function get unsignedInteger():uint { return _unsignedInteger; }
 		override public function get name():String { return "ABCOpcodeUIntAttribute"; }
 		

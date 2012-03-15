@@ -1,10 +1,10 @@
 package com.codeazur.as3swf.data.abc
 {
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfoKind;
 	import com.codeazur.as3swf.SWFData;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfoFactory;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoFactory;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoKind;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -21,7 +21,7 @@ package com.codeazur.as3swf.data.abc
 			traits = new Vector.<ABCTraitInfo>();
 		}
 
-		public function read(data : SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>) : void {
+		public function read(data:SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>) : void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++) {
 				data.position = traitPositions[i];
@@ -29,13 +29,26 @@ package com.codeazur.as3swf.data.abc
 				const index:uint = data.readEncodedU30();
 
 				const traitMName:IABCMultiname = getMultinameByIndex(index);
-				const traitQName:IABCMultiname = traitMName.toQualifiedName();
 				
 				const traitKind:uint = data.readUI8();
-				const trait:ABCTraitInfo = ABCTraitInfoFactory.create(abcData, traitKind, traitQName, isStatic);
+				const trait:ABCTraitInfo = ABCTraitInfoFactory.create(abcData, traitKind, traitMName, isStatic);
 				trait.read(data, scanner);
 				
 				traits.push(trait); 
+			}
+		}
+		
+		public function write(bytes:SWFData) : void {
+			const total:uint = traits.length;
+			bytes.writeEncodedU32(total);
+			
+			for(var i:uint=0; i<total; i++) {
+				const trait:ABCTraitInfo = traits[i];
+				
+				bytes.writeEncodedU32(getMultinameIndex(trait.qname));
+				bytes.writeUI8(trait.kind);
+				
+				trait.write(bytes);
 			}
 		}
 		

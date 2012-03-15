@@ -24,6 +24,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			multiname = getMultinameByIndex(index);
 		}
 		
+		override public function write(bytes : SWFData) : void {
+			bytes.writeEncodedU32(getMultinameIndex(multiname));
+		}
+		
 		override public function get name():String { return "ABCOpcodeMultinameAttribute"; }
 		
 		override public function toString(indent : uint = 0) : String {

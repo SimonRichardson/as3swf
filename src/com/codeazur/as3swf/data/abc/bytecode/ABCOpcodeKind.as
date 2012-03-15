@@ -10,6 +10,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		private static const _types:Dictionary = new Dictionary();
 		
+		public static const EOB:ABCOpcodeKind = new ABCOpcodeKind(0x00, "eob");
 		public static const ADD:ABCOpcodeKind = new ABCOpcodeKind(0xa0, "add");
 		public static const ADD_D:ABCOpcodeKind = new ABCOpcodeKind(0x9B, "add_d");
 		public static const ADD_I:ABCOpcodeKind = new ABCOpcodeKind(0xC5, "add_i");

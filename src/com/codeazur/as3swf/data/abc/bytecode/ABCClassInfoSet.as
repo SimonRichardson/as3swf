@@ -47,7 +47,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function write(bytes:SWFData):void {
-			
+			const total:uint = classInfos.length;
+			for(var i:uint=0; i<total; i++) {
+				const classInfo:ABCClassInfo = classInfos[i];
+				bytes.writeEncodedU32(getMethodInfoIndex(classInfo.staticInitialiser));
+				classInfo.write(bytes);
+			}
 		}
 		
 		public function getAt(index:uint):ABCClassInfo {

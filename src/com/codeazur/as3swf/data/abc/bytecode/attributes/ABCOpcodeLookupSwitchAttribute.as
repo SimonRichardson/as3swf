@@ -30,6 +30,15 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			}
 		}
 		
+		override public function write(bytes : SWFData) : void {
+			bytes.writeSI24(defaultOffset);
+			
+			const total:uint = offsets.length;
+			for(var i:uint=0; i<total; i++) {
+				bytes.writeSI24(offsets[i]);
+			}
+		}
+		
 		override public function get name():String { return "ABCOpcodeLookupSwitchAttribute"; }
 		
 		override public function toString(indent : uint = 0) : String {

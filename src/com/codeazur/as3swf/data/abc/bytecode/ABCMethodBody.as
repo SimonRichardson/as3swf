@@ -10,6 +10,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 	 */
 	public class ABCMethodBody extends ABCTraitSet {
 		
+		public var methodInfo:ABCMethodInfo;
+		public var methodInfoIndex:int;
+		
 		public var maxStack:uint;
 		public var localCount:uint;
 		public var initScopeDepth:uint;
@@ -27,9 +30,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		override public function read(data:SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>):void {
-			const methodIndex:uint = data.readEncodedU30();
-			const method:ABCMethodInfo = getMethodInfoByIndex(methodIndex);
-			method.methodBody = this;
+			methodInfoIndex = data.readEncodedU30();
+			
+			methodInfo = getMethodInfoByIndex(methodInfoIndex);
+			methodInfo.methodBody = this;
 			
 			maxStack = data.readEncodedU30();
 			localCount = data.readEncodedU30();
@@ -37,12 +41,27 @@ package com.codeazur.as3swf.data.abc.bytecode
 			maxScopeDepth = data.readEncodedU30();
 			
 			opcode = ABCOpcodeSet.create(abcData);
-			opcode.parse(data);
+			opcode.read(data);
 			
 			exceptionInfo = ABCExceptionInfoSet.create(abcData);
-			exceptionInfo.parse(data, scanner);
+			exceptionInfo.read(data, scanner);
 			
 			super.read(data, scanner, traitPositions);
+		}
+		
+		override public function write(bytes : SWFData) : void
+		{
+			bytes.writeEncodedU32(methodInfoIndex);
+			
+			bytes.writeEncodedU32(maxStack);
+			bytes.writeEncodedU32(localCount);
+			bytes.writeEncodedU32(initScopeDepth);
+			bytes.writeEncodedU32(maxScopeDepth);
+			
+			opcode.write(bytes);
+			exceptionInfo.write(bytes);
+			
+			super.write(bytes);
 		}
 		
 		override public function get name():String { return "ABCMethodBody"; }

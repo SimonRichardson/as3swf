@@ -29,7 +29,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return new ABCOpcodeSet(abcData);
 		}
 		
-		public function parse(data:SWFData):void {
+		public function read(data:SWFData):void {
 			
 			opcodes.length = 0;
 			jumpTargets.length = 0;
@@ -127,6 +127,16 @@ package com.codeazur.as3swf.data.abc.bytecode
 						}
 					}
 				}
+			}
+		}
+		
+		public function write(bytes:SWFData):void {
+			const total:uint = opcodes.length;
+			bytes.writeEncodedU32(total);
+			
+			for(var i:uint=0; i<total; i++) {
+				const opcode:ABCOpcode = opcodes[i];
+				opcode.write(bytes);
 			}
 		}
 		

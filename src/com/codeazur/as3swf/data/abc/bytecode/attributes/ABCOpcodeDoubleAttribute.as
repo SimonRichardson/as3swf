@@ -23,6 +23,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			double = getDoubleByIndex(index);
 		}
 		
+		override public function write(bytes : SWFData) : void {
+			bytes.writeEncodedU32(getDoubleIndex(double));
+		}
+		
 		override public function get name():String { return "ABCOpcodeDoubleAttribute"; }
 		
 		override public function toString(indent : uint = 0) : String {

@@ -1,8 +1,10 @@
-package com.codeazur.as3swf.data.abc.bytecode
+package com.codeazur.as3swf.data.abc.bytecode.traits
 {
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
 	import com.codeazur.utils.StringUtils;
 
@@ -41,6 +43,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 			methodInfo.isValidMethodName = true;
 			
 			super.read(data, scanner);
+		}
+		
+		override public function write(bytes : SWFData) : void
+		{
+			bytes.writeEncodedU32(id);
+			bytes.writeEncodedU32(getMethodInfoIndex(methodInfo));
+			
+			super.write(bytes);
 		}
 
 		override public function get name() : String { return "ABCTraitMethodInfo"; }

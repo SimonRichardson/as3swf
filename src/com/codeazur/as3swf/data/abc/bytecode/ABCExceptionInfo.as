@@ -25,7 +25,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return new ABCExceptionInfo(abcData);
 		}
 		
-		public function parse(data:SWFData, scanner:ABCScanner):void {
+		public function read(data:SWFData, scanner:ABCScanner):void {
 			from = data.readEncodedU30();
 			to = data.readEncodedU30();
 			target = data.readEncodedU30();
@@ -35,6 +35,15 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			const variableNameIndex:uint = data.readEncodedU30();
 			variableName = getMultinameByIndex(variableNameIndex);
+		}
+		
+		public function write(bytes:SWFData):void {
+			bytes.writeEncodedU32(from);
+			bytes.writeEncodedU32(to);
+			bytes.writeEncodedU32(target);
+			
+			bytes.writeEncodedU32(getMultinameIndex(exceptionType));
+			bytes.writeEncodedU32(getMultinameIndex(variableName));
 		}
 		
 		override public function get name():String { return "ABCExceptionInfo"; }

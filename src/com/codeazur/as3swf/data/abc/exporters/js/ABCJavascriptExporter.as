@@ -6,9 +6,9 @@ package com.codeazur.as3swf.data.abc.exporters.js
 	import com.codeazur.as3swf.data.abc.bytecode.ABCClassInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.exporters.IABCExporter;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassBuilder;
 	import com.codeazur.as3swf.data.abc.exporters.builders.IABCClassStaticBuilder;

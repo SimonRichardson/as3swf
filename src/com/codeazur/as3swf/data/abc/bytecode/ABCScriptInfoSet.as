@@ -42,7 +42,15 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function write(bytes:SWFData):void {
+			const total:uint = scriptInfos.length;
+			bytes.writeEncodedU32(total);
 			
+			for(var i:uint=0; i<total; i++){
+				const scriptInfo:ABCScriptInfo = scriptInfos[i];
+				bytes.writeEncodedU32(getMethodInfoIndex(scriptInfo.scriptInitialiser));
+				
+				scriptInfo.write(bytes);
+			}
 		}
 		
 		override public function get name():String { return "ABCScriptInfoSet"; }

@@ -30,6 +30,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 			attribute.read(data);
 		}
 		
+		public function write(bytes:SWFData):void {
+			bytes.writeUI8(kind.type);
+			
+			attribute.write(bytes);
+		}
+		
 		override public function get name():String { return "ABCOpcode"; }
 		
 		override public function toString(indent:uint=0) : String {

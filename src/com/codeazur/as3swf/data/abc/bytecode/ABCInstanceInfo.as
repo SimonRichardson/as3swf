@@ -57,6 +57,23 @@ package com.codeazur.as3swf.data.abc.bytecode
 			super.read(data, scanner, traitPositions);
 		}
 		
+		override public function write(bytes:SWFData) : void {
+			if(isProtected) {
+				bytes.writeEncodedU32(getNamespaceIndex(protectedNamespace));
+			}
+			
+			const total:int = interfaceMultinames.length;
+			bytes.writeEncodedU32(total);
+			
+			for(var i:uint=0; i<total; i++) {
+				bytes.writeEncodedU32(getMultinameIndex(interfaceMultinames[i]));
+			}
+			
+			bytes.writeEncodedU32(getMethodInfoIndex(instanceInitialiser));
+			
+			super.write(bytes);
+		}
+		
 		override public function get name() : String { return "ABCInstanceInfo"; }
 		public function get isFinal():Boolean { 
 			return ABCInstanceInfoFlags.isType(flags, ABCInstanceInfoFlags.FINAL); 

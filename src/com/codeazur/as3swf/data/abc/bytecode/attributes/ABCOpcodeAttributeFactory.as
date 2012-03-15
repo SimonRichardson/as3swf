@@ -35,6 +35,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.INCLOCAL_I:
 				case ABCOpcodeKind.KILL:
 				case ABCOpcodeKind.NEWARRAY:
+				case ABCOpcodeKind.NEWCLASS:
 				case ABCOpcodeKind.NEWFUNCTION:
 				case ABCOpcodeKind.NEWOBJECT:
 				case ABCOpcodeKind.SETGLOBALSLOT:
@@ -114,8 +115,34 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 					attribute = ABCOpcodeUnsignedIntegerAttribute.create(abcData);
 					break;
 				
-				default:
+				case ABCOpcodeKind.CONVERT_B:
+				case ABCOpcodeKind.CONVERT_D:
+				case ABCOpcodeKind.CONVERT_I:
+				case ABCOpcodeKind.CONVERT_O:
+				case ABCOpcodeKind.CONVERT_S:
+				case ABCOpcodeKind.CONVERT_U:	
+				case ABCOpcodeKind.GETLOCAL_0:
+				case ABCOpcodeKind.GETLOCAL_1:
+				case ABCOpcodeKind.GETLOCAL_2:
+				case ABCOpcodeKind.GETLOCAL_3:
+				case ABCOpcodeKind.NOP:
+				case ABCOpcodeKind.NOT:
+				case ABCOpcodeKind.POP:
+				case ABCOpcodeKind.POPSCOPE:
+				case ABCOpcodeKind.PUSHFALSE:
+				case ABCOpcodeKind.PUSHSCOPE:
+				case ABCOpcodeKind.PUSHTRUE:
+				case ABCOpcodeKind.RETURNVALUE:
+				case ABCOpcodeKind.RETURNVOID:
+				case ABCOpcodeKind.SETLOCAL_0:
+				case ABCOpcodeKind.SETLOCAL_1:
+				case ABCOpcodeKind.SETLOCAL_2:
+				case ABCOpcodeKind.SETLOCAL_3:
 					attribute = ABCOpcodeAttribute.create(abcData);
+					break;
+				
+				default:
+					throw new Error('Invalid opcode kind (recieved=' + kind + ')');
 					break;
 			}
 			
