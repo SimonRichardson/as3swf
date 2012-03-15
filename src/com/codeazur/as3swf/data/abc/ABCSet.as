@@ -19,14 +19,26 @@ package com.codeazur.as3swf.data.abc
 		{
 			_abcData = abcData;
 		}
+		
+		protected function getIntegerIndex(integer:uint):int {
+			return abcData.constantPool.getIntegerIndex(integer);
+		}	
 				
 		protected function getIntegerByIndex(index:uint):int {
 			return abcData.constantPool.getIntegerByIndex(index);
 		}
 		
+		protected function getUnsignedIntegerIndex(unsignedInteger:uint):int {
+			return abcData.constantPool.getUnsignedIntegerIndex(unsignedInteger);
+		}	
+		
 		protected function getUnsignedIntegerByIndex(index:uint):uint {
 			return abcData.constantPool.getUnsignedIntegerByIndex(index);
 		}
+			
+		protected function getDoubleIndex(double:Number):int {
+			return abcData.constantPool.getDoubleIndex(double);
+		}	
 				
 		protected function getDoubleByIndex(index:uint):Number {
 			return abcData.constantPool.getDoubleByIndex(index);
@@ -34,6 +46,10 @@ package com.codeazur.as3swf.data.abc
 		
 		protected function addString(string:String):void {
 			abcData.constantPool.addString(string);
+		}
+		
+		protected function getStringIndex(string:String):int {
+			return abcData.constantPool.getStringIndex(string);
 		}
 		
 		protected function getStringByIndex(index:uint):String {
@@ -44,12 +60,20 @@ package com.codeazur.as3swf.data.abc
 			abcData.constantPool.addMultiname(multiname);
 		}
 		
+		protected function getMultinameIndex(multiname:IABCMultiname):int {
+			return abcData.constantPool.getMultinameIndex(multiname);
+		}
+		
 		protected function getMultinameByIndex(index:uint):IABCMultiname {
 			return abcData.constantPool.getMultinameByIndex(index);
 		}
 		
 		protected function addNamespace(ns:ABCNamespace):void {
 			abcData.constantPool.addNamespace(ns);
+		}
+		
+		protected function getNamespaceIndex(ns:ABCNamespace):int {
+			return abcData.constantPool.getNamespaceIndex(ns);
 		}
 		
 		protected function getNamespaceByIndex(index:uint):ABCNamespace {

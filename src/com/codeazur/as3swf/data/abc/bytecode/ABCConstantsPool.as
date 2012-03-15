@@ -322,12 +322,24 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function getIntegerIndex(integer:int):int {
+			return integerPool.indexOf(integer);
+		}
+		
 		public function getIntegerByIndex(index:uint):int {
 			return integerPool[index];
 		}
 		
+		public function getUnsignedIntegerIndex(unsignedInteger:uint):int {
+			return unsignedIntegerPool.indexOf(unsignedInteger);
+		}
+		
 		public function getUnsignedIntegerByIndex(index:uint):uint {
 			return unsignedIntegerPool[index];
+		}
+		
+		public function getDoubleIndex(double:Number):int {
+			return doublePool.indexOf(double);
 		}
 		
 		public function getDoubleByIndex(index:uint):Number {

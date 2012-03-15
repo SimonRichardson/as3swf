@@ -34,7 +34,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			const index:uint = data.readEncodedU30();
 			methodInfo = getMethodInfoByIndex(index);
-			methodInfo.methodName = ABCQualifiedName(qname).label;
+			methodInfo.methodNameLabel = ABCQualifiedName(qname).label;
 			
 			super.read(data, scanner);
 		}

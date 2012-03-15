@@ -37,7 +37,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const index:uint = data.readEncodedU30();
 			methodInfo = getMethodInfoByIndex(index);
 			methodInfo.qname = qualifiedName;
-			methodInfo.methodName = qualifiedName.fullName;
+			methodInfo.methodNameLabel = qualifiedName.fullName;
 			methodInfo.isValidMethodName = true;
 			
 			super.read(data, scanner);

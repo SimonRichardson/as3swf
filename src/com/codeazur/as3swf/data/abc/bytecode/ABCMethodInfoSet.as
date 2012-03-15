@@ -24,14 +24,20 @@ package com.codeazur.as3swf.data.abc.bytecode
 				data.position = scanner.getMethodInfoAtIndex(i);
 				
 				const info:ABCMethodInfo = ABCMethodInfo.create(abcData);
-				info.parse(data, scanner);
+				info.read(data, scanner);
 				
 				methodInfos.push(info);
 			}
 		}
 		
 		public function write(bytes:SWFData):void {
+			const total:uint = methodInfos.length;
+			bytes.writeEncodedU32(total);
 			
+			for(var i:uint=0; i<total; i++) {
+				const info:ABCMethodInfo = methodInfos[i];
+				info.write(bytes);
+			}
 		}
 		
 		public function getAt(index:uint):ABCMethodInfo {

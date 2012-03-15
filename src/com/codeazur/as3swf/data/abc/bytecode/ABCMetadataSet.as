@@ -15,10 +15,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public var metadatas:Vector.<ABCMetadata>;
 		
+		private var _keys:Vector.<Vector.<ABCMetadataKey>>;
+		
 		public function ABCMetadataSet(abcData : ABCData) {
 			super(abcData);
 			
 			metadatas = new Vector.<ABCMetadata>();
+			
+			_keys = new Vector.<Vector.<ABCMetadataKey>>();
 		}
 		
 		public function read(data:SWFData, scanner:ABCScanner):void {
@@ -36,12 +40,17 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const nameIndex:uint = data.readEncodedU30();
 				const metadataName:String = getStringByIndex(nameIndex);
 				
-				const keysTotal:uint = data.readEncodedU30();
+				const keysTotal:int = data.readEncodedU30();
+				
 				const keys:Vector.<String> = new Vector.<String>();
+				
+				const metadataKeys:Vector.<ABCMetadataKey> = new Vector.<ABCMetadataKey>();
 				
 				for(var j:uint=0; j<keysTotal; j++) {
 					const keyIndex:uint = data.readEncodedU30();
 					const keyName:String = getStringByIndex(keyIndex);
+					
+					metadataKeys.push(ABCMetadataKey.create(keyIndex));
 					
 					keys.push(keyName);
 				}
@@ -53,15 +62,38 @@ package com.codeazur.as3swf.data.abc.bytecode
 					const valueIndex:uint = data.readEncodedU30();
 					const value:String = getStringByIndex(valueIndex);
 					
+					const metadataKeyValue:ABCMetadataKey = metadataKeys[k];
+					metadataKeyValue.value = valueIndex;
+					
 					properties[key] = value;
 				}
 				
+				_keys.push(metadataKeys);
 				metadatas.push(ABCMetadata.create(metadataName, properties));
 			}
 		}
 		
 		public function write(bytes:SWFData):void {
+			const total:uint = metadatas.length;
+			bytes.writeEncodedU32(total);
 			
+			for(var i:uint=0; i<total; i++) {
+				const metadata:ABCMetadata = metadatas[i];
+				
+				bytes.writeEncodedU32(getStringIndex(metadata.label));
+				
+				const keys:Vector.<ABCMetadataKey> = _keys[i];
+				const keysTotal:uint = keys.length;
+				bytes.writeEncodedU32(keysTotal);
+				
+				for(var j:uint=0; j<keysTotal; j++) {
+					bytes.writeEncodedU32(keys[j].key);
+				}
+				
+				for(var k:uint=0; k<keysTotal; k++) {
+					bytes.writeEncodedU32(keys[k].value);
+				}
+			}
 		}
 		
 		public function getAt(index:uint):ABCMetadata {

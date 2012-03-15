@@ -13,11 +13,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 
 		public var qname:ABCQualifiedName;
 		public var methodName:String;
+		public var methodNameLabel:String;
 		public var methodBody:ABCMethodBody;
 		public var parameters:Vector.<ABCParameter>;
 		public var returnType:IABCMultiname;
 		public var scopeName:String;
 		public var flags:uint;
+		public var optionalTotal:int;
 		public var isConstructor:Boolean;
 		public var isValidMethodName:Boolean;
 
@@ -41,7 +43,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return result;
 		}
 		
-		public function parse(data:SWFData, scanner:ABCScanner):void {
+		public function read(data:SWFData, scanner:ABCScanner):void {
 			const paramTotal:uint = data.readEncodedU30();
 				
 			const returnIndex:uint = data.readEncodedU30();
@@ -58,12 +60,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			const methodIndex:uint = data.readEncodedU30();
 			methodName = getStringByIndex(methodIndex);
+			
+			methodNameLabel = methodName;
 			scopeName = getScopeName(methodName);
 			
 			flags = data.readUI8();
 						
 			if(hasOptional) {
-				const optionalTotal:uint = data.readEncodedU30();
+				optionalTotal = data.readEncodedU30();
 				for(var k:uint=0; k<optionalTotal; k++) {
 					
 					const optionalParamIndex:uint = (paramTotal - optionalTotal) + k;
@@ -133,8 +137,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 				nameParam.label = (hasParamNames) ? paramName : "";
 			}
 			
-			if(isValidMethodName && !StringUtils.isEmpty(methodName)){
-				const parts:Array = methodName.split("/");
+			if(isValidMethodName && !StringUtils.isEmpty(methodNameLabel)){
+				const parts:Array = methodNameLabel.split("/");
 				if(parts.length == 2) {
 					const qname:String = parts[0];
 					const name:String = parts[1];
@@ -145,6 +149,77 @@ package com.codeazur.as3swf.data.abc.bytecode
 				}
 			} else {
 				isConstructor = false;
+			}
+		}
+		
+		public function write(bytes:SWFData):void {
+			const paramTotal:uint = parameters.length;
+			bytes.writeEncodedU32(paramTotal);
+			bytes.writeEncodedU32(getMultinameIndex(returnType));
+			
+			for(var i:uint=0; i<paramTotal; i++) {
+				bytes.writeEncodedU32(getMultinameIndex(parameters[i].qname));
+			}
+			
+			bytes.writeEncodedU32(getStringIndex(methodName));
+			bytes.writeUI8(flags);
+			
+			if(hasOptional) {
+				bytes.writeEncodedU32(optionalTotal);
+				for(var k:uint=0; k<optionalTotal; k++) {
+					
+					const optionalParamIndex:uint = (paramTotal - optionalTotal) + k;
+					const optionalParam:ABCParameter = parameters[optionalParamIndex];
+					
+					var position:int;
+					switch(optionalParam.optionalKind) {
+						case ABCConstantKind.INT:
+							position = getIntegerIndex(optionalParam.defaultValue);
+							break;
+							
+						case ABCConstantKind.UINT:
+							position = getUnsignedIntegerIndex(optionalParam.defaultValue);
+							break;
+						
+						case ABCConstantKind.DOUBLE:
+							position = getDoubleIndex(optionalParam.defaultValue);
+							break;
+						
+						case ABCConstantKind.UTF8:
+							position = getStringIndex(optionalParam.defaultValue);
+							break;
+						
+						case ABCConstantKind.EXPLICIT_NAMESPACE:
+						case ABCConstantKind.NAMESPACE:
+						case ABCConstantKind.PACKAGE_NAMESPACE:
+						case ABCConstantKind.PACKAGE_INTERNAL_NAMESPACE:
+						case ABCConstantKind.PRIVATE_NAMESPACE:
+						case ABCConstantKind.PROTECTED_NAMESPACE:
+						case ABCConstantKind.STATIC_PROTECTED_NAMESPACE:
+							position = getNamespaceIndex(optionalParam.defaultValue);
+							break;
+							
+						case ABCConstantKind.TRUE:
+						case ABCConstantKind.FALSE:
+						case ABCConstantKind.NULL:
+						case ABCConstantKind.UNDEFINED:
+							position = optionalParam.optionalKind.type;
+							break;
+						
+						default:
+							throw new Error();
+					}
+					
+					bytes.writeEncodedU32(position);
+					bytes.writeUI8(optionalParam.optionalKind.type);
+				}
+			}
+			
+			if(hasParamNames) {
+				for(var j:uint=0; j<paramTotal; j++) {
+					const paramName:String = parameters[j].label;
+					bytes.writeEncodedU32(getStringIndex(paramName));
+				}
 			}
 		}
 		
@@ -166,7 +241,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			var str:String = super.toString(indent);
 			
 			str += "\n" + StringUtils.repeat(indent + 2);
-			str += "MethodName: " + methodName;
+			str += "MethodName: " + methodNameLabel;
 			
 			const total:int = parameters.length;
 			if(total > 0) {
