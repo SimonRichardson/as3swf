@@ -218,13 +218,45 @@
 		}
 		
 		public function writeEncodedU32(value:uint):void {
-			for (;;) {
-				var v:uint = value & 0x7f;
-				if ((value >>= 7) == 0) {
-					writeUI8(v);
-					break;
-				}
-				writeUI8(v | 0x80);
+			// This doesn't work for me.
+			//for (;;) {
+			//	var v:uint = value & 0x7f;
+			//	if ((value >>= 7) == 0) {
+			//		writeUI8(v);
+			//		break;
+			//	}
+			//	writeUI8(v | 0x80);
+			//}
+
+			if (value < 128 && value > -1)
+			{
+				writeUI8(value);
+			}
+			else if (value < 16384 && value > -1)
+			{
+				writeUI8((value & 0x7F) | 0x80);
+				writeUI8((value >> 7) & 0x7F);
+			}
+			else if (value < 2097152 && value > -1)
+			{
+				writeUI8((value & 0x7F) | 0x80);
+				writeUI8((value >> 7) | 0x80);
+				writeUI8((value >> 14) & 0x7F);
+			}
+			else if (value < 268435456 && value > -1)
+			{
+				writeUI8((value & 0x7F) | 0x80);
+				writeUI8(value >> 7 | 0x80);
+				writeUI8(value >> 14 | 0x80);
+				writeUI8((value >> 21) & 0x7F);
+			}
+			else
+			{
+				writeUI8((value & 0x7F) | 0x80);
+				writeUI8(value >> 7 | 0x80);
+				writeUI8(value >> 14 | 0x80);
+				writeUI8(value >> 21 | 0x80);
+				writeUI8((value >> 28) & 0x0F);
 			}
 		}
 
@@ -272,7 +304,7 @@
 			if (value && value.length > 0) {
 				writeUTFBytes(value);
 			}
-			writeByte(0);
+			writeByte(0x00);
 		}
 		
 		/////////////////////////////////////////////////////////

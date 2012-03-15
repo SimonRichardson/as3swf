@@ -7,8 +7,9 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 	 */
 	public class ABCNamespace {
 
-		public var kind : ABCNamespaceKind;
-		public var value : String;
+		public var kind:ABCNamespaceKind;
+		public var value:String;
+		public var byte:int;		
 
 		public function ABCNamespace(initKind:ABCNamespaceKind = null, initValue:String = "") {
 			kind = initKind;
@@ -27,7 +28,9 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		}
 		
 		public function clone():ABCNamespace {
-			return new ABCNamespace(kind, value);
+			const ns:ABCNamespace = new ABCNamespace(kind, value);
+			ns.byte = byte;
+			return ns;
 		}
 		
 		public function get name():String { return "ABCNamespace"; }

@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameKind;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultiname;
@@ -91,7 +92,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const strLength:uint = data.readEncodedU32();
 				const str:String = data.readUTFBytes(strLength);
 				if (strLength != str.length) {
-					throw new Error();	
+					throw new Error("String length mismatch (expected=" + strLength + ", recieved=" + str.length + ")");	
 				}
 				stringPool.push(str);
 			}
@@ -102,13 +103,18 @@ package com.codeazur.as3swf.data.abc.bytecode
 			while(--index > 0){
 				data.position = scanner.getConstantNamespaceAtIndex(sIndex++); 
 				
-				const nsKind:uint = 255 & data.readByte();
+				const nsByte:int = data.readByte();
+				const nsKind:uint = 255 & nsByte;
 				const strPoolIndex:uint = data.readEncodedU32();
 				if(strPoolIndex >= stringPool.length){
 					throw new Error();
 				}
 				const nsName:String = getStringByIndex(strPoolIndex);
-				namespacePool.push(ABCNamespace.create(nsKind, nsName));
+				
+				const abcNamespace:ABCNamespace = ABCNamespace.create(nsKind, nsName);
+				abcNamespace.byte = nsByte;
+				
+				namespacePool.push(abcNamespace);
 			}
 			
 			data.position = scanner.getConstantNamespaceSet();
@@ -137,41 +143,180 @@ package com.codeazur.as3swf.data.abc.bytecode
 			while(--index > 0) {
 				data.position = scanner.getConstantMultinameAtIndex(sIndex++); 
 				
-				const kind : uint = 255 & data.readByte();
+				var multiname:IABCMultiname;
+				const multinameByte:int = data.readByte();
+				
+				const kind : uint = 255 & multinameByte;
 				if(kind == 0x07 || kind == 0x0D){
+					
 					ref = data.readEncodedU32();
 					const ns:ABCNamespace = getNamespaceByIndex(ref);
 					ref = data.readEncodedU32();
 					const name:String = getStringByIndex(ref);
-					multinamePool.push(ABCQualifiedName.create(name, ns, kind));
+					multiname = ABCQualifiedName.create(name, ns, kind);
+					
 				} else if(kind == 0x0f || kind == 0x10){
+					
 					ref = data.readEncodedU32();
 					const strRQname:String = getStringByIndex(ref);
-					multinamePool.push(ABCRuntimeQualifiedName.create(strRQname, kind));
+					multiname = ABCRuntimeQualifiedName.create(strRQname, kind);
+					
 				} else if(kind == 0x11 || kind == 0x12){
-					multinamePool.push(ABCRuntimeQualifiedNameLate.create(kind));
+					
+					multiname = ABCRuntimeQualifiedNameLate.create(kind);
+					
 				} else if(kind == 0x09 || kind == 0x0E){
+					
 					ref = data.readEncodedU32();
 					const strMName:String = getStringByIndex(ref);
 					ref = data.readEncodedU32();
 					const namespaces:ABCNamespaceSet = getNamespaceSetByIndex(ref);
-					multinamePool.push(ABCMultiname.create(strMName, namespaces, kind));
+					multiname = ABCMultiname.create(strMName, namespaces, kind);
+					
 				} else if(kind == 0x1B || kind == 0x1C){
+					
 					ref = data.readEncodedU32();
 					const namespacesLate:ABCNamespaceSet = getNamespaceSetByIndex(ref);
-					multinamePool.push(ABCMultinameLate.create(namespacesLate, kind));
+					multiname = ABCMultinameLate.create(namespacesLate, kind);
+					
 				} else if(kind == 0x1D){
+					
 					ref = data.readEncodedU32();
 					const qname:IABCMultiname = getMultinameByIndex(ref);
 					ref = data.readEncodedU32();
 					var paramIndex:int = ref;
 					const params:Vector.<IABCMultiname> = new Vector.<IABCMultiname>();
-					while(--paramIndex > 0){
+					
+					while(--paramIndex > -1){
 						ref = data.readEncodedU32();
 						const param:IABCMultiname = getMultinameByIndex(ref);
 						params.push(param);
 					}
-					multinamePool.push(ABCMultinameGeneric.create(qname, params));
+					multiname = ABCMultinameGeneric.create(qname, params);
+					
+				} else {
+					throw new Error();
+				}
+				
+				multiname.byte = multinameByte;
+				multinamePool.push(multiname);
+			}
+		}
+		
+		public function write(bytes:SWFData):void {
+			
+			var i:int = 0;
+			var total:int = 0;
+			
+			total = integerPool.length;
+			bytes.writeEncodedU32(total - 1);
+			
+			for(i=1; i<total; i++) {
+				bytes.writeEncodedU32(integerPool[i]);
+			}
+			
+			total = unsignedIntegerPool.length;
+			bytes.writeEncodedU32(total - 1);
+			
+			for(i=1; i<total; i++) {
+				bytes.writeEncodedU32(unsignedIntegerPool[i]);
+			}
+			
+			total = doublePool.length;
+			bytes.writeEncodedU32(total - 1);
+			
+			for(i=1; i<total; i++) {
+				bytes.writeDouble(doublePool[i]);
+			}
+			
+			total = stringPool.length;
+			bytes.writeEncodedU32(total);
+			
+			for(i=1; i<total; i++) {
+				const string:String = stringPool[i];
+				bytes.writeEncodedU32(string.length);
+				bytes.writeUTFBytes(string);
+			}
+			
+			total = namespacePool.length;
+			bytes.writeEncodedU32(total - 1);
+			
+			for(i=1; i<total; i++) {
+				const ns:ABCNamespace = namespacePool[i];
+				bytes.writeByte(ns.byte);
+				bytes.writeEncodedU32(getStringIndex(ns.value));
+			}
+			
+			total = namespaceSetPool.length;
+			bytes.writeEncodedU32(total - 1);
+			for(i=1; i<total; i++) {
+				const nsSet:ABCNamespaceSet = namespaceSetPool[i];
+				const nsSetTotal:int = nsSet.length;
+				bytes.writeEncodedU32(nsSetTotal);
+				
+				for(var j:int=0; j<nsSetTotal; j++) {
+					const index:int = getNamespaceIndex(nsSet.getAt(j));
+					bytes.writeEncodedU32(index);	
+				}
+			}
+			
+			total = multinamePool.length;
+			bytes.writeEncodedU32(total - 1);
+			
+			for(i=1; i<total; i++) {
+				const abcMultiname:IABCMultiname = multinamePool[i];
+				
+				bytes.writeByte(abcMultiname.byte);
+				
+				switch(abcMultiname.kind) {
+					case ABCMultinameKind.QNAME:
+					case ABCMultinameKind.QNAME_A:
+						
+						const qname:ABCQualifiedName = abcMultiname.toQualifiedName();
+						bytes.writeEncodedU32(getNamespaceIndex(qname.ns));
+						bytes.writeEncodedU32(getStringIndex(qname.label));
+						break;
+					
+					case ABCMultinameKind.RUNTIME_QNAME:
+					case ABCMultinameKind.RUNTIME_QNAME_A:
+						const runtime:ABCRuntimeQualifiedName = ABCRuntimeQualifiedName(abcMultiname);
+						bytes.writeEncodedU32(getStringIndex(runtime.label));
+						break;
+						
+					case ABCMultinameKind.RUNTIME_QNAME_LATE:
+					case ABCMultinameKind.RUNTIME_QNAME_LATE_A:
+						// does nothing.
+						break;
+						
+					case ABCMultinameKind.MULTINAME:
+					case ABCMultinameKind.MULTINAME_A:
+						
+						const multiname:ABCMultiname = ABCMultiname(abcMultiname);
+						bytes.writeEncodedU32(getStringIndex(multiname.label));
+						bytes.writeEncodedU32(getNamespaceSetIndex(multiname.namespaces));
+						break;
+					
+					case ABCMultinameKind.MULTINAME_LATE:
+					case ABCMultinameKind.MULTINAME_LATE_A:
+						
+						const multinameLate:ABCMultinameLate = ABCMultinameLate(abcMultiname);
+						bytes.writeEncodedU32(getNamespaceSetIndex(multinameLate.namespaces));
+						break;
+						
+					case ABCMultinameKind.GENERIC:
+						const generic:ABCMultinameGeneric = ABCMultinameGeneric(abcMultiname);
+						bytes.writeEncodedU32(getMultinameIndex(generic.qname));
+						
+						const multinameTotal:int = generic.params.length;
+						bytes.writeEncodedU32(multinameTotal);
+						
+						for(var k:int=0; k<multinameTotal; k++) {
+							bytes.writeEncodedU32(getMultinameIndex(generic.params[k]));
+						}
+						break;
+					
+					default:	
+						throw new Error();
 				}
 			}
 		}
@@ -192,6 +337,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			if(stringPool.indexOf(string) < 0) {
 				stringPool.push(string);
 			}
+		}
+		
+		public function getStringIndex(string:String):int {
+			return stringPool.indexOf(string);
 		}
 		
 		public function getStringByIndex(index:uint):String {
@@ -221,6 +370,21 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function getMultinameIndex(multiname:IABCMultiname):int {
+			var index:int = -1;
+			
+			const total:uint = multinamePool.length;
+			for(var i:uint=0; i<total; i++) {
+				const m:IABCMultiname = multinamePool[i];
+				if(m.byte == multiname.byte) {
+					index = i;
+					break;
+				}
+			}
+			
+			return index;
+		}
+		
 		public function getMultinameByIndex(index:uint):IABCMultiname {
 			return multinamePool[index];
 		}
@@ -231,6 +395,22 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function getNamespaceIndex(ns:ABCNamespace):int {
+			var index:int = -1;
+			
+			const total:uint = namespacePool.length;
+			for(var i:uint=0; i<total; i++) {
+				const n:ABCNamespace = namespacePool[i];
+				
+				if(n.byte == ns.byte && n.value == ns.value) {
+					index = i;
+					break;
+				}
+			}
+			
+			return index;
+		}
+		
 		public function getNamespaceByIndex(index:uint):ABCNamespace {
 			return namespacePool[index];
 		}
@@ -239,6 +419,34 @@ package com.codeazur.as3swf.data.abc.bytecode
 			if(namespaceSetPool.indexOf(ns) < 0) {
 				namespaceSetPool.push(ns);
 			}
+		}
+		
+		public function getNamespaceSetIndex(ns:ABCNamespaceSet):int {
+			var index:int = 0;
+			
+			const total:uint = namespaceSetPool.length;
+			for(var i:uint=0; i<total; i++) {
+				const n:ABCNamespaceSet = namespaceSetPool[i];
+				const nsTotal:uint = ns.length;
+				if(n.length == nsTotal) {
+					// deep match
+					var contains:Boolean = true;
+					for(var j:uint=0; j<nsTotal; j++) {
+						const s:ABCNamespace = ns.getAt(j);
+						if(getNamespaceIndex(s) < 0) {
+							contains = false;
+							break;
+						}
+					}
+					
+					if(contains) {
+						index = i;
+						break;
+					}
+				}
+			}
+			
+			return index;
 		}
 		
 		public function getNamespaceSetByIndex(index:uint):ABCNamespaceSet {

@@ -13,7 +13,7 @@ package com.codeazur.as3swf.data.abc.io
 		
 		private var _scanner:ABCScanner;
 		
-		public function ABCReader(bytes : ByteArray) {
+		public function ABCReader(bytes:ByteArray) {
 			if(bytes is SWFData) _bytes = SWFData(bytes);
 			else {
 				_bytes = new SWFData();
@@ -24,7 +24,7 @@ package com.codeazur.as3swf.data.abc.io
 			_scanner = new ABCScanner();
 		}
 		
-		public function read(abcData : ABCData) : void {
+		public function read(abcData:ABCData) : void {
 			scanner.scan(_bytes);
 			
 			_bytes.position = scanner.minorVersion;

@@ -47,6 +47,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			qname.label = label;
 			qname.kind = kind;
 			qname.ns = ns.clone();
+			qname.byte = byte;
 			return qname; 
 		}
 		

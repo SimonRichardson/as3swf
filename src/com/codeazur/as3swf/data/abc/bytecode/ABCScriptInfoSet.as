@@ -41,6 +41,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function write(bytes:SWFData):void {
+			
+		}
+		
 		override public function get name():String { return "ABCScriptInfoSet"; }
 		
 		override public function toString(indent:uint=0):String {

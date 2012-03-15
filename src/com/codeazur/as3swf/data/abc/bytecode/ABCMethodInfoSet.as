@@ -30,6 +30,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function write(bytes:SWFData):void {
+			
+		}
+		
 		public function getAt(index:uint):ABCMethodInfo {
 			return methodInfos[index];
 		}

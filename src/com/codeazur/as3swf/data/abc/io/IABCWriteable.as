@@ -12,6 +12,5 @@ package com.codeazur.as3swf.data.abc.io
 		function toString(indent:uint=0):String;
 		
 		function get name():String;
-		
 	}
 }
