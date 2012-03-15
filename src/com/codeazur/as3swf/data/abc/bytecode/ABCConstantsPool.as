@@ -209,37 +209,37 @@ package com.codeazur.as3swf.data.abc.bytecode
 			var total:int = 0;
 			
 			total = integerPool.length;
-			bytes.writeEncodedU32(total - 1);
+			bytes.writeEncodedU32(calculatePoolTotal(total));
 			
 			for(i=1; i<total; i++) {
 				bytes.writeEncodedU32(integerPool[i]);
 			}
 			
 			total = unsignedIntegerPool.length;
-			bytes.writeEncodedU32(total - 1);
+			bytes.writeEncodedU32(calculatePoolTotal(total));
 			
 			for(i=1; i<total; i++) {
 				bytes.writeEncodedU32(unsignedIntegerPool[i]);
 			}
 			
 			total = doublePool.length;
-			bytes.writeEncodedU32(total - 1);
+			bytes.writeEncodedU32(calculatePoolTotal(total));
 			
 			for(i=1; i<total; i++) {
 				bytes.writeDouble(doublePool[i]);
 			}
 			
 			total = stringPool.length;
-			bytes.writeEncodedU32(total);
+			bytes.writeEncodedU32(calculatePoolTotal(total));
 			
 			for(i=1; i<total; i++) {
 				const string:String = stringPool[i];
 				bytes.writeEncodedU32(string.length);
 				bytes.writeUTFBytes(string);
 			}
-			
+						
 			total = namespacePool.length;
-			bytes.writeEncodedU32(total - 1);
+			bytes.writeEncodedU32(calculatePoolTotal(total));
 			
 			for(i=1; i<total; i++) {
 				const ns:ABCNamespace = namespacePool[i];
@@ -248,7 +248,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			
 			total = namespaceSetPool.length;
-			bytes.writeEncodedU32(total - 1);
+			bytes.writeEncodedU32(calculatePoolTotal(total));
 			for(i=1; i<total; i++) {
 				const nsSet:ABCNamespaceSet = namespaceSetPool[i];
 				const nsSetTotal:int = nsSet.length;
@@ -261,7 +261,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			
 			total = multinamePool.length;
-			bytes.writeEncodedU32(total - 1);
+			bytes.writeEncodedU32(calculatePoolTotal(total));
 			
 			for(i=1; i<total; i++) {
 				const abcMultiname:IABCMultiname = multinamePool[i];
@@ -305,6 +305,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 						
 					case ABCMultinameKind.GENERIC:
 						const generic:ABCMultinameGeneric = ABCMultinameGeneric(abcMultiname);
+						
 						bytes.writeEncodedU32(getMultinameIndex(generic.qname));
 						
 						const multinameTotal:int = generic.params.length;
@@ -376,7 +377,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const total:uint = multinamePool.length;
 			for(var i:uint=0; i<total; i++) {
 				const m:IABCMultiname = multinamePool[i];
-				if(m.byte == multiname.byte) {
+				if(m.byte == multiname.byte && m.fullName == multiname.fullName) {
 					index = i;
 					break;
 				}
@@ -500,6 +501,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			
 			return item;
+		}
+		
+		private function calculatePoolTotal(value:uint):uint {
+			return value <= 1 ? 0 : value;
 		}
 		
 		public function get name():String { return "ABCConstantsPool"; }

@@ -1,6 +1,5 @@
 package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
-	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.utils.StringUtils;
 	/**
@@ -26,10 +25,6 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		override public function get name():String { return "ABCMultinameGeneric"; }
 		
 		override public function toString(indent : uint = 0) : String {
-			return ABC.toStringCommon(name, indent) +
-				"QName: " + qname + ", " + 
-				(null != params ? "Params: " + params + ", " : "") +
-				"Kind: " + kind;
 			var str:String = super.toString(indent);
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "QName: ";
