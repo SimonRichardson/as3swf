@@ -32,7 +32,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				const scriptIndex:uint = data.readEncodedU30();
 				const scriptInitialiser:ABCMethodInfo = getMethodInfoByIndex(scriptIndex);
-				
 				const scriptInfo:ABCScriptInfo = ABCScriptInfo.create(abcData, scriptInitialiser);
 				const scriptTraitPositions:Vector.<uint> = scanner.getScriptTraitInfoAtIndex(i);
 				scriptInfo.read(data, scanner, scriptTraitPositions);
@@ -48,7 +47,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 			for(var i:uint=0; i<total; i++){
 				const scriptInfo:ABCScriptInfo = scriptInfos[i];
 				bytes.writeEncodedU32(getMethodInfoIndex(scriptInfo.scriptInitialiser));
-				
 				scriptInfo.write(bytes);
 			}
 		}

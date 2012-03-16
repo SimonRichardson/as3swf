@@ -126,7 +126,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const nsSet:ABCNamespaceSet = ABCNamespaceSet.create();
 				
 				const nsIndex:uint = data.readEncodedU32(); 
-				while(--nsIndex > 0){
+				while(--nsIndex > -1){
 					const nsPoolIndex:uint = data.readEncodedU32();
 					if(nsPoolIndex > namespacePool.length){
 						throw new Error();
@@ -246,7 +246,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				bytes.writeUI8(ns.byte);
 				bytes.writeEncodedU32(getStringIndex(ns.value));
 			}
-						
+				
 			total = namespaceSetPool.length;
 			bytes.writeEncodedU32(calculatePoolTotal(total));
 			for(i=1; i<total; i++) {
@@ -256,10 +256,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				for(var j:int=0; j<nsSetTotal; j++) {
 					const index:int = getNamespaceIndex(nsSet.getAt(j));
-					bytes.writeEncodedU32(index);	
+					bytes.writeEncodedU32(index);
 				}
 			}
-						
+									
 			total = multinamePool.length;
 			bytes.writeEncodedU32(calculatePoolTotal(total));
 			

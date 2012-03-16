@@ -81,7 +81,7 @@ package com.codeazur.as3swf.data.abc
 		}
 		
 		protected function getMethodInfoIndex(value:ABCMethodInfo):int {
-			return abcData.methodInfoSet.indexOf(value);
+			return abcData.methodInfoSet.methodInfos.indexOf(value);
 		}
 		
 		protected function getMethodInfoByIndex(index:uint):ABCMethodInfo {

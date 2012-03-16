@@ -131,13 +131,18 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function write(bytes:SWFData):void {
-			const total:uint = opcodes.length;
-			bytes.writeEncodedU32(total);
+			const data:SWFData = new SWFData();
 			
+			const total:uint = opcodes.length;
 			for(var i:uint=0; i<total; i++) {
 				const opcode:ABCOpcode = opcodes[i];
-				opcode.write(bytes);
+				data.writeUI8(opcode.kind.type);
+				opcode.write(data);
 			}
+			
+			const dataLength:uint = data.length;
+			bytes.writeEncodedU32(dataLength);
+			bytes.writeBytes(data, 0, dataLength);
 		}
 		
 		public function getAt(index:uint):ABCOpcode {

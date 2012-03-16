@@ -31,8 +31,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function write(bytes:SWFData):void {
-			bytes.writeUI8(kind.type);
-			
 			attribute.write(bytes);
 		}
 		
