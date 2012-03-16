@@ -18,6 +18,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 			instanceInfos = new Vector.<ABCInstanceInfo>();
 		}
 		
+		public function merge(instanceInfoSet:ABCInstanceInfoSet):void {
+			const total:uint = instanceInfoSet.instanceInfos.length;
+			for(var i:uint=0; i<total; i++) {
+				const info:ABCInstanceInfo = instanceInfoSet.instanceInfos[i];
+				instanceInfos.push(info);
+			}
+		}
+		
 		public function read(data:SWFData, scanner:ABCScanner):void {
 			const position:uint = scanner.getInstanceInfo();
 			if(data.position != position) {

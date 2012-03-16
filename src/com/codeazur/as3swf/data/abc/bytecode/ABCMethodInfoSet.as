@@ -18,6 +18,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 			methodInfos = new Vector.<ABCMethodInfo>();
 		}
 		
+		public function merge(methodInfoSet:ABCMethodInfoSet):void {
+			const total:uint = methodInfoSet.methodInfos.length;
+			for(var i:uint=0; i<total; i++) {
+				const info:ABCMethodInfo = methodInfoSet.methodInfos[i];
+				methodInfos.push(info);
+			}
+		}
+		
 		public function read(data:SWFData, scanner:ABCScanner):void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++) {

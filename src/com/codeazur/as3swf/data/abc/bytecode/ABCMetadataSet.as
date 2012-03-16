@@ -26,6 +26,19 @@ package com.codeazur.as3swf.data.abc.bytecode
 			_keys = new Vector.<Vector.<ABCMetadataKey>>();
 		}
 		
+		public function merge(metadataSet:ABCMetadataSet):void {
+			const total:uint = metadataSet.metadatas.length;
+			for(var i:uint=0; i<total; i++) {
+				const info:ABCMetadata = metadataSet.metadatas[i];
+				metadatas.push(info);
+			}
+			
+			// rebuild the keys
+			for(i=0; i<total; i++) {
+				_keys[i] = metadataSet._keys[i];
+			}
+		}
+		
 		public function read(data:SWFData, scanner:ABCScanner):void {
 			const position:uint = scanner.getMetadataInfo();
 			if(data.position != position) {

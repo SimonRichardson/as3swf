@@ -18,6 +18,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 			methodBodies = new Vector.<ABCMethodBody>();
 		}
 		
+		public function merge(methodBodySet:ABCMethodBodySet):void {
+			const total:uint = methodBodySet.methodBodies.length;
+			for(var i:uint=0; i<total; i++) {
+				const info:ABCMethodBody = methodBodySet.methodBodies[i];
+				methodBodies.push(info);
+			}
+		}
+		
 		public function read(data:SWFData, scanner:ABCScanner):void {
 			const position:uint = scanner.getMethodBodyInfo();
 			if(data.position != position) {

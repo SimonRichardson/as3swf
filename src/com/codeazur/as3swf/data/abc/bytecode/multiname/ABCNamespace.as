@@ -23,8 +23,16 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			return ns;
 		}
 		
+		public static function isType(type:ABCNamespace, ns:ABCNamespace):Boolean {
+			return type.equals(ns);
+		}
+		
 		public static function getType(type:ABCNamespaceType):ABCNamespace {
 			return ABCNamespaceType.getType(type);
+		}
+		
+		public function equals(ns:ABCNamespace):Boolean {
+			return byte == ns.byte && value == value;
 		}
 		
 		public function clone():ABCNamespace {
