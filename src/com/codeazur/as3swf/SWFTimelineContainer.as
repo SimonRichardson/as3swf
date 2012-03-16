@@ -1,9 +1,13 @@
 package com.codeazur.as3swf
 {
+	import com.codeazur.as3swf.data.abc.io.ABCWriter;
 	import com.codeazur.as3swf.data.SWFFrameLabel;
 	import com.codeazur.as3swf.data.SWFRawTag;
 	import com.codeazur.as3swf.data.SWFRecordHeader;
 	import com.codeazur.as3swf.data.SWFScene;
+	import com.codeazur.as3swf.data.abc.ABCData;
+	import com.codeazur.as3swf.data.abc.ABCDataSet;
+	import com.codeazur.as3swf.data.abc.io.ABCReader;
 	import com.codeazur.as3swf.data.consts.SoundCompression;
 	import com.codeazur.as3swf.events.SWFErrorEvent;
 	import com.codeazur.as3swf.events.SWFEventDispatcher;
@@ -15,6 +19,7 @@ package com.codeazur.as3swf
 	import com.codeazur.as3swf.tags.ITag;
 	import com.codeazur.as3swf.tags.TagDefineMorphShape;
 	import com.codeazur.as3swf.tags.TagDefineSceneAndFrameLabelData;
+	import com.codeazur.as3swf.tags.TagDoABC;
 	import com.codeazur.as3swf.tags.TagEnd;
 	import com.codeazur.as3swf.tags.TagFrameLabel;
 	import com.codeazur.as3swf.tags.TagJPEGTables;
@@ -35,7 +40,7 @@ package com.codeazur.as3swf
 	import com.codeazur.as3swf.timeline.Scene;
 	import com.codeazur.as3swf.timeline.SoundStream;
 	import com.codeazur.utils.StringUtils;
-	
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.utils.ByteArray;
@@ -110,6 +115,51 @@ package com.codeazur.as3swf
 				return rootTimelineContainer.tags[tagIndex] as IDefinitionTag;
 			}
 			return null;
+		}
+		
+		public function mergeABCTags():void {
+			const tags:Vector.<ITag> = getTagsByClassType(TagDoABC);
+			const total:uint = tags.length;
+			if(total > 1) {
+				const abcFiles:ABCDataSet = new ABCDataSet();
+				
+				var index:int = total;
+				// We want the first TagDoABC
+				while(--index > 0) {
+					const tag:TagDoABC = TagDoABC(tags[index]);
+					const tagIndex:int = tags.indexOf(tag);
+					if(tagIndex > -1) {
+						tags.splice(index, 1);
+						// Read the abc data via the reader
+						const abcReader:ABCReader = new ABCReader(tag.bytes);
+						const abcData:ABCData = new ABCData();
+						abcReader.read(abcData);
+						// Add it to the stack
+						abcFiles.add(abcData);
+					} else {
+						throw new Error();
+					}
+				}
+				// Merge the abc files into one
+				const merge:ABCData = abcFiles.merge();
+				const abcWriter:ABCWriter = new ABCWriter(merge);
+				const bytes:SWFData = new SWFData();
+				abcWriter.write(bytes);
+				// Push the bytes on the first tag
+				TagDoABC(tags[0]).bytes = bytes;
+			}
+		}
+		
+		public function getTagsByClassType(type:Class):Vector.<ITag> {
+			const result:Vector.<ITag> = new Vector.<ITag>();
+			const total : int = tags.length;
+			for(var i : int = 0; i < total; i++) {
+				const tag : ITag = tags[i];
+				if(tag is type){
+					result.push(tag);
+				}
+			}
+			return result;
 		}
 		
 		public function parseTags(data:SWFData, version:uint):void {
