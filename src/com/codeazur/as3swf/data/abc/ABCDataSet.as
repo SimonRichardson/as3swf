@@ -15,6 +15,10 @@ package com.codeazur.as3swf.data.abc
 			_data.push(data);
 			return data;
 		}
+		
+		public function getAt(index:uint):ABCData {
+			return _data[index];
+		}
 
 		public function merge():ABCData {
 			var result:ABCData;
@@ -41,6 +45,8 @@ package com.codeazur.as3swf.data.abc
 			master.minorVersion = value.minorVersion;
 			master.majorVersion = value.majorVersion;
 			
+			trace(master.minorVersion, master.majorVersion);
+			
 			master.constantPool.merge(value.constantPool);
 			
 			master.methodInfoSet.merge(value.methodInfoSet);
@@ -52,5 +58,7 @@ package com.codeazur.as3swf.data.abc
 			
 			master.methodBodySet.merge(value.methodBodySet);
 		}
+		
+		public function get length():uint { return _data.length; }
 	}
 }

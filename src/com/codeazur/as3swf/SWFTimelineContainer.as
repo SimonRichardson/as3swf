@@ -124,12 +124,16 @@ package com.codeazur.as3swf
 				const abcFiles:ABCDataSet = new ABCDataSet();
 				
 				var index:int = total;
-				// We want the first TagDoABC
-				while(--index > 0) {
+				while(--index > -1) {
+					
 					const tag:TagDoABC = TagDoABC(tags[index]);
 					const tagIndex:int = tags.indexOf(tag);
 					if(tagIndex > -1) {
-						tags.splice(index, 1);
+						// We want the first TagDoABC
+						if(index > 0) {
+							tags.splice(tagIndex, 1);
+						}
+						
 						// Read the abc data via the reader
 						const abcReader:ABCReader = new ABCReader(tag.bytes);
 						const abcData:ABCData = new ABCData();
@@ -140,6 +144,7 @@ package com.codeazur.as3swf
 						throw new Error();
 					}
 				}
+				
 				// Merge the abc files into one
 				const merge:ABCData = abcFiles.merge();
 				const abcWriter:ABCWriter = new ABCWriter(merge);

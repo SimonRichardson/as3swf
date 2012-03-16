@@ -35,7 +35,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			// rebuild the keys
 			for(i=0; i<total; i++) {
-				_keys[i] = metadataSet._keys[i];
+				_keys.push(metadataSet._keys[i]);
 			}
 		}
 		

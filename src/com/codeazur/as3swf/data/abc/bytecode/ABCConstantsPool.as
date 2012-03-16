@@ -93,10 +93,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			for(i=0; i<total; i++) {
 				const abcMultiname:IABCMultiname = value.multinamePool[i];
 				
-				if(getMultinameIndex(multiname) < 0) {
+				if(getMultinameIndex(abcMultiname) < 0) {
 					
 					// Make sure we add the correct items to the pool if they're missing.
-					switch(multiname.kind) {
+					switch(abcMultiname.kind) {
 						case ABCMultinameKind.QNAME:
 						case ABCMultinameKind.QNAME_A:
 							addMultiname(abcMultiname.toQualifiedName());
@@ -141,8 +141,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 						default:	
 							throw new Error();
 					}
-					
-					multinamePool.push(multiname);
 				}
 			}
 		}
