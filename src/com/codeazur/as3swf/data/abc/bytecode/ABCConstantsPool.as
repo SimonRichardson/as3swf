@@ -243,10 +243,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			for(i=1; i<total; i++) {
 				const ns:ABCNamespace = namespacePool[i];
-				bytes.writeByte(ns.byte);
+				bytes.writeUI8(ns.byte);
 				bytes.writeEncodedU32(getStringIndex(ns.value));
 			}
-			
+						
 			total = namespaceSetPool.length;
 			bytes.writeEncodedU32(calculatePoolTotal(total));
 			for(i=1; i<total; i++) {
@@ -259,7 +259,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 					bytes.writeEncodedU32(index);	
 				}
 			}
-			
+						
 			total = multinamePool.length;
 			bytes.writeEncodedU32(calculatePoolTotal(total));
 			

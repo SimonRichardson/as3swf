@@ -9,7 +9,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 
 		public var kind:ABCNamespaceKind;
 		public var value:String;
-		public var byte:int;		
+		public var byte:int;
 
 		public function ABCNamespace(initKind:ABCNamespaceKind = null, initValue:String = "") {
 			kind = initKind;
@@ -19,7 +19,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		public static function create(type:uint, value:String = ""):ABCNamespace {
 			const ns:ABCNamespace = new ABCNamespace();
 			ns.kind = ABCNamespaceKind.getType(type);
-			ns.value = ns.kind == ABCNamespaceKind.PRIVATE_NAMESPACE ? "private" : value;
+			ns.value = value;
 			return ns;
 		}
 		
