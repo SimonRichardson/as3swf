@@ -28,6 +28,11 @@
 		}
 		
 		public function get bytes():ByteArray { return _bytes; }
+		public function set bytes(value:ByteArray):void { 
+			_bytes.position = 0;
+			_bytes.length = 0;
+			_bytes.writeBytes(value, 0, value.length); 
+		}
 
 		public function parse(data:SWFData, length:uint, version:uint, async:Boolean = false):void {
 			var pos:uint = data.position;
