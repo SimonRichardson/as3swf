@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+	import com.codeazur.utils.DictionaryUtils;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
@@ -107,32 +108,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			for(var i:uint=0; i<total; i++) {
 				const metadata:ABCMetadata = metadatas[i];
 				if(metadata.label == value.label) {
+					const d0:Dictionary = metadata.properties;
+					const d1:Dictionary = value.properties;
 					
-					const p0:Dictionary = metadata.properties;
-					const p1:Dictionary = value.properties;
-					
-					if(p0 == p1) {
-						index = i;
-					} else {
-						
-						const matched:Dictionary = new Dictionary();
-						for(var k0:Object in p0) {
-							matched[k0] = k0;
-							if(p0[k0] != p1[k0]) {
-								return -1;
-							}
-						}
-						
-						for(var k1:Object in p1) {
-							if(matched[k1]) {
-								continue;
-							} else {
-								if(p1[k1] != p0[k1]) {
-									return -1;
-								}
-							}
-						}
-						
+					if(DictionaryUtils.compare(d0, d1)) {
 						index = i;
 					}
 				}
