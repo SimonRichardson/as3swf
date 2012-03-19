@@ -22,6 +22,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const total:uint = methodInfoSet.methodInfos.length;
 			for(var i:uint=0; i<total; i++) {
 				const info:ABCMethodInfo = methodInfoSet.methodInfos[i];
+				info.methodIndex = methodInfos.length;
 				methodInfos.push(info);
 			}
 		}
@@ -29,9 +30,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function read(data:SWFData, scanner:ABCScanner):void {
 			const total:uint = data.readEncodedU30();
 			for(var i:uint=0; i<total; i++) {
-				data.position = scanner.getMethodInfoAtIndex(i);
-				
 				const info:ABCMethodInfo = ABCMethodInfo.create(abcData);
+				info.methodIndex = i;
 				info.read(data, scanner);
 				
 				methodInfos.push(info);

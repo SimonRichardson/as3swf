@@ -473,14 +473,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			if(multiname is ABCNamedMultiname) {
 				const nmname:ABCNamedMultiname = ABCNamedMultiname(multiname);
 				addString(nmname.label);
-			}
-			
-			if(multiname is ABCQualifiedName) {
+			} else if(multiname is ABCQualifiedName) {
 				const qname:ABCQualifiedName = multiname.toQualifiedName();
 				addNamespace(qname.ns);
-			}
-			
-			if(multiname is ABCMultinameGeneric) {
+			} else if(multiname is ABCMultinameGeneric) {
 				const gmname:ABCMultinameGeneric = ABCMultinameGeneric(multiname);
 				addMultiname(gmname.qname);
 				
@@ -489,6 +485,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 					const qnameParam:ABCQualifiedName = gmname.params[i].toQualifiedName();
 					addMultiname(qnameParam);
 				}
+			} else {
+				throw new Error();
 			}
 		}
 		

@@ -27,6 +27,7 @@ package com.codeazur.as3swf.data.abc.io
 		
 		private var _methodInfo:uint;
 		private var _methodInfos:Vector.<uint>;
+		private var _methodInfosName:Vector.<uint>;
 		
 		private var _metadataInfo:uint;
 		private var _metadataInfos:Vector.<uint>;
@@ -135,6 +136,10 @@ package com.codeazur.as3swf.data.abc.io
 		
 		public function getMethodInfoAtIndex(index:uint):uint {
 			return _methodInfos[index];
+		}
+		
+		public function getMethodInfoNameAtIndex(index:uint):uint {
+			return _methodInfosName[index];
 		}
 		
 		// metadata info
@@ -356,6 +361,7 @@ package com.codeazur.as3swf.data.abc.io
 	    private function scanMethods(input:SWFData):void {
 			_methodInfo = input.position;
 	        _methodInfos = new Vector.<uint>();
+			_methodInfosName = new Vector.<uint>();
 			
 	        const size:uint = input.readEncodedU32();
 	        for(var i:uint = 0; i < size; i++) {
@@ -364,6 +370,8 @@ package com.codeazur.as3swf.data.abc.io
 	            const paramCount:uint = input.readEncodedU32();
 	            input.readEncodedU32();
 	            input.skipEntries(paramCount);
+				
+				_methodInfosName.push(input.position);
 	            input.readEncodedU32();
 	            const flags:uint = input.readUI8();
 	            const optionalCount:uint = (flags & 8) == 0 ? 0 : input.readEncodedU32();
@@ -373,9 +381,9 @@ package com.codeazur.as3swf.data.abc.io
 	            }
 	
 	            const paramNameCount:uint = (flags & 0x80) == 0 ? 0 : paramCount;
-	            for(var k:uint = 0; k < paramNameCount; k++)
+	            for(var k:uint = 0; k < paramNameCount; k++) {
 	                input.readEncodedU32();
-	
+				}
 	        }
 	    }
 	

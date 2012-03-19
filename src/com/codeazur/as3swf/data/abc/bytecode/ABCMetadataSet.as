@@ -31,10 +31,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			for(var i:uint=0; i<total; i++) {
 				const info:ABCMetadata = metadataSet.metadatas[i];
 				metadatas.push(info);
-			}
-			
-			// rebuild the keys
-			for(i=0; i<total; i++) {
+				
 				_keys.push(metadataSet._keys[i]);
 			}
 		}

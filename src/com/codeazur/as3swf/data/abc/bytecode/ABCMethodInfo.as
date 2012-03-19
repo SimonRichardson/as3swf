@@ -1,9 +1,10 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
 	import com.codeazur.utils.StringUtils;
 	/**
@@ -14,6 +15,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var qname:ABCQualifiedName;
 		public var methodName:String;
 		public var methodNameLabel:String;
+		public var methodIndex:uint;
 		public var methodBody:ABCMethodBody;
 		public var parameters:Vector.<ABCParameter>;
 		public var returnType:IABCMultiname;
@@ -32,7 +34,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		private static function getScopeName(methodName:String):String {
-			var result : String = "";
+			var result:String = "";
 			if (null != methodName && methodName.length > 0) {
 				const parts:Array = methodName.split(".");
 				if (parts.length > 1) {
@@ -44,6 +46,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function read(data:SWFData, scanner:ABCScanner):void {
+			data.position = scanner.getMethodInfoAtIndex(methodIndex);
 			const paramTotal:uint = data.readEncodedU30();
 				
 			const returnIndex:uint = data.readEncodedU30();
@@ -57,6 +60,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				parameters.push(ABCParameter.create(paramQName));
 			}
+
+			data.position = scanner.getMethodInfoNameAtIndex(methodIndex);
 			
 			const methodIndex:uint = data.readEncodedU30();
 			methodName = getStringByIndex(methodIndex);
