@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
@@ -483,9 +484,55 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const total:uint = multinamePool.length;
 			for(var i:uint=0; i<total; i++) {
 				const m:IABCMultiname = multinamePool[i];
-				if(m.byte == multiname.byte && m.fullName == multiname.fullName) {
-					index = i;
-					break;
+				if(ABCMultinameKind.isType(m.kind, multiname.kind)) {
+					switch(m.kind) {
+						case ABCMultinameKind.QNAME:
+						case ABCMultinameKind.QNAME_A:
+						case ABCMultinameKind.RUNTIME_QNAME:
+						case ABCMultinameKind.RUNTIME_QNAME_A:
+						case ABCMultinameKind.RUNTIME_QNAME_LATE:
+						case ABCMultinameKind.RUNTIME_QNAME_LATE_A:
+							const qname0:ABCQualifiedName = m.toQualifiedName();
+							const qname1:ABCQualifiedName = multiname.toQualifiedName();
+							if(	qname0 == qname1 || 
+								(qname0.label == qname1.label && ABCNamespaceKind.isType(qname0.ns.kind, qname1.ns.kind))) {
+								return i;
+							}
+							break;
+							
+						case ABCMultinameKind.MULTINAME:
+						case ABCMultinameKind.MULTINAME_A:
+							const mname0:ABCMultiname = ABCMultiname(m);
+							const mname1:ABCMultiname = ABCMultiname(multiname);
+							if(	mname0 == mname1 || 
+								(mname0.label == mname1.label && mname0.namespaces.length == mname1.namespaces.length)) {
+								// TODO : validate namespaces vector
+								return i;
+							}
+							break;
+						
+						case ABCMultinameKind.MULTINAME_LATE:
+						case ABCMultinameKind.MULTINAME_LATE_A:
+							const mnameLate0:ABCMultinameLate = ABCMultinameLate(m);
+							const mnameLate1:ABCMultinameLate = ABCMultinameLate(multiname);
+							if(mnameLate0.namespaces.length == mnameLate1.namespaces.length) {
+								// TODO : validate namespaces vector
+								return i;
+							}
+							break;
+							
+						case ABCMultinameKind.GENERIC:
+							const generic0:ABCMultinameGeneric = ABCMultinameGeneric(m);
+							const generic1:ABCMultinameGeneric = ABCMultinameGeneric(multiname);
+							if(generic0.qname == generic1.qname && generic0.params.length == generic1.params.length) {
+								// TODO : validate params vector
+								return i;
+							}
+							break;
+						
+						default:	
+							throw new Error();
+					}
 				}
 			}
 			

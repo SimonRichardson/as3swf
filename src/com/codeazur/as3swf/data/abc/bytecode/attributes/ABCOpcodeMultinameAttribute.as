@@ -25,6 +25,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 		}
 		
 		override public function write(bytes : SWFData) : void {
+			trace(multiname);
 			bytes.writeEncodedU32(getMultinameIndex(multiname));
 		}
 		
