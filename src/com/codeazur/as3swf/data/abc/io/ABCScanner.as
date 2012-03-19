@@ -372,6 +372,7 @@ package com.codeazur.as3swf.data.abc.io
 	            input.skipEntries(paramCount);
 				
 				_methodInfosName.push(input.position);
+				
 	            input.readEncodedU32();
 	            const flags:uint = input.readUI8();
 	            const optionalCount:uint = (flags & 8) == 0 ? 0 : input.readEncodedU32();

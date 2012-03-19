@@ -45,18 +45,16 @@ package com.codeazur.as3swf.data.abc
 			master.minorVersion = value.minorVersion;
 			master.majorVersion = value.majorVersion;
 			
-			trace(master.minorVersion, master.majorVersion);
-			
 			master.constantPool.merge(value.constantPool);
 			
-			master.methodInfoSet.merge(value.methodInfoSet);
-			master.metadataSet.merge(value.metadataSet);
-			
-			master.instanceInfoSet.merge(value.instanceInfoSet);
-			master.classInfoSet.merge(value.classInfoSet);
-			master.scriptInfoSet.merge(value.scriptInfoSet);
-			
-			master.methodBodySet.merge(value.methodBodySet);
+//			master.methodInfoSet.merge(value.methodInfoSet);
+//			master.metadataSet.merge(value.metadataSet);
+//			
+//			master.instanceInfoSet.merge(value.instanceInfoSet);
+//			master.classInfoSet.merge(value.classInfoSet);
+//			master.scriptInfoSet.merge(value.scriptInfoSet);
+//			
+//			master.methodBodySet.merge(value.methodBodySet);
 		}
 		
 		public function get length():uint { return _data.length; }

@@ -48,6 +48,8 @@ package com.codeazur.as3swf.data.abc.reflect
 			for(var i:uint=0; i<total; i++) {
 				const tag:TagDoABC = TagDoABC(tags[i]);
 				
+				trace(i, tag);
+				
 				const abcReader:ABCReader = new ABCReader(tag.bytes);
 				const abcData:ABCData = new ABCData();
 				abcReader.read(abcData);

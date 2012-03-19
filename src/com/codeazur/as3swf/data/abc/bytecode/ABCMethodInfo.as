@@ -46,7 +46,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function read(data:SWFData, scanner:ABCScanner):void {
-			data.position = scanner.getMethodInfoAtIndex(methodIndex);
+			const methodPosition:uint = scanner.getMethodInfoAtIndex(methodIndex);
+			if(methodPosition != data.position) {
+				throw new Error("Invalid position (Expected: " + methodPosition + ", Recieved: " + data.position + ")");
+			}
+			data.position = methodPosition;
+			
 			const paramTotal:uint = data.readEncodedU30();
 				
 			const returnIndex:uint = data.readEncodedU30();
@@ -60,8 +65,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				parameters.push(ABCParameter.create(paramQName));
 			}
-
-			data.position = scanner.getMethodInfoNameAtIndex(methodIndex);
+			
+			const methodNamePosition:uint = scanner.getMethodInfoNameAtIndex(methodIndex);
+			if(methodNamePosition != data.position) {
+				throw new Error("Invalid position (Expected: " + methodNamePosition + ", Recieved: " + data.position + ")");
+			}
+			data.position = methodNamePosition;
 			
 			const methodIndex:uint = data.readEncodedU30();
 			methodName = getStringByIndex(methodIndex);
