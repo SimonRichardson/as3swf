@@ -66,6 +66,16 @@ package com.codeazur.as3swf.data.abc
 			return result;
 		}
 		
+		override public function set abcData(value : ABCData) : void {
+			super.abcData = value;
+			
+			const total:uint = traits.length;
+			for(var i:uint=0; i<total; i++) {
+				const trait:ABCTraitInfo = traits[i];
+				trait.abcData = value;
+			}
+		}
+		
 		override public function get name() : String { return "ABCTraitSet"; }
 
 		override public function toString(indent : uint = 0) : String {

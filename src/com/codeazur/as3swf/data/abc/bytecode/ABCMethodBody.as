@@ -49,8 +49,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			super.read(data, scanner, traitPositions);
 		}
 		
-		override public function write(bytes : SWFData) : void
-		{
+		override public function write(bytes : SWFData) : void {
 			bytes.writeEncodedU32(methodInfoIndex);
 			
 			bytes.writeEncodedU32(maxStack);
@@ -62,6 +61,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 			exceptionInfo.write(bytes);
 			
 			super.write(bytes);
+		}
+		
+		override public function set abcData(value : ABCData) : void {
+			super.abcData = value;
+			
+			opcode.abcData = value;
+			exceptionInfo.abcData = value;
 		}
 		
 		override public function get name():String { return "ABCMethodBody"; }

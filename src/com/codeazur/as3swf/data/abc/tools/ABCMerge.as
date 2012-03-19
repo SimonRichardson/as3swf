@@ -17,7 +17,7 @@ package com.codeazur.as3swf.data.abc.tools
 			_abc.majorVersion = value.majorVersion;
 			
 			_abc.constantPool.merge(value.constantPool);
-						
+			
 			_abc.methodInfoSet.merge(value.methodInfoSet);
 			_abc.metadataSet.merge(value.metadataSet);
 			

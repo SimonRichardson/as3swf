@@ -34,6 +34,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 			attribute.write(bytes);
 		}
 		
+		override public function set abcData(value : ABCData) : void {
+			super.abcData = value;
+			
+			attribute.abcData = value;
+		}
+		
 		override public function get name():String { return "ABCOpcode"; }
 		
 		override public function toString(indent:uint=0) : String {

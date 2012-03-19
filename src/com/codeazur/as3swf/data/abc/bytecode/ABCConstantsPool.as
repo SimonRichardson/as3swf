@@ -536,19 +536,19 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
-		public function getNamespaceSetIndex(ns:ABCNamespaceSet):int {
-			var index:int = 0;
+		public function getNamespaceSetIndex(namespaceSet:ABCNamespaceSet):int {
+			var index:int = -1;
 			
 			const total:uint = namespaceSetPool.length;
 			for(var i:uint=0; i<total; i++) {
-				const n:ABCNamespaceSet = namespaceSetPool[i];
-				const nsTotal:uint = ns.length;
-				if(n.length == nsTotal) {
-					// deep match
+				const ns:ABCNamespaceSet = namespaceSetPool[i];
+				if(ns.length == namespaceSet.length) {
 					var contains:Boolean = true;
-					for(var j:uint=0; j<nsTotal; j++) {
-						const s:ABCNamespace = ns.getAt(j);
-						if(getNamespaceIndex(s) < 0) {
+					
+					const namespaceSetTotal:uint = namespaceSet.length;
+					for(var j:uint=0; j<namespaceSetTotal; j++) {
+						const nsNamespace:ABCNamespace = ns.getAt(j);
+						if(getNamespaceIndex(nsNamespace) < 0) {
 							contains = false;
 							break;
 						}

@@ -55,7 +55,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				const opcodePosition:ABCOpcodeJumpTargetPosition = ABCOpcodeJumpTargetPosition.create(startLocation, finishLocation);
 				jumpTargetByOpcode[opcodePosition.start] = opcode;
-				jumpTargetByPositions[opcode] = opcodePosition; 
+				jumpTargetByPositions[opcode] = opcodePosition;
 				
 				if(ABCOpcodeJumpTargetKind.isKind(opcode)) {
 					jumpTargets.push(ABCOpcodeJumpTarget.create(opcode));
@@ -176,6 +176,16 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			
 			return result;
+		}
+		
+		override public function set abcData(value : ABCData) : void {
+			super.abcData = value;
+			
+			const total:uint = opcodes.length;
+			for(var i:uint=0; i<total; i++){
+				const opcode:ABCOpcode = opcodes[i];
+				opcode.abcData = value;
+			}
 		}
 		
 		override public function get length():uint { return opcodes.length; }

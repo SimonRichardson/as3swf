@@ -42,6 +42,17 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		override public function set abcData(value : ABCData) : void {
+			super.abcData = value;
+			
+			const total:uint = exceptions.length;
+			
+			for(var i:uint=0; i<total; i++){
+				const exception:ABCExceptionInfo = exceptions[i];
+				exception.abcData = value;
+			}
+		}
+		
 		override public function get name():String { return "ABCExceptionInfoSet"; }
 		
 		override public function toString(indent:uint = 0) : String {

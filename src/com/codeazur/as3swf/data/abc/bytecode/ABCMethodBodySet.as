@@ -26,6 +26,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const info:ABCMethodBody = methodBodySet.methodBodies[i];
 				info.abcData = abcData;
 				
+				info.methodInfoIndex = getMethodInfoIndex(info.methodInfo); 
+				
 				methodBodies.push(info);
 			}
 		}
