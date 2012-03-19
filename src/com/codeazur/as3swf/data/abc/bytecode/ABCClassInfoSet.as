@@ -19,9 +19,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function merge(classInfoSet:ABCClassInfoSet):void {
+			classInfoSet.abcData = abcData;
+			
 			const total:uint = classInfoSet.classInfos.length;
 			for(var i:uint=0; i<total; i++) {
 				const info:ABCClassInfo = classInfoSet.classInfos[i];
+				info.abcData = abcData;
+				
 				classInfos.push(info);
 			}
 		}

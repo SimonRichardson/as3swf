@@ -18,7 +18,6 @@ package com.codeazur.as3swf.data.abc.io
 			bytes.writeUI16(_data.majorVersion);
 			
 			_data.constantPool.write(bytes);
-			
 			_data.methodInfoSet.write(bytes);
 			_data.metadataSet.write(bytes);
 			

@@ -1,11 +1,12 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-	import com.codeazur.utils.DictionaryUtils;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
+	import com.codeazur.utils.DictionaryUtils;
 	import com.codeazur.utils.StringUtils;
+
 	import flash.utils.Dictionary;
 
 
@@ -16,23 +17,19 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public var metadatas:Vector.<ABCMetadata>;
 		
-		private var _keys:Vector.<Vector.<ABCMetadataKey>>;
-		
 		public function ABCMetadataSet(abcData : ABCData) {
 			super(abcData);
 			
 			metadatas = new Vector.<ABCMetadata>();
-			
-			_keys = new Vector.<Vector.<ABCMetadataKey>>();
 		}
 		
 		public function merge(metadataSet:ABCMetadataSet):void {
+			metadataSet.abcData = abcData;
+			
 			const total:uint = metadataSet.metadatas.length;
 			for(var i:uint=0; i<total; i++) {
 				const info:ABCMetadata = metadataSet.metadatas[i];
 				metadatas.push(info);
-				
-				_keys.push(metadataSet._keys[i]);
 			}
 		}
 		
@@ -55,13 +52,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				const keys:Vector.<String> = new Vector.<String>();
 				
-				const metadataKeys:Vector.<ABCMetadataKey> = new Vector.<ABCMetadataKey>();
-				
 				for(var j:uint=0; j<keysTotal; j++) {
 					const keyIndex:uint = data.readEncodedU30();
 					const keyName:String = getStringByIndex(keyIndex);
-					
-					metadataKeys.push(ABCMetadataKey.create(keyIndex));
 					
 					keys.push(keyName);
 				}
@@ -73,13 +66,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 					const valueIndex:uint = data.readEncodedU30();
 					const value:String = getStringByIndex(valueIndex);
 					
-					const metadataKeyValue:ABCMetadataKey = metadataKeys[k];
-					metadataKeyValue.value = valueIndex;
-					
 					properties[key] = value;
 				}
-				
-				_keys.push(metadataKeys);
 				metadatas.push(ABCMetadata.create(metadataName, properties));
 			}
 		}
@@ -93,16 +81,23 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				bytes.writeEncodedU32(getStringIndex(metadata.label));
 				
-				const keys:Vector.<ABCMetadataKey> = _keys[i];
-				const keysTotal:uint = keys.length;
-				bytes.writeEncodedU32(keysTotal);
+				var key:String;
+				var propertyTotal:uint = 0;
+				for(key in metadata.properties) {
+					propertyTotal++;
+				}
+				bytes.writeEncodedU32(propertyTotal);
 				
-				for(var j:uint=0; j<keysTotal; j++) {
-					bytes.writeEncodedU32(keys[j].key);
+				const keys:Vector.<String> = new Vector.<String>();
+				for(key in metadata.properties) {
+					bytes.writeEncodedU32(getStringIndex(key));
+					keys.push(key);
 				}
 				
-				for(var k:uint=0; k<keysTotal; k++) {
-					bytes.writeEncodedU32(keys[k].value);
+				const keysTotal:uint = keys.length;
+				for(var j:uint=0; j<keysTotal; j++) {
+					const propertyValue:String = metadata.properties[keys[j]];
+					bytes.writeEncodedU32(getStringIndex(propertyValue));
 				}
 			}
 		}

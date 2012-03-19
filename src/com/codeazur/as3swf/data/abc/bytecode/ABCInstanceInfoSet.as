@@ -19,9 +19,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function merge(instanceInfoSet:ABCInstanceInfoSet):void {
+			instanceInfoSet.abcData = abcData;
+			
 			const total:uint = instanceInfoSet.instanceInfos.length;
 			for(var i:uint=0; i<total; i++) {
 				const info:ABCInstanceInfo = instanceInfoSet.instanceInfos[i];
+				info.abcData = abcData;
+				
 				instanceInfos.push(info);
 			}
 		}

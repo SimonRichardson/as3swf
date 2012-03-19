@@ -148,7 +148,7 @@ package com.codeazur.as3swf
 				// Merge the abc files into one
 				abcFiles.visit(new ABCMerge(abcFiles.abc));
 				abcFiles.visit(new ABCSortConstantPool(abcFiles.abc));
-								
+				
 				// Write the merged files to onwe abc file
 				const abcWriter:ABCWriter = new ABCWriter(abcFiles.abc);
 				const bytes:SWFData = new SWFData();

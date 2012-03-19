@@ -27,13 +27,16 @@ package com.codeazur.as3swf.data.abc
 		public var methodBodySet:ABCMethodBodySet;
 
 		public function ABCData() {
-			constantPool = new ABCConstantsPool();
+			constantPool = new ABCConstantsPool(this);
 			
 			methodInfoSet = new ABCMethodInfoSet(this);
 			metadataSet = new ABCMetadataSet(this);
+			
 			instanceInfoSet = new ABCInstanceInfoSet(this);
 			classInfoSet = new ABCClassInfoSet(this);
+			
 			scriptInfoSet = new ABCScriptInfoSet(this);
+			
 			methodBodySet = new ABCMethodBodySet(this);
 		}
 		

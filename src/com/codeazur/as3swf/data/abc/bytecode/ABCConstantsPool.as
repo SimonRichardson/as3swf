@@ -1,10 +1,11 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameKind;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameGeneric;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameKind;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameLate;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamedMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespace;
@@ -18,8 +19,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
 	 */
-	public class ABCConstantsPool
-	{
+	public class ABCConstantsPool {
 		
 		public var integerPool:Vector.<int>;
 		public var unsignedIntegerPool:Vector.<uint>;
@@ -29,7 +29,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var namespaceSetPool:Vector.<ABCNamespaceSet>;
 		public var multinamePool:Vector.<IABCMultiname>;
 		
-		public function ABCConstantsPool() {
+		private var _abcData:ABCData;
+		
+		public function ABCConstantsPool(abcData:ABCData) {
+			_abcData = abcData;
+			
 			integerPool = new Vector.<int>();
 			integerPool.push(0);
 			
@@ -92,56 +96,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			total = value.multinamePool.length;
 			for(i=0; i<total; i++) {
 				const abcMultiname:IABCMultiname = value.multinamePool[i];
-				
-				if(getMultinameIndex(abcMultiname) < 0) {
-					
-					// Make sure we add the correct items to the pool if they're missing.
-					switch(abcMultiname.kind) {
-						case ABCMultinameKind.QNAME:
-						case ABCMultinameKind.QNAME_A:
-							addMultiname(abcMultiname.toQualifiedName());
-							break;
-						
-						case ABCMultinameKind.RUNTIME_QNAME:
-						case ABCMultinameKind.RUNTIME_QNAME_A:
-							addString(ABCRuntimeQualifiedName(abcMultiname).label);
-							break;
-							
-						case ABCMultinameKind.RUNTIME_QNAME_LATE:
-						case ABCMultinameKind.RUNTIME_QNAME_LATE_A:
-							// does nothing.
-							break;
-							
-						case ABCMultinameKind.MULTINAME:
-						case ABCMultinameKind.MULTINAME_A:
-							
-							const multiname:ABCMultiname = ABCMultiname(abcMultiname);
-							addString(multiname.label);
-							addNamespaceSet(multiname.namespaces);
-							break;
-						
-						case ABCMultinameKind.MULTINAME_LATE:
-						case ABCMultinameKind.MULTINAME_LATE_A:
-							
-							addNamespaceSet(ABCMultinameLate(abcMultiname).namespaces);
-							break;
-							
-						case ABCMultinameKind.GENERIC:
-							const generic:ABCMultinameGeneric = ABCMultinameGeneric(abcMultiname);
-							
-							addMultiname(generic.qname);
-							
-							const multinameTotal:int = generic.params.length;
-							
-							for(var k:int=0; k<multinameTotal; k++) {
-								addMultiname(generic.params[k]);
-							}
-							break;
-						
-						default:	
-							throw new Error();
-					}
-				}
+				addMultiname(abcMultiname);
 			}
 		}
 		
@@ -470,23 +425,55 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function addMultiname(multiname:IABCMultiname):void {
-			if(multiname is ABCNamedMultiname) {
-				const nmname:ABCNamedMultiname = ABCNamedMultiname(multiname);
-				addString(nmname.label);
-			} else if(multiname is ABCQualifiedName) {
-				const qname:ABCQualifiedName = multiname.toQualifiedName();
-				addNamespace(qname.ns);
-			} else if(multiname is ABCMultinameGeneric) {
-				const gmname:ABCMultinameGeneric = ABCMultinameGeneric(multiname);
-				addMultiname(gmname.qname);
-				
-				const total:uint = gmname.params.length;
-				for(var i:uint=0; i<total; i++) {
-					const qnameParam:ABCQualifiedName = gmname.params[i].toQualifiedName();
-					addMultiname(qnameParam);
+			if(getMultinameIndex(multiname) < 0) {
+				// Make sure we add the correct items to the pool if they're missing.
+				switch(multiname.kind) {
+					case ABCMultinameKind.QNAME:
+					case ABCMultinameKind.QNAME_A:
+					case ABCMultinameKind.RUNTIME_QNAME:
+					case ABCMultinameKind.RUNTIME_QNAME_A:
+					case ABCMultinameKind.RUNTIME_QNAME_LATE:
+					case ABCMultinameKind.RUNTIME_QNAME_LATE_A:
+						// does nothing.
+						break;
+						
+					case ABCMultinameKind.MULTINAME:
+					case ABCMultinameKind.MULTINAME_A:
+						const mname:ABCMultiname = ABCMultiname(multiname);
+						addNamespaceSet(mname.namespaces);
+						break;
+					
+					case ABCMultinameKind.MULTINAME_LATE:
+					case ABCMultinameKind.MULTINAME_LATE_A:
+						addNamespaceSet(ABCMultinameLate(multiname).namespaces);
+						break;
+						
+					case ABCMultinameKind.GENERIC:
+						const generic:ABCMultinameGeneric = ABCMultinameGeneric(multiname);
+						
+						addMultiname(generic.qname);
+						
+						const multinameTotal:int = generic.params.length;
+						for(var k:int=0; k<multinameTotal; k++) {
+							addMultiname(generic.params[k]);
+						}
+						break;
+					
+					default:	
+						throw new Error();
 				}
-			} else {
-				throw new Error();
+				
+				if(multiname is ABCNamedMultiname) {
+					const nmname:ABCNamedMultiname = ABCNamedMultiname(multiname);
+					addString(nmname.label);
+				}
+				
+				const qname:ABCQualifiedName = multiname.toQualifiedName();
+				if(qname && qname.ns) {
+					addNamespace(qname.ns);
+				}
+						
+				multinamePool.push(multiname);
 			}
 		}
 		
@@ -538,10 +525,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function addNamespaceSet(ns:ABCNamespaceSet):void {
 			if(getNamespaceSetIndex(ns) < 0) { 
+				ns.abcData = _abcData;
+				
 				const total:uint = ns.length;
 				for(var i:uint=0; i<total; i++) {
 					addNamespace(ns.getAt(i));
 				}
+				
 				namespaceSetPool.push(ns);
 			}
 		}

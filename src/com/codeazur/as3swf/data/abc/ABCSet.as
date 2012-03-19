@@ -12,8 +12,8 @@ package com.codeazur.as3swf.data.abc
 	 */
 	public class ABCSet
 	{
-		
-		private var _abcData:ABCData;
+
+		private var _abcData : ABCData;
 
 		public function ABCSet(abcData:ABCData)
 		{
@@ -21,7 +21,11 @@ package com.codeazur.as3swf.data.abc
 		}
 		
 		protected function getIntegerIndex(integer:uint):int {
-			return abcData.constantPool.getIntegerIndex(integer);
+			const index:int = abcData.constantPool.getIntegerIndex(integer);
+			if(index < 0) {
+				throw new Error('Range Error');
+			}
+			return index;
 		}	
 				
 		protected function getIntegerByIndex(index:uint):int {
@@ -29,7 +33,11 @@ package com.codeazur.as3swf.data.abc
 		}
 		
 		protected function getUnsignedIntegerIndex(unsignedInteger:uint):int {
-			return abcData.constantPool.getUnsignedIntegerIndex(unsignedInteger);
+			const index:int = abcData.constantPool.getUnsignedIntegerIndex(unsignedInteger);
+			if(index < 0) {
+				throw new Error('Range Error');
+			}
+			return index;
 		}	
 		
 		protected function getUnsignedIntegerByIndex(index:uint):uint {
@@ -37,7 +45,11 @@ package com.codeazur.as3swf.data.abc
 		}
 			
 		protected function getDoubleIndex(double:Number):int {
-			return abcData.constantPool.getDoubleIndex(double);
+			const index:int = abcData.constantPool.getDoubleIndex(double);
+			if(index < 0) {
+				throw new Error('Range Error');
+			}
+			return index;
 		}	
 				
 		protected function getDoubleByIndex(index:uint):Number {
@@ -49,7 +61,11 @@ package com.codeazur.as3swf.data.abc
 		}
 		
 		protected function getStringIndex(string:String):int {
-			return abcData.constantPool.getStringIndex(string);
+			const index:int = abcData.constantPool.getStringIndex(string);
+			if(index < 0) {
+				throw new Error('Range Error');
+			}
+			return index;
 		}
 		
 		protected function getStringByIndex(index:uint):String {
@@ -61,7 +77,11 @@ package com.codeazur.as3swf.data.abc
 		}
 		
 		protected function getMultinameIndex(multiname:IABCMultiname):int {
-			return abcData.constantPool.getMultinameIndex(multiname);
+			const index:int = abcData.constantPool.getMultinameIndex(multiname);
+			if(index < 0) {
+				throw new Error('Range Error');
+			}
+			return index;
 		}
 		
 		protected function getMultinameByIndex(index:uint):IABCMultiname {
@@ -73,7 +93,11 @@ package com.codeazur.as3swf.data.abc
 		}
 		
 		protected function getNamespaceIndex(ns:ABCNamespace):int {
-			return abcData.constantPool.getNamespaceIndex(ns);
+			const index:int = abcData.constantPool.getNamespaceIndex(ns);
+			if(index < 0) {
+				throw new Error('Range Error');
+			}
+			return index;
 		}
 		
 		protected function getNamespaceByIndex(index:uint):ABCNamespace {
@@ -81,7 +105,11 @@ package com.codeazur.as3swf.data.abc
 		}
 		
 		protected function getMethodInfoIndex(value:ABCMethodInfo):int {
-			return abcData.methodInfoSet.methodInfos.indexOf(value);
+			const index:int = abcData.methodInfoSet.methodInfos.indexOf(value);
+			if(index < 0) {
+				throw new Error('Range Error');
+			}
+			return index;
 		}
 		
 		protected function getMethodInfoByIndex(index:uint):ABCMethodInfo {
@@ -89,7 +117,11 @@ package com.codeazur.as3swf.data.abc
 		}
 		
 		protected function getMetadataIndex(value:ABCMetadata):int {
-			return abcData.metadataSet.indexOf(value);
+			const index:int = abcData.metadataSet.indexOf(value);
+			if(index < 0) {
+				throw new Error('Range Error');
+			}
+			return index;
 		}
 		
 		protected function getMetadataByIndex(index:uint):ABCMetadata {
@@ -107,8 +139,10 @@ package com.codeazur.as3swf.data.abc
 		protected function getConstantPoolItemByKindAtIndex(kind:ABCConstantKind, index:uint):* {
 			return abcData.constantPool.getPoolItemByKindAtIndex(kind, index);
 		}
-		
+
 		public function get abcData():ABCData { return _abcData; }
+		public function set abcData(value:ABCData):void { _abcData = value; }
+		
 		public function get name():String { return "ABCSet"; }
 		public function get length():uint { return 0; }
 		
