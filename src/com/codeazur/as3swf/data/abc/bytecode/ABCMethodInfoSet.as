@@ -41,7 +41,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function write(bytes:SWFData):void {
 			const total:uint = methodInfos.length;
 			bytes.writeEncodedU32(total);
-			
 			for(var i:uint=0; i<total; i++) {
 				const info:ABCMethodInfo = methodInfos[i];
 				info.write(bytes);

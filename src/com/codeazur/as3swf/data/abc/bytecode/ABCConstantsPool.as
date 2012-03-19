@@ -350,7 +350,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 					bytes.writeEncodedU32(index);
 				}
 			}
-									
+												
 			total = multinamePool.length;
 			bytes.writeEncodedU32(calculatePoolTotal(total));
 			
