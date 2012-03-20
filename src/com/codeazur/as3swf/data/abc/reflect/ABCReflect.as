@@ -19,33 +19,18 @@ package com.codeazur.as3swf.data.abc.reflect
 		private var _swf:SWF;
 		private var _abcDataSet:ABCDataSet;
 		
+		private var _instances:Vector.<IABCReflectInstance>;
+		
 		public function ABCReflect(swf:SWF){
 			_swf = swf;
 			_abcDataSet = new ABCDataSet();
 			
 			loadABCData();
+			populateInstances();
 		}
 		
 		public function getAllInstances():Vector.<IABCReflectInstance> {
-			const instances:Vector.<IABCReflectInstance> = new Vector.<IABCReflectInstance>();
-			
-			const total:uint = _abcDataSet.length;
-			for(var i:uint=0; i<total; i++) {
-				const data:ABCData = _abcDataSet.getAt(i);
-				const classesTotal:uint = data.instanceInfoSet.length;
-				for(var j:uint=0; j<classesTotal; j++) {
-					const instance:ABCInstanceInfo = data.instanceInfoSet.getAt(j);
-					if(instance.isInterface) {
-						const reflectInterface:ABCReflectInterface = ABCReflectInterface.create(instance.qname);
-						instances.push(reflectInterface);
-					} else {
-						const reflectClass:ABCReflectClass = ABCReflectClass.create(instance.qname);
-						instances.push(reflectClass);
-					}
-				}
-			}
-			
-			return instances;
+			return _instances;
 		}
 		
 		public function getAllClasses():Vector.<ABCReflectClass> {
@@ -108,6 +93,26 @@ package com.codeazur.as3swf.data.abc.reflect
 				
 				_abcDataSet.add(abcData);
 			}
+		}
+		
+		private function populateInstances():void {
+			_instances = new Vector.<IABCReflectInstance>();
+			
+			const total:uint = _abcDataSet.length;
+			for(var i:uint=0; i<total; i++) {
+				const data:ABCData = _abcDataSet.getAt(i);
+				const classesTotal:uint = data.instanceInfoSet.length;
+				for(var j:uint=0; j<classesTotal; j++) {
+					const instance:ABCInstanceInfo = data.instanceInfoSet.getAt(j);
+					if(instance.isInterface) {
+						const reflectInterface:ABCReflectInterface = ABCReflectInterface.create(instance.qname);
+						_instances.push(reflectInterface);
+					} else {
+						const reflectClass:ABCReflectClass = ABCReflectClass.create(instance.qname, instance.traits);
+						_instances.push(reflectClass);
+					}
+				}
+			}	
 		}
 		
 		public function get swf():SWF { return _swf; }

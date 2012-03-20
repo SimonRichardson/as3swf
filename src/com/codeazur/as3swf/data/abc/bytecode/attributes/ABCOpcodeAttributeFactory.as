@@ -115,6 +115,9 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 					attribute = ABCOpcodeUnsignedIntegerAttribute.create(abcData);
 					break;
 				
+				case ABCOpcodeKind.ADD:
+				case ABCOpcodeKind.ADD_D:
+				case ABCOpcodeKind.ADD_I:
 				case ABCOpcodeKind.CONVERT_B:
 				case ABCOpcodeKind.CONVERT_D:
 				case ABCOpcodeKind.CONVERT_I:
