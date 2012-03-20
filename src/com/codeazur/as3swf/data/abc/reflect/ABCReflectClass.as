@@ -42,23 +42,9 @@ package com.codeazur.as3swf.data.abc.reflect
 			for(var i:uint=0; i<total; i++) {
 				const trait:IABCReflectTrait = traits[i];
 				if(trait is ABCReflectConstTrait) {
-					const traitQName:ABCQualifiedName = trait.qname.toQualifiedName();
-					if(ABCReflectMemberVisibility.isType(visiblity, ABCReflectMemberVisibility.ALL)) {
-						instances.push(trait);
-						
-					} else if(	ABCReflectMemberVisibility.isType(visiblity, ABCReflectMemberVisibility.PRIVATE) && 
-								ABCNamespaceKind.isType(traitQName.ns.kind, ABCNamespaceKind.PRIVATE_NAMESPACE)) {
-						instances.push(trait);
-						
-					} else if(	ABCReflectMemberVisibility.isType(visiblity, ABCReflectMemberVisibility.PROTECTED) && 
-								ABCNamespaceKind.isType(traitQName.ns.kind, ABCNamespaceKind.PROTECTED_NAMESPACE)) {
-						instances.push(trait);
-						
-					} else if(	ABCReflectMemberVisibility.isType(visiblity, ABCReflectMemberVisibility.PUBLIC) && 
-								ABCNamespaceKind.isType(traitQName.ns.kind, ABCNamespaceKind.PACKAGE_NAMESPACE)) {
-						instances.push(trait);
-					} else {
-						throw new Error();
+					const visibiltyTrait:IABCReflectTrait = getTraitItemForVisibilty(trait, visiblity);
+					if(visibiltyTrait) {
+						instances.push(visibiltyTrait);
 					}
 				}
 			}
@@ -75,6 +61,32 @@ package com.codeazur.as3swf.data.abc.reflect
 				const trait:IABCReflectTrait = ABCReflectTraitFactory.create(instanceTrait);
 				_traits.push(trait);
 			}
+		}
+		
+		private function getTraitItemForVisibilty(trait:IABCReflectTrait, visiblity:ABCReflectMemberVisibility):IABCReflectTrait {
+			var instance:IABCReflectTrait = null;
+			
+			const traitQName:ABCQualifiedName = trait.qname.toQualifiedName();
+			if(ABCReflectMemberVisibility.isType(visiblity, ABCReflectMemberVisibility.ALL)) {
+				instance = trait;
+				
+			} else if(	ABCReflectMemberVisibility.isType(visiblity, ABCReflectMemberVisibility.PRIVATE) && 
+						ABCNamespaceKind.isType(traitQName.ns.kind, ABCNamespaceKind.PRIVATE_NAMESPACE)) {
+				instance = trait;
+				
+			} else if(	ABCReflectMemberVisibility.isType(visiblity, ABCReflectMemberVisibility.PROTECTED) && 
+						ABCNamespaceKind.isType(traitQName.ns.kind, ABCNamespaceKind.PROTECTED_NAMESPACE)) {
+				instance = trait;
+				
+			} else if(	ABCReflectMemberVisibility.isType(visiblity, ABCReflectMemberVisibility.PUBLIC) && 
+						ABCNamespaceKind.isType(traitQName.ns.kind, ABCNamespaceKind.PACKAGE_NAMESPACE)) {
+				instance = trait;
+				
+			} else {
+				throw new Error();
+			}
+			
+			return trait;
 		}
 		
 		override public function get name():String { return "ABCReflectClass"; }
