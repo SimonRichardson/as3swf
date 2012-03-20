@@ -29,7 +29,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			interfaceMultinames = new Vector.<IABCMultiname>();
 		}
 		
-		public static function create(abcData:ABCData, qname:IABCMultiname, superMultiname:IABCMultiname, flags:uint = 0):ABCInstanceInfo {
+		public static function create(abcData:ABCData, qname:IABCMultiname, superMultiname:IABCMultiname, flags:uint=0):ABCInstanceInfo {
 			const instance:ABCInstanceInfo = new ABCInstanceInfo(abcData);
 			instance.qname = qname;
 			instance.superMultiname = superMultiname;

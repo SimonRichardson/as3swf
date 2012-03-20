@@ -1,11 +1,12 @@
 package com.codeazur.as3swf.data.abc.reflect
 {
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+
 	import com.codeazur.as3swf.SWF;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCDataSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.io.ABCReader;
 	import com.codeazur.as3swf.tags.ITag;
 	import com.codeazur.as3swf.tags.TagDoABC;
@@ -24,9 +25,9 @@ package com.codeazur.as3swf.data.abc.reflect
 			
 			loadABCData();
 		}
-				
-		public function getAllClasses():Vector.<ABCReflectClass> {
-			const classes:Vector.<ABCReflectClass> = new Vector.<ABCReflectClass>();
+		
+		public function getAllInstances():Vector.<IABCReflectInstance> {
+			const instances:Vector.<IABCReflectInstance> = new Vector.<IABCReflectInstance>();
 			
 			const total:uint = _abcDataSet.length;
 			for(var i:uint=0; i<total; i++) {
@@ -34,23 +35,59 @@ package com.codeazur.as3swf.data.abc.reflect
 				const classesTotal:uint = data.instanceInfoSet.length;
 				for(var j:uint=0; j<classesTotal; j++) {
 					const instance:ABCInstanceInfo = data.instanceInfoSet.getAt(j);
-					
-					const reflect:ABCReflectClass = ABCReflectClass.create(instance.qname);
-					classes.push(reflect);
+					if(instance.isInterface) {
+						const reflectInterface:ABCReflectInterface = ABCReflectInterface.create(instance.qname);
+						instances.push(reflectInterface);
+					} else {
+						const reflectClass:ABCReflectClass = ABCReflectClass.create(instance.qname);
+						instances.push(reflectClass);
+					}
+				}
+			}
+			
+			return instances;
+		}
+		
+		public function getAllClasses():Vector.<ABCReflectClass> {
+			const classes:Vector.<ABCReflectClass> = new Vector.<ABCReflectClass>();
+			
+			const instances:Vector.<IABCReflectInstance> = getAllInstances();
+			
+			const total:uint = instances.length;
+			for(var i:uint=0; i<total; i++) {
+				const instance:IABCReflectInstance = instances[i];
+				if(ABCReflectKind.isType(instance.kind, ABCReflectKind.CLASS)) {
+					classes.push(instance);
 				}
 			}
 			
 			return classes;
 		}
 		
-		public function getClassByQualifiedName(qname:ABCQualifiedName):ABCReflectClass {
-			var result:ABCReflectClass = null;
+		public function getAllInterfaces():Vector.<ABCReflectInterface> {
+			const classes:Vector.<ABCReflectInterface> = new Vector.<ABCReflectInterface>();
 			
-			const classes:Vector.<ABCReflectClass> = getAllClasses();
+			const instances:Vector.<IABCReflectInstance> = getAllInstances();
 			
-			const total:uint = classes.length;
+			const total:uint = instances.length;
 			for(var i:uint=0; i<total; i++) {
-				const item:ABCReflectClass = classes[i];
+				const instance:IABCReflectInstance = instances[i];
+				if(ABCReflectKind.isType(instance.kind, ABCReflectKind.INTERFACE)) {
+					classes.push(instance);
+				}
+			}
+			
+			return classes;
+		}
+		
+		public function getInstanceByQualifiedName(qname:ABCQualifiedName):IABCReflectInstance {
+			var result:IABCReflectInstance = null;
+			
+			const instances:Vector.<IABCReflectInstance> = getAllInstances();
+			
+			const total:uint = instances.length;
+			for(var i:uint=0; i<total; i++) {
+				const item:IABCReflectInstance = instances[i];
 				if(item.qname.equals(qname)) {
 					result = item;
 					break;
