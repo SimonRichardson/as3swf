@@ -511,8 +511,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 							} else if(mname0.label == mname1.label && mname0.namespaces.length == mname1.namespaces.length) {
 								contains = true;
 								for(var j:uint=0; j<mname0.namespaces.length; j++) {
-									const mnameNs0:ABCNamespace = mname0.namespaces[j];
-									const mnameNs1:ABCNamespace = mname1.namespaces[j];
+									const mnameNs0:ABCNamespace = mname0.namespaces.getAt(j);
+									const mnameNs1:ABCNamespace = mname1.namespaces.getAt(j);
 									if(!mnameNs0.equals(mnameNs1)) {
 										contains = false;
 										break;
@@ -531,8 +531,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 							if(mnameLate0.namespaces.length == mnameLate1.namespaces.length) {
 								contains = true;
 								for(var k:uint=0; k<mnameLate0.namespaces.length; k++) {
-									const mnameLateNs0:ABCNamespace = mnameLate0.namespaces[j];
-									const mnameLateNs1:ABCNamespace = mnameLate1.namespaces[j];
+									const mnameLateNs0:ABCNamespace = mnameLate0.namespaces.getAt(k);
+									const mnameLateNs1:ABCNamespace = mnameLate1.namespaces.getAt(k);
 									if(!mnameLateNs0.equals(mnameLateNs1)) {
 										contains = false;
 										break;
@@ -550,8 +550,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 							if(generic0.qname.equals(generic1.qname) && generic0.params.length == generic1.params.length) {
 								contains = true;
 								for(var l:uint=0; l<generic0.params.length; l++) {
-									const genericMultiname0:IABCMultiname = generic0.params[j];
-									const genericMultiname1:IABCMultiname = generic1.params[j];
+									const genericMultiname0:IABCMultiname = generic0.params[l];
+									const genericMultiname1:IABCMultiname = generic1.params[l];
 									if(!genericMultiname0.equals(genericMultiname1)) {
 										contains = false;
 										break;

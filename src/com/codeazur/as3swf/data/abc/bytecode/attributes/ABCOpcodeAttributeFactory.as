@@ -130,6 +130,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.POP:
 				case ABCOpcodeKind.POPSCOPE:
 				case ABCOpcodeKind.PUSHFALSE:
+				case ABCOpcodeKind.PUSHNULL:
 				case ABCOpcodeKind.PUSHSCOPE:
 				case ABCOpcodeKind.PUSHTRUE:
 				case ABCOpcodeKind.RETURNVALUE:
