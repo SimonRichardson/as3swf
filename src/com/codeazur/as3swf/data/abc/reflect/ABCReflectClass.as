@@ -1,11 +1,12 @@
 package com.codeazur.as3swf.data.abc.reflect
 {
 
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.reflect.traits.ABCReflectConstTrait;
+	import com.codeazur.as3swf.data.abc.reflect.traits.ABCReflectSlotTrait;
 	import com.codeazur.as3swf.data.abc.reflect.traits.ABCReflectTraitFactory;
 	import com.codeazur.as3swf.data.abc.reflect.traits.IABCReflectTrait;
 	/**
@@ -42,6 +43,26 @@ package com.codeazur.as3swf.data.abc.reflect
 			for(var i:uint=0; i<total; i++) {
 				const trait:IABCReflectTrait = traits[i];
 				if(trait is ABCReflectConstTrait) {
+					const visibiltyTrait:IABCReflectTrait = getTraitItemForVisibilty(trait, visiblity);
+					if(visibiltyTrait) {
+						instances.push(visibiltyTrait);
+					}
+				}
+			}
+			
+			return instances;
+		}
+		
+		public function getSlotTraits(visiblity:ABCReflectMemberVisibility=null):Vector.<ABCReflectSlotTrait> {
+			visiblity = visiblity || ABCReflectMemberVisibility.ALL;
+			
+			const instances:Vector.<ABCReflectSlotTrait> = new Vector.<ABCReflectSlotTrait>();
+			
+			const traits:Vector.<IABCReflectTrait> = getInstanceTraits();
+			const total:uint = traits.length;
+			for(var i:uint=0; i<total; i++) {
+				const trait:IABCReflectTrait = traits[i];
+				if(trait is ABCReflectSlotTrait) {
 					const visibiltyTrait:IABCReflectTrait = getTraitItemForVisibilty(trait, visiblity);
 					if(visibiltyTrait) {
 						instances.push(visibiltyTrait);
