@@ -8,6 +8,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 	public interface IABCMultiname
 	{
 		
+		function equals(value:IABCMultiname):Boolean;
+		
 		function get kind():ABCMultinameKind;
 		function set kind(value:ABCMultinameKind):void;
 		

@@ -480,6 +480,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function getMultinameIndex(multiname:IABCMultiname):int {
 			var index:int = -1;
+			var contains:Boolean = false;
 			
 			const total:uint = multinamePool.length;
 			for(var i:uint=0; i<total; i++) {
@@ -494,8 +495,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 						case ABCMultinameKind.RUNTIME_QNAME_LATE_A:
 							const qname0:ABCQualifiedName = m.toQualifiedName();
 							const qname1:ABCQualifiedName = multiname.toQualifiedName();
-							if(	qname0 == qname1 || 
-								(qname0.label == qname1.label && ABCNamespaceKind.isType(qname0.ns.kind, qname1.ns.kind))) {
+							if(qname0 == qname1) {
+								return i;
+							} else if(qname0.label == qname1.label && ABCNamespaceKind.isType(qname0.ns.kind, qname1.ns.kind)) {
 								return i;
 							}
 							break;
@@ -504,10 +506,21 @@ package com.codeazur.as3swf.data.abc.bytecode
 						case ABCMultinameKind.MULTINAME_A:
 							const mname0:ABCMultiname = ABCMultiname(m);
 							const mname1:ABCMultiname = ABCMultiname(multiname);
-							if(	mname0 == mname1 || 
-								(mname0.label == mname1.label && mname0.namespaces.length == mname1.namespaces.length)) {
-								// TODO : validate namespaces vector
+							if(	mname0 === mname1) {
 								return i;
+							} else if(mname0.label == mname1.label && mname0.namespaces.length == mname1.namespaces.length) {
+								contains = true;
+								for(var j:uint=0; j<mname0.namespaces.length; j++) {
+									const mnameNs0:ABCNamespace = mname0.namespaces[j];
+									const mnameNs1:ABCNamespace = mname1.namespaces[j];
+									if(!mnameNs0.equals(mnameNs1)) {
+										contains = false;
+										break;
+									}
+								}
+								if(contains) {
+									return i;
+								}
 							}
 							break;
 						
@@ -516,17 +529,37 @@ package com.codeazur.as3swf.data.abc.bytecode
 							const mnameLate0:ABCMultinameLate = ABCMultinameLate(m);
 							const mnameLate1:ABCMultinameLate = ABCMultinameLate(multiname);
 							if(mnameLate0.namespaces.length == mnameLate1.namespaces.length) {
-								// TODO : validate namespaces vector
-								return i;
+								contains = true;
+								for(var k:uint=0; k<mnameLate0.namespaces.length; k++) {
+									const mnameLateNs0:ABCNamespace = mnameLate0.namespaces[j];
+									const mnameLateNs1:ABCNamespace = mnameLate1.namespaces[j];
+									if(!mnameLateNs0.equals(mnameLateNs1)) {
+										contains = false;
+										break;
+									}
+								}
+								if(contains) {
+									return i;
+								}
 							}
 							break;
 							
 						case ABCMultinameKind.GENERIC:
 							const generic0:ABCMultinameGeneric = ABCMultinameGeneric(m);
 							const generic1:ABCMultinameGeneric = ABCMultinameGeneric(multiname);
-							if(generic0.qname == generic1.qname && generic0.params.length == generic1.params.length) {
-								// TODO : validate params vector
-								return i;
+							if(generic0.qname.equals(generic1.qname) && generic0.params.length == generic1.params.length) {
+								contains = true;
+								for(var l:uint=0; l<generic0.params.length; l++) {
+									const genericMultiname0:IABCMultiname = generic0.params[j];
+									const genericMultiname1:IABCMultiname = generic1.params[j];
+									if(!genericMultiname0.equals(genericMultiname1)) {
+										contains = false;
+										break;
+									}
+								}
+								if(contains) {
+									return i;
+								}
 							}
 							break;
 						

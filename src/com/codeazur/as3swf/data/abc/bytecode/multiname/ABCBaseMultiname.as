@@ -15,8 +15,8 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			_byte = 0;
 		}
 
-		public static function equals(qname0:IABCMultiname, qname1:IABCMultiname):Boolean {
-			return qname0.kind.type == qname1.kind.type && qname0.fullName == qname1.fullName; 
+		public function equals(qname:IABCMultiname):Boolean {
+			return ABCMultinameKind.isType(kind, qname.kind) && fullName == qname.fullName; 
 		}
 
 		public function get kind():ABCMultinameKind { return _kind; }
