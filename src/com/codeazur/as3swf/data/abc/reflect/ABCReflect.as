@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.reflect
 {
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.SWF;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
@@ -42,14 +43,28 @@ package com.codeazur.as3swf.data.abc.reflect
 			return classes;
 		}
 		
+		public function getClassByQualifiedName(qname:ABCQualifiedName):ABCReflectClass {
+			var result:ABCReflectClass = null;
+			
+			const classes:Vector.<ABCReflectClass> = getAllClasses();
+			
+			const total:uint = classes.length;
+			for(var i:uint=0; i<total; i++) {
+				const item:ABCReflectClass = classes[i];
+				if(item.qname.equals(qname)) {
+					result = item;
+					break;
+				}
+			}
+			
+			return result;
+		}
+		
 		private function loadABCData():void {
 			const tags:Vector.<ITag> = swf.getTagsByClassType(TagDoABC);
 			const total:uint = tags.length;
 			for(var i:uint=0; i<total; i++) {
 				const tag:TagDoABC = TagDoABC(tags[i]);
-				
-				trace(i, tag);
-				
 				const abcReader:ABCReader = new ABCReader(tag.bytes);
 				const abcData:ABCData = new ABCData();
 				abcReader.read(abcData);
