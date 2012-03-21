@@ -48,6 +48,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.PUSHINT:
 					attribute = ABCOpcodeIntegerAttribute.create(abcData);
 					break;
+				
+				case ABCOpcodeKind.PUSHSHORT:
+					attribute = ABCOpcodeShortAttribute.create(abcData);
+					break;
 					
 				case ABCOpcodeKind.LOOKUPSWITCH:
 					attribute = ABCOpcodeLookupSwitchAttribute.create(abcData);
@@ -118,21 +122,43 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.ADD:
 				case ABCOpcodeKind.ADD_D:
 				case ABCOpcodeKind.ADD_I:
+				case ABCOpcodeKind.COERCE:
+				case ABCOpcodeKind.COERCE_A:
+				case ABCOpcodeKind.COERCE_B:
+				case ABCOpcodeKind.COERCE_D:
+				case ABCOpcodeKind.COERCE_I:
+				case ABCOpcodeKind.COERCE_O:
+				case ABCOpcodeKind.COERCE_S:
+				case ABCOpcodeKind.COERCE_U:
 				case ABCOpcodeKind.CONVERT_B:
 				case ABCOpcodeKind.CONVERT_D:
 				case ABCOpcodeKind.CONVERT_I:
 				case ABCOpcodeKind.CONVERT_O:
 				case ABCOpcodeKind.CONVERT_S:
-				case ABCOpcodeKind.CONVERT_U:	
+				case ABCOpcodeKind.CONVERT_U:
+				case ABCOpcodeKind.DUP:	
+				case ABCOpcodeKind.EQUALS:	
 				case ABCOpcodeKind.GETLOCAL_0:
 				case ABCOpcodeKind.GETLOCAL_1:
 				case ABCOpcodeKind.GETLOCAL_2:
 				case ABCOpcodeKind.GETLOCAL_3:
+				case ABCOpcodeKind.GREATEREQUALS:
+				case ABCOpcodeKind.GREATERTHAN:
+				case ABCOpcodeKind.INCREMENT:
+				case ABCOpcodeKind.INCREMENT_I:
+				case ABCOpcodeKind.LABEL:
+				case ABCOpcodeKind.LESSEQUALS:
+				case ABCOpcodeKind.LESSTHAN:
+				case ABCOpcodeKind.MODULO:
+				case ABCOpcodeKind.MULTIPLY:
+				case ABCOpcodeKind.MULTIPLY_I:
 				case ABCOpcodeKind.NOP:
 				case ABCOpcodeKind.NOT:
 				case ABCOpcodeKind.POP:
 				case ABCOpcodeKind.POPSCOPE:
+				case ABCOpcodeKind.PUSHDNAN:
 				case ABCOpcodeKind.PUSHFALSE:
+				case ABCOpcodeKind.PUSHNAN:
 				case ABCOpcodeKind.PUSHNULL:
 				case ABCOpcodeKind.PUSHSCOPE:
 				case ABCOpcodeKind.PUSHTRUE:
@@ -142,6 +168,9 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.SETLOCAL_1:
 				case ABCOpcodeKind.SETLOCAL_2:
 				case ABCOpcodeKind.SETLOCAL_3:
+				case ABCOpcodeKind.SUBTRACT:
+				case ABCOpcodeKind.SUBTRACT_I:
+				case ABCOpcodeKind.THROW_OP:
 					attribute = ABCOpcodeAttribute.create(abcData);
 					break;
 				
