@@ -43,7 +43,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		}
 		
 		public static function isType(type:ABCNamespaceKind, kind:ABCNamespaceKind):Boolean {
-			 return type == kind;
+			 return type.type == kind.type;
 		}
 		
 		public function get type():uint { return _type; }
