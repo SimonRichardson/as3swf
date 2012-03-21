@@ -6,16 +6,16 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class ABCOpcodeShortAttribute extends ABCOpcodeAttribute implements IABCOpcodeIntegerAttribute {
+	public class ABCOpcodeParameterAttribute extends ABCOpcodeAttribute  implements IABCOpcodeIntegerAttribute {
 		
 		private var _integer:int;
 		
-		public function ABCOpcodeShortAttribute(abcData:ABCData) {
+		public function ABCOpcodeParameterAttribute(abcData:ABCData) {
 			super(abcData);
 		}
 		
-		public static function create(abcData:ABCData):ABCOpcodeShortAttribute {
-			return new ABCOpcodeShortAttribute(abcData);
+		public static function create(abcData:ABCData):ABCOpcodeParameterAttribute {
+			return new ABCOpcodeParameterAttribute(abcData);
 		}
 		
 		override public function read(data:SWFData):void {
@@ -23,13 +23,13 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 		}
 		
 		override public function write(bytes : SWFData) : void {
-			bytes.writeEncodedU32(uint(integer));
+			bytes.writeEncodedU32(integer);
 		}
 		
 		public function get integer():int { return _integer; }
 		
 		override public function get value():* { return _integer; }
-		override public function get name():String { return "ABCOpcodeShortAttribute"; }
+		override public function get name():String { return "ABCOpcodeParameterAttribute"; }
 		
 		override public function toString(indent : uint = 0) : String {
 			var str:String = super.toString(indent);

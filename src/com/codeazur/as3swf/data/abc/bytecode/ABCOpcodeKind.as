@@ -14,6 +14,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public static const ADD:ABCOpcodeKind = new ABCOpcodeKind(0xa0, "add");
 		public static const ADD_D:ABCOpcodeKind = new ABCOpcodeKind(0x9B, "add_d");
 		public static const ADD_I:ABCOpcodeKind = new ABCOpcodeKind(0xC5, "add_i");
+		public static const ADD_P:ABCOpcodeKind = new ABCOpcodeKind(0xb5, "add_p");
 		public static const APPLYTYPE:ABCOpcodeKind = new ABCOpcodeKind(0x53, "applytype");
 		public static const ASTYPE:ABCOpcodeKind = new ABCOpcodeKind(0x86, "astype");
 		public static const ASTYPELATE:ABCOpcodeKind = new ABCOpcodeKind(0x87, "astypelate");
@@ -62,6 +63,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public static const DELETEPROPERTY:ABCOpcodeKind = new ABCOpcodeKind(0x6a, "deleteproperty");
 		public static const DELETEPROPERTYLATE:ABCOpcodeKind = new ABCOpcodeKind(0x6B, "deletepropertylate");
 		public static const DIVIDE:ABCOpcodeKind = new ABCOpcodeKind(0xa3, "divide");
+		public static const DIVIDE_P:ABCOpcodeKind = new ABCOpcodeKind(0xb8, "divide_p");
 		public static const DUP:ABCOpcodeKind = new ABCOpcodeKind(0x2a, "dup");
 		public static const DXNS:ABCOpcodeKind = new ABCOpcodeKind(0x06, "dxns");
 		public static const DXNSLATE:ABCOpcodeKind = new ABCOpcodeKind(0x07, "dxnslate");
@@ -122,8 +124,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public static const LOOKUPSWITCH:ABCOpcodeKind = new ABCOpcodeKind(0x1b, "lookupswitch");
 		public static const LSHIFT:ABCOpcodeKind = new ABCOpcodeKind(0xa5, "lshift");
 		public static const MODULO:ABCOpcodeKind = new ABCOpcodeKind(0xa4, "modulo");
+		public static const MODULO_P:ABCOpcodeKind = new ABCOpcodeKind(0xb9, "modulo_p");
 		public static const MULTIPLY:ABCOpcodeKind = new ABCOpcodeKind(0xa2, "multiply");
 		public static const MULTIPLY_I:ABCOpcodeKind = new ABCOpcodeKind(0xC7, "multiply_i");
+		public static const MULTIPLY_P:ABCOpcodeKind = new ABCOpcodeKind(0xB7, "multiply_p");
 		public static const NEGATE:ABCOpcodeKind = new ABCOpcodeKind(0x90, "negate");
 		public static const NEGATE_I:ABCOpcodeKind = new ABCOpcodeKind(0xC4, "negate_i");
 		public static const NEWACTIVATION:ABCOpcodeKind = new ABCOpcodeKind(0x57, "newactivation");
@@ -171,6 +175,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public static const STRICTEQUALS:ABCOpcodeKind = new ABCOpcodeKind(0xac, "strictequals");
 		public static const SUBTRACT:ABCOpcodeKind = new ABCOpcodeKind(0xa1, "subtract");
 		public static const SUBTRACT_I:ABCOpcodeKind = new ABCOpcodeKind(0xC6, "subtract_i");
+		public static const SUBTRACT_P:ABCOpcodeKind = new ABCOpcodeKind(0xb6, "subtract_p");
 		public static const SWAP:ABCOpcodeKind = new ABCOpcodeKind(0x2b, "swap");
 		public static const THROW_OP:ABCOpcodeKind = new ABCOpcodeKind(0x03, "throw");
 		public static const TYPEOF_OP:ABCOpcodeKind = new ABCOpcodeKind(0x95, "typeof");

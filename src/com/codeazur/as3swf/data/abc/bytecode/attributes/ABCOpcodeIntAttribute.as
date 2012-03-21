@@ -27,6 +27,8 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 		}
 		
 		public function get integer():int { return _integer; }
+		
+		override public function get value():* { return _integer; }
 		override public function get name():String { return "ABCOpcodeIntAttribute"; }
 		
 		override public function toString(indent : uint = 0) : String {

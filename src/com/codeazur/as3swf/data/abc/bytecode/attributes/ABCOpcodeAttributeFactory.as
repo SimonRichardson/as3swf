@@ -18,7 +18,15 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.PUSHDOUBLE:
 					attribute = ABCOpcodeDoubleAttribute.create(abcData);
 					break;
-					
+				
+				case ABCOpcodeKind.ADD_P:
+				case ABCOpcodeKind.DIVIDE_P:
+				case ABCOpcodeKind.MODULO_P:
+				case ABCOpcodeKind.MULTIPLY_P:
+				case ABCOpcodeKind.SUBTRACT_P:
+					attribute = ABCOpcodeParameterAttribute.create(abcData);
+					break;
+				
 				case ABCOpcodeKind.APPLYTYPE:
 				case ABCOpcodeKind.CALL:
 				case ABCOpcodeKind.CONSTRUCT:
@@ -122,6 +130,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.ADD:
 				case ABCOpcodeKind.ADD_D:
 				case ABCOpcodeKind.ADD_I:
+				case ABCOpcodeKind.ASTYPELATE:
 				case ABCOpcodeKind.COERCE:
 				case ABCOpcodeKind.COERCE_A:
 				case ABCOpcodeKind.COERCE_B:
@@ -136,6 +145,9 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.CONVERT_O:
 				case ABCOpcodeKind.CONVERT_S:
 				case ABCOpcodeKind.CONVERT_U:
+				case ABCOpcodeKind.DECREMENT:
+				case ABCOpcodeKind.DECREMENT_I:
+				case ABCOpcodeKind.DIVIDE:
 				case ABCOpcodeKind.DUP:	
 				case ABCOpcodeKind.EQUALS:	
 				case ABCOpcodeKind.GETLOCAL_0:
@@ -146,12 +158,15 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.GREATERTHAN:
 				case ABCOpcodeKind.INCREMENT:
 				case ABCOpcodeKind.INCREMENT_I:
+				case ABCOpcodeKind.ISTYPELATE:
 				case ABCOpcodeKind.LABEL:
 				case ABCOpcodeKind.LESSEQUALS:
 				case ABCOpcodeKind.LESSTHAN:
 				case ABCOpcodeKind.MODULO:
 				case ABCOpcodeKind.MULTIPLY:
 				case ABCOpcodeKind.MULTIPLY_I:
+				case ABCOpcodeKind.NEGATE:
+				case ABCOpcodeKind.NEGATE_I:
 				case ABCOpcodeKind.NOP:
 				case ABCOpcodeKind.NOT:
 				case ABCOpcodeKind.POP:

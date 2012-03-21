@@ -39,6 +39,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			}
 		}
 		
+		override public function get value():* { return defaultOffset; }
 		override public function get name():String { return "ABCOpcodeLookupSwitchAttribute"; }
 		
 		override public function toString(indent : uint = 0) : String {

@@ -34,6 +34,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			bytes.writeEncodedU32(attributes[3]);
 		}
 		
+		override public function get value():* { return attributes; }
 		override public function get name():String { return "ABCOpcodeDebugAttribute"; }
 		
 		override public function toString(indent : uint = 0) : String {

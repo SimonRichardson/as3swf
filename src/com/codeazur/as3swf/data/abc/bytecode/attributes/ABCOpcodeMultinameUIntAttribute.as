@@ -31,9 +31,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			bytes.writeEncodedU32(numArguments);
 		}
 		
+		override public function get value():* { return multiname; }
 		override public function get name():String { return "ABCOpcodeMultinameUIntAttribute"; }
 		
-		override public function toString(indent : uint = 0) : String {
+		override public function toString(indent:uint=0):String {
 			var str:String = super.toString(indent);
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "Multiname: ";

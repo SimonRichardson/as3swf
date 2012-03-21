@@ -118,7 +118,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 							targetOpcode = jumpTargetByOpcode[targetPosition];
 							
 							if(null == targetOpcode) {
-								throw new Error("Invalid jump target");
+								throw new Error("Invalid jump target (recieved=" + jumpOpcode + ")");
 							}
 							
 							jumpTarget.targetOpcode = targetOpcode;

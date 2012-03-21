@@ -24,6 +24,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			
 		}
 		
+		public function get value():* { return null; }
 		override public function get name():String { return "ABCOpcodeAttribute"; }
 		
 		override public function toString(indent:uint=0):String {

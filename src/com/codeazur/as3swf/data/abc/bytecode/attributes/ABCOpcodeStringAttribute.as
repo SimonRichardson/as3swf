@@ -27,6 +27,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 			bytes.writeEncodedU32(getStringIndex(string));
 		}
 		
+		override public function get value():* { return string; }
 		override public function get name():String { return "ABCOpcodeStringAttribute"; }
 		
 		override public function toString(indent:uint = 0) : String {
