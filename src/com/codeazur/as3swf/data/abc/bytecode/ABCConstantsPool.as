@@ -1,6 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
+
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
@@ -10,6 +10,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameLate;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamedMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespace;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceSet;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
@@ -137,11 +138,21 @@ package com.codeazur.as3swf.data.abc.bytecode
 				data.position = scanner.getConstantStringAtIndex(sIndex++);
 				
 				const strLength:uint = data.readEncodedU32();
+				
+				// Force the reading of a string (Alchemy issue)
+				const currentPosition:int = data.position;
 				const str:String = data.readUTFBytes(strLength);
-				if (strLength != str.length) {
-					throw new Error("String length mismatch (expected=" + strLength + ", recieved=" + str.length + ")");
+				if(str.length != strLength) {
+					// Move back to the original position and attempt a forced read.
+					data.position = currentPosition;
+					
+					var buffer:String = "";
+					while(buffer.length < strLength) {
+						buffer += data.readUTFBytes(1);
+					}
 				}
-				stringPool.push(str);
+				
+				stringPool.push(buffer);
 			}
 			
 			data.position = scanner.getConstantNamespace();

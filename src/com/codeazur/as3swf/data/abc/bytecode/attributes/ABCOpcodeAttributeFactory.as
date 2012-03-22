@@ -166,6 +166,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.GETLOCAL_3:
 				case ABCOpcodeKind.GREATEREQUALS:
 				case ABCOpcodeKind.GREATERTHAN:
+				case ABCOpcodeKind.IN_OP:
 				case ABCOpcodeKind.INCREMENT:
 				case ABCOpcodeKind.INCREMENT_I:
 				case ABCOpcodeKind.ISTYPELATE:
