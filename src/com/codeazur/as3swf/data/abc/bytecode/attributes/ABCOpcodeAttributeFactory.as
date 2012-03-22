@@ -132,6 +132,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 					attribute = ABCOpcodeUnsignedIntegerAttribute.create(abcData);
 					break;
 				
+				case ABCOpcodeKind.NEWCATCH:
+					attribute = ABCOpcodeExceptionInfoAttribute.create(abcData);
+					break;
+				
 				case ABCOpcodeKind.ADD:
 				case ABCOpcodeKind.ADD_D:
 				case ABCOpcodeKind.ADD_I:
@@ -169,6 +173,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.IN_OP:
 				case ABCOpcodeKind.INCREMENT:
 				case ABCOpcodeKind.INCREMENT_I:
+				case ABCOpcodeKind.INSTANCE_OF:
 				case ABCOpcodeKind.ISTYPELATE:
 				case ABCOpcodeKind.LABEL:
 				case ABCOpcodeKind.LSHIFT:
@@ -179,6 +184,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.MULTIPLY_I:
 				case ABCOpcodeKind.NEGATE:
 				case ABCOpcodeKind.NEGATE_I:
+				case ABCOpcodeKind.NEXTNAME:
 				case ABCOpcodeKind.NEXTVALUE:
 				case ABCOpcodeKind.NEWACTIVATION:
 				case ABCOpcodeKind.NOP:
@@ -191,6 +197,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.PUSHNULL:
 				case ABCOpcodeKind.PUSHSCOPE:
 				case ABCOpcodeKind.PUSHTRUE:
+				case ABCOpcodeKind.PUSHUNDEFINED:
 				case ABCOpcodeKind.RETURNVALUE:
 				case ABCOpcodeKind.RETURNVOID:
 				case ABCOpcodeKind.RSHIFT:
@@ -201,7 +208,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.STRICTEQUALS:
 				case ABCOpcodeKind.SUBTRACT:
 				case ABCOpcodeKind.SUBTRACT_I:
+				case ABCOpcodeKind.SWAP:
 				case ABCOpcodeKind.THROW_OP:
+				case ABCOpcodeKind.TYPEOF_OP:
+				case ABCOpcodeKind.URSHIFT:
 					attribute = ABCOpcodeAttribute.create(abcData);
 					break;
 				
