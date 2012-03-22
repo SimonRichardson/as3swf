@@ -181,6 +181,21 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public static const TYPEOF_OP:ABCOpcodeKind = new ABCOpcodeKind(0x95, "typeof");
 		public static const URSHIFT:ABCOpcodeKind = new ABCOpcodeKind(0xa7, "urshift");
 		
+		// Alchemy opcodes
+		public static const SI8:ABCOpcodeKind = new ABCOpcodeKind(0x3a, "si8");
+		public static const SI16:ABCOpcodeKind = new ABCOpcodeKind(0x3b, "si16");
+		public static const SI32:ABCOpcodeKind = new ABCOpcodeKind(0x3c, "si32");
+		public static const SF32:ABCOpcodeKind = new ABCOpcodeKind(0x3d, "sf32");
+		public static const SF64:ABCOpcodeKind = new ABCOpcodeKind(0x3e, "sf64");
+		public static const LI8:ABCOpcodeKind = new ABCOpcodeKind(0x35, "li8");
+		public static const LI16:ABCOpcodeKind = new ABCOpcodeKind(0x36, "li16");
+		public static const LI32:ABCOpcodeKind = new ABCOpcodeKind(0x37, "li32");
+		public static const LF32:ABCOpcodeKind = new ABCOpcodeKind(0x38, "lf32");
+		public static const LF64:ABCOpcodeKind = new ABCOpcodeKind(0x39, "lf64");
+		public static const SXI1:ABCOpcodeKind = new ABCOpcodeKind(0x50, "sxi1");
+		public static const SXI8:ABCOpcodeKind = new ABCOpcodeKind(0x51, "sxi8");
+		public static const SXI16:ABCOpcodeKind = new ABCOpcodeKind(0x52, "sxi16");
+		
 		private var _type:uint;
 		private var _name:String;
 		

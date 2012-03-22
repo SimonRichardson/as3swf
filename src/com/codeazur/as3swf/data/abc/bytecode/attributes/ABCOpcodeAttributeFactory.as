@@ -205,6 +205,23 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 					attribute = ABCOpcodeAttribute.create(abcData);
 					break;
 				
+				// Alchemy opcodes
+				case ABCOpcodeKind.SI8:
+				case ABCOpcodeKind.SI16:
+				case ABCOpcodeKind.SI32:
+				case ABCOpcodeKind.SF32:
+				case ABCOpcodeKind.SF64:
+				case ABCOpcodeKind.LI8:
+				case ABCOpcodeKind.LI16:
+				case ABCOpcodeKind.LI32:
+				case ABCOpcodeKind.LF32:
+				case ABCOpcodeKind.LF64:
+				case ABCOpcodeKind.SXI1:
+				case ABCOpcodeKind.SXI8:
+				case ABCOpcodeKind.SXI16:
+					attribute = ABCOpcodeAlchemyAttribute.create(abcData);
+					break;
+				
 				default:
 					throw new Error('Invalid opcode kind (recieved=' + kind + ')');
 					break;
