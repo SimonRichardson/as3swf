@@ -134,6 +134,7 @@ package com.codeazur.as3swf
 						if(index > 0) {
 							tags.splice(tagIndex, 1);
 						}
+						trace(">>>>", tag);
 						// Read the abc data via the reader
 						const abcReader:ABCReader = new ABCReader(tag.bytes);
 						const abcData:ABCData = new ABCData();

@@ -46,6 +46,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				opcodeStartPosition = data.position;
 				
 				const opcodeKind:uint = data.readUI8();
+				trace(">>", opcodeKind);
 				const opcode:ABCOpcode = ABCOpcodeFactory.create(abcData, opcodeKind);
 				opcode.read(data);
 				

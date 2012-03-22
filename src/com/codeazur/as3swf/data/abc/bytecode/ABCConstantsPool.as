@@ -139,7 +139,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const strLength:uint = data.readEncodedU32();
 				const str:String = data.readUTFBytes(strLength);
 				if (strLength != str.length) {
-					throw new Error("String length mismatch (expected=" + strLength + ", recieved=" + str.length + ")");	
+					throw new Error("String length mismatch (expected=" + strLength + ", recieved=" + str.length + ")");
 				}
 				stringPool.push(str);
 			}

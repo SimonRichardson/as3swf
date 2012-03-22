@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode.attributes
 {
+
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	/**
@@ -55,6 +56,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.BKPTLINE:
 				case ABCOpcodeKind.PUSHINT:
 					attribute = ABCOpcodeIntegerAttribute.create(abcData);
+					break;
+				
+				case ABCOpcodeKind.HASNEXT2:
+					attribute = ABCOpcodeHasNext2Attribute.create(abcData);
 					break;
 				
 				case ABCOpcodeKind.PUSHSHORT:
@@ -131,6 +136,10 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.ADD_D:
 				case ABCOpcodeKind.ADD_I:
 				case ABCOpcodeKind.ASTYPELATE:
+				case ABCOpcodeKind.BITAND:
+				case ABCOpcodeKind.BITNOT:
+				case ABCOpcodeKind.BITOR:
+				case ABCOpcodeKind.BITXOR:
 				case ABCOpcodeKind.COERCE:
 				case ABCOpcodeKind.COERCE_A:
 				case ABCOpcodeKind.COERCE_B:
@@ -150,6 +159,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.DIVIDE:
 				case ABCOpcodeKind.DUP:	
 				case ABCOpcodeKind.EQUALS:	
+				case ABCOpcodeKind.GETGLOBALSCOPE:
 				case ABCOpcodeKind.GETLOCAL_0:
 				case ABCOpcodeKind.GETLOCAL_1:
 				case ABCOpcodeKind.GETLOCAL_2:
@@ -160,6 +170,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.INCREMENT_I:
 				case ABCOpcodeKind.ISTYPELATE:
 				case ABCOpcodeKind.LABEL:
+				case ABCOpcodeKind.LSHIFT:
 				case ABCOpcodeKind.LESSEQUALS:
 				case ABCOpcodeKind.LESSTHAN:
 				case ABCOpcodeKind.MODULO:
@@ -167,6 +178,8 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.MULTIPLY_I:
 				case ABCOpcodeKind.NEGATE:
 				case ABCOpcodeKind.NEGATE_I:
+				case ABCOpcodeKind.NEXTVALUE:
+				case ABCOpcodeKind.NEWACTIVATION:
 				case ABCOpcodeKind.NOP:
 				case ABCOpcodeKind.NOT:
 				case ABCOpcodeKind.POP:
@@ -179,10 +192,12 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.PUSHTRUE:
 				case ABCOpcodeKind.RETURNVALUE:
 				case ABCOpcodeKind.RETURNVOID:
+				case ABCOpcodeKind.RSHIFT:
 				case ABCOpcodeKind.SETLOCAL_0:
 				case ABCOpcodeKind.SETLOCAL_1:
 				case ABCOpcodeKind.SETLOCAL_2:
 				case ABCOpcodeKind.SETLOCAL_3:
+				case ABCOpcodeKind.STRICTEQUALS:
 				case ABCOpcodeKind.SUBTRACT:
 				case ABCOpcodeKind.SUBTRACT_I:
 				case ABCOpcodeKind.THROW_OP:

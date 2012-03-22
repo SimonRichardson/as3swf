@@ -24,7 +24,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 		override public function read(data:SWFData):void {
 			defaultOffset = data.readSI24();
 			
-			const total:uint = data.readEncodedU30();
+			const total:uint = data.readEncodedU30() + 1;
 			for(var i:uint=0; i<total; i++) {
 				offsets.push(data.readSI24());
 			}
