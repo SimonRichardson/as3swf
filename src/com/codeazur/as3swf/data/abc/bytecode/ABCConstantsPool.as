@@ -494,6 +494,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function getMultinameIndex(multiname:IABCMultiname):int {
+			if(!multiname) {
+				throw new ArgumentError('Multiname can not be null');
+			}
+			
 			var index:int = -1;
 			var contains:Boolean = false;
 			

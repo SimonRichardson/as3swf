@@ -19,6 +19,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public static function create(qname:IABCMultiname, label:String = "", defaultValue:* = null):ABCParameter {
+			if(!qname) {
+				throw new ArgumentError('Multiname can not be null');
+			}
+			
 			const argument:ABCParameter = new ABCParameter();
 			argument.qname = qname;
 			argument.label = label;
