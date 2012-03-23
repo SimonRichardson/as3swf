@@ -25,6 +25,8 @@ package com.codeazur.as3swf.data.abc.io
 		private var _constantMultiname:uint;
 		private var _constantMultinamePool:Vector.<uint>;
 		
+		private var _constantEndPosition:uint;
+		
 		private var _methodInfo:uint;
 		private var _methodInfos:Vector.<uint>;
 		private var _methodInfosName:Vector.<uint>;
@@ -48,6 +50,8 @@ package com.codeazur.as3swf.data.abc.io
 		private var _methodBodyInfos:Vector.<uint>;
 		private var _methodBodyTraitInfo:Vector.<Vector.<uint>>;
 		
+		private var _length:uint;
+		
 		public function ABCScanner() {
 			_instanceTraitInfo = new Vector.<Vector.<uint>>();
 			_classTraitInfo = new Vector.<Vector.<uint>>();
@@ -70,6 +74,8 @@ package com.codeazur.as3swf.data.abc.io
 			scanNamespaceSetConstants(input);
 			scanMultinameConstants(input);
 			
+			_constantEndPosition = input.position;
+			
 			scanMethods(input);
 			scanMetadata(input);
 			
@@ -79,8 +85,12 @@ package com.codeazur.as3swf.data.abc.io
 			scanScripts(input);
 			scanMethodBodies(input);
 			
+			_length = input.position;
+			
 			input.position = position;
 		}
+		
+		public function get length():uint { return _length; }
 		
 		public function get minorVersion():uint { return _minorVersion; }
 		public function get majorVersion():uint { return _majorVersion; }
@@ -126,6 +136,10 @@ package com.codeazur.as3swf.data.abc.io
 
 		public function getConstantMultinameAtIndex(index:uint):uint {
 			return _constantMultinamePool[index];
+		}
+		
+		public function getConstantEndPosition():uint {
+			return _constantEndPosition;
 		}
 		
 		// method info

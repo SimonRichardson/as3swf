@@ -259,6 +259,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 				multiname.byte = multinameByte;
 				multinamePool.push(multiname);
 			}
+			
+			if(data.position != scanner.getConstantEndPosition()) {
+				throw new Error('Invalid pool length (expected:' + scanner.getConstantEndPosition() + ', recieved:' + data.position + ')');
+			}
 		}
 		
 		public function write(bytes:SWFData):void {

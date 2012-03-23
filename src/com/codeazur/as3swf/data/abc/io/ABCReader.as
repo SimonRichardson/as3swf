@@ -34,7 +34,7 @@ package com.codeazur.as3swf.data.abc.io
 			abcData.majorVersion = _bytes.readUI16();
 						
 			abcData.constantPool.read(_bytes, scanner);
-			
+						
 			abcData.methodInfoSet.read(_bytes, scanner);
 			abcData.metadataSet.read(_bytes, scanner);
 			
@@ -42,6 +42,11 @@ package com.codeazur.as3swf.data.abc.io
 			abcData.classInfoSet.read(_bytes, scanner);
 			abcData.scriptInfoSet.read(_bytes, scanner);
 			abcData.methodBodySet.read(_bytes, scanner);
+			
+			// Check the length at the end to confirm the length
+			if(_bytes.length != scanner.length) {
+				throw new Error('Length mismatch (expected:' + scanner.length + ', recieved:' + _bytes.length + ')');
+			}
 		}
 		
 		public function get scanner():ABCScanner {
