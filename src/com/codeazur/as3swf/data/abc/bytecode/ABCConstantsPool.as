@@ -512,7 +512,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 							const qname1:ABCQualifiedName = multiname.toQualifiedName();
 							if(qname0 == qname1) {
 								return i;
-							} else if(qname0.label == qname1.label && ABCNamespaceKind.isType(qname0.ns.kind, qname1.ns.kind)) {
+							} else if(qname0.label == qname1.label && ((qname0.ns && qname1.ns) && ABCNamespaceKind.isType(qname0.ns.kind, qname1.ns.kind))) {
 								return i;
 							}
 							break;

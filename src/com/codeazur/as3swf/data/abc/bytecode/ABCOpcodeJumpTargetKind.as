@@ -33,7 +33,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public static function isKind(opcode:ABCOpcode):Boolean {
-			trace(opcode.kind);
 			return (null != _types[opcode.kind]);
 		}
 		

@@ -46,7 +46,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			const qname:ABCQualifiedName = new ABCQualifiedName();
 			qname.label = label;
 			qname.kind = kind;
-			qname.ns = ns.clone();
+			qname.ns = ns ? ns.clone() : null;
 			qname.byte = byte;
 			return qname; 
 		}

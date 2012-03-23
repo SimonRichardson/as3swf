@@ -144,6 +144,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.BITNOT:
 				case ABCOpcodeKind.BITOR:
 				case ABCOpcodeKind.BITXOR:
+				case ABCOpcodeKind.CHECKFILTER:
 				case ABCOpcodeKind.COERCE:
 				case ABCOpcodeKind.COERCE_A:
 				case ABCOpcodeKind.COERCE_B:
@@ -198,6 +199,7 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.PUSHSCOPE:
 				case ABCOpcodeKind.PUSHTRUE:
 				case ABCOpcodeKind.PUSHUNDEFINED:
+				case ABCOpcodeKind.PUSHWITH:
 				case ABCOpcodeKind.RETURNVALUE:
 				case ABCOpcodeKind.RETURNVOID:
 				case ABCOpcodeKind.RSHIFT:

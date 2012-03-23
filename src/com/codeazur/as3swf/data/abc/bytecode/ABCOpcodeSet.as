@@ -14,6 +14,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var opcodes:Vector.<ABCOpcode>;
 		public var jumpTargets:Vector.<ABCOpcodeJumpTarget>;
 		
+		public var autoBuildJumpTargets:Boolean;
+		
 		private var _jumpPositions:Vector.<ABCOpcodeJumpTargetPosition>;
 		private var _hasAlchemyOpcodes:Boolean; 
 				
@@ -22,6 +24,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			opcodes = new Vector.<ABCOpcode>();
 			jumpTargets = new Vector.<ABCOpcodeJumpTarget>();
+			
+			autoBuildJumpTargets = false;
 			
 			_jumpPositions = new Vector.<ABCOpcodeJumpTargetPosition>();
 			
@@ -69,39 +73,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 					dataPositionOffset = finish;
 				}
 				
-				const jumpTargetsTotal:uint = jumpTargets.length;
-				if(jumpTargetsTotal > 0) {
-					for(var i:uint=0; i<jumpTargetsTotal; i++) {
-						const jumpTarget:ABCOpcodeJumpTarget = jumpTargets[i];
-						const jumpOpcode:ABCOpcode = jumpTarget.opcode;
-						const jumpAttribute:ABCOpcodeAttribute = jumpOpcode.attribute;
-						
-						if(ABCOpcodeJumpTargetKind.isType(jumpTarget, ABCOpcodeKind.LOOKUPSWITCH)) {
-							
-						} else {
-							if(jumpAttribute is IABCOpcodeIntegerAttribute) {
-								const attribute:IABCOpcodeIntegerAttribute = IABCOpcodeIntegerAttribute(jumpAttribute);
-								
-								const opcodeTarget:ABCOpcodeJumpTargetPosition = getJumpTargetPosition(jumpOpcode);
-								if(opcodeTarget) {
-									
-									const jumpToPosition:uint = opcodeTarget.finish + attribute.integer;
-									const jumpToTarget:ABCOpcodeJumpTargetPosition = getJumpToTarget(jumpToPosition);
-									
-									if(jumpToTarget && jumpToTarget.opcode) {
-										jumpTarget.targetOpcode = jumpToTarget.opcode;
-									} else {
-										throw new Error('No such opcode target');
-									}
-									
-								} else {
-									throw new Error('No such opcode');
-								}
-							} else {
-								throw new Error('Invalid opcode attribute (recieved:' + jumpAttribute + ')');
-							}
-						}
-					}
+				if(autoBuildJumpTargets) {
+					buildJumpTargets();
 				}
 			}
 		}
@@ -123,6 +96,43 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function getAt(index:uint):ABCOpcode {
 			return opcodes[index];
+		}
+		
+		public function buildJumpTargets():void {
+			const jumpTargetsTotal:uint = jumpTargets.length;
+			if(jumpTargetsTotal > 0) {
+				for(var i:uint=0; i<jumpTargetsTotal; i++) {
+					const jumpTarget:ABCOpcodeJumpTarget = jumpTargets[i];
+					const jumpOpcode:ABCOpcode = jumpTarget.opcode;
+					const jumpAttribute:ABCOpcodeAttribute = jumpOpcode.attribute;
+					
+					if(ABCOpcodeJumpTargetKind.isType(jumpTarget, ABCOpcodeKind.LOOKUPSWITCH)) {
+						
+					} else {
+						if(jumpAttribute is IABCOpcodeIntegerAttribute) {
+							const attribute:IABCOpcodeIntegerAttribute = IABCOpcodeIntegerAttribute(jumpAttribute);
+							
+							const opcodeTarget:ABCOpcodeJumpTargetPosition = getJumpTargetPosition(jumpOpcode);
+							if(opcodeTarget) {
+								
+								const jumpToPosition:uint = opcodeTarget.finish + attribute.integer;
+								const jumpToTarget:ABCOpcodeJumpTargetPosition = getJumpToTarget(jumpToPosition);
+								
+								if(jumpToTarget && jumpToTarget.opcode) {
+									jumpTarget.targetOpcode = jumpToTarget.opcode;
+								} else {
+									throw new Error('No such opcode target');
+								}
+								
+							} else {
+								throw new Error('No such opcode');
+							}
+						} else {
+							throw new Error('Invalid opcode attribute (recieved:' + jumpAttribute + ')');
+						}
+					}
+				}
+			}
 		}
 		
 		public function isJumpPoint(opcode:ABCOpcode):Boolean {
