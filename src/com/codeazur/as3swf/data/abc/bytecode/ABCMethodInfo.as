@@ -143,12 +143,17 @@ package com.codeazur.as3swf.data.abc.bytecode
 				}
 			}
 			
+			
 			for(var l:uint=0; l<paramTotal; l++) {
-				const paramNameIndex:uint = data.readEncodedU30();
-				const paramName:String = getStringByIndex(paramNameIndex);
 				const nameParam:ABCParameter = parameters[l];
 				
-				nameParam.label = (hasParamNames) ? paramName : "";
+				if(hasParamNames) {
+					const paramNameIndex:uint = data.readEncodedU30();
+					const paramName:String = getStringByIndex(paramNameIndex);
+					nameParam.label = paramName;
+				} else {
+					nameParam.label = "";
+				}
 			}
 			
 			if(isValidMethodName && !StringUtils.isEmpty(methodNameLabel)){

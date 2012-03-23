@@ -32,9 +32,9 @@ package com.codeazur.as3swf.data.abc.io
 			
 			_bytes.position = scanner.majorVersion;
 			abcData.majorVersion = _bytes.readUI16();
-						
+					
 			abcData.constantPool.read(_bytes, scanner);
-						
+			
 			abcData.methodInfoSet.read(_bytes, scanner);
 			abcData.metadataSet.read(_bytes, scanner);
 			

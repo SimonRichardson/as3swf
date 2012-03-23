@@ -261,7 +261,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			
 			if(data.position != scanner.getConstantEndPosition()) {
-				throw new Error('Invalid pool length (expected:' + scanner.getConstantEndPosition() + ', recieved:' + data.position + ')');
+				throw new Error('Invalid ConstantsPool length (expected:' + scanner.getConstantEndPosition() + ', recieved:' + data.position + ')');
 			}
 		}
 		
