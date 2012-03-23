@@ -13,6 +13,10 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		public function ABCQualifiedName() {}
 
 		public static function create(label:String, ns:ABCNamespace, kind:int = -1):ABCQualifiedName {
+			if(ns == null) {
+				throw new ArgumentError('Namespace can not be null');
+			}
+			
 			const qname : ABCQualifiedName = new ABCQualifiedName();
 			qname.label = label;
 			qname.ns = ns;
