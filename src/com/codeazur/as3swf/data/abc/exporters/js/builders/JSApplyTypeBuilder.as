@@ -59,9 +59,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 							if(nestedBlock.right is JSMultinameArgumentBuilder) {
 								
 								const multinameArgument:JSMultinameArgumentBuilder = JSMultinameArgumentBuilder(nestedBlock.right);
-								if(multinameArgument.argument.qname) {
+								if(multinameArgument.argument.multiname) {
 									
-									const qname:IABCMultiname = multinameArgument.argument.qname;
+									const qname:IABCMultiname = multinameArgument.argument.multiname;
 									if(ABCMultinameBuiltin.isBuiltin(qname) && ABCMultinameBuiltin.isType(qname, ABCMultinameBuiltin.VECTOR)) {
 										
 										result = true;

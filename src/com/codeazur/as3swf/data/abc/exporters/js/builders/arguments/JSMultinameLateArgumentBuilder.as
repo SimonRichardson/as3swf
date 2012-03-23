@@ -45,7 +45,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 			_argument = value;
 			
 			_value.value = _argument.defaultValue;
-			_value.qname = _argument.qname;
+			_value.qname = _argument.multiname;
 		}
 		
 		public function get name():String { return "JSMultinameLateArgumentBuilder"; }

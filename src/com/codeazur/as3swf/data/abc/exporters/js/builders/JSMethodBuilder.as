@@ -36,7 +36,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 		}
 		
 		public function write(data:ByteArray):void {
-			const qname:ABCQualifiedName = methodInfo.qname;
+			const qname:ABCQualifiedName = methodInfo.multiname.toQualifiedName();
 			const methodBuilder:IABCMethodNameBuilder = JSMethodNameBuilder.create(qname);
 			methodBuilder.write(data);
 			

@@ -27,7 +27,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 		
 		public static function create(data:ABCData, qname:IABCMultiname, kind:uint, kindType:ABCTraitInfoKind, isStatic:Boolean = false):ABCTraitSlotInfo {
 			const slot:ABCTraitSlotInfo = new ABCTraitSlotInfo(data);
-			slot.qname = qname;
+			slot.multiname = qname;
 			slot.kind = kind;
 			slot.kindType = kindType;
 			slot.isStatic = isStatic;

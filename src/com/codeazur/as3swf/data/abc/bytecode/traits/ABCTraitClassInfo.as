@@ -23,7 +23,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 		
 		public static function create(data:ABCData, qname:IABCMultiname, kind:uint, kindType:ABCTraitInfoKind):ABCTraitClassInfo {
 			const classInfo:ABCTraitClassInfo = new ABCTraitClassInfo(data);
-			classInfo.qname = qname;
+			classInfo.multiname = qname;
 			classInfo.kind = kind;
 			classInfo.kindType = kindType;
 			return classInfo;

@@ -24,7 +24,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 		
 		public static function create(data:ABCData, qname:IABCMultiname, kind:uint, kindType:ABCTraitInfoKind, isStatic:Boolean = false):ABCTraitMethodInfo {
 			const trait:ABCTraitMethodInfo = new ABCTraitMethodInfo(data);
-			trait.qname = qname;
+			trait.multiname = qname;
 			trait.kind = kind;
 			trait.kindType = kindType;
 			trait.isStatic = isStatic;
@@ -34,13 +34,17 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 		override public function read(data:SWFData, scanner:ABCScanner) : void {
 			id = data.readEncodedU30();
 			
-			const qualifiedName:ABCQualifiedName = qname.toQualifiedName();
-			
 			const index:uint = data.readEncodedU30();
 			methodInfo = getMethodInfoByIndex(index);
-			methodInfo.qname = qualifiedName;
-			methodInfo.methodNameLabel = qualifiedName.fullName;
-			methodInfo.isValidMethodName = true;
+			methodInfo.multiname = multiname;
+			
+			const qname:ABCQualifiedName = multiname.toQualifiedName();
+			if(qname) {
+				methodInfo.methodNameLabel = qname.fullName;
+				methodInfo.isValidMethodName = true;
+			} else {
+				methodInfo.isValidMethodName = false;
+			}
 			
 			super.read(data, scanner);
 		}

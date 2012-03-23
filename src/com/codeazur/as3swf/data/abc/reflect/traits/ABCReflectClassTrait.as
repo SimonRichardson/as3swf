@@ -14,7 +14,7 @@ package com.codeazur.as3swf.data.abc.reflect.traits
 		}
 		
 		public static function create(trait:ABCTraitClassInfo):ABCReflectClassTrait {
-			const instance:ABCReflectClassTrait = new ABCReflectClassTrait(trait.qname);
+			const instance:ABCReflectClassTrait = new ABCReflectClassTrait(trait.multiname);
 			return instance;
 		}
 		

@@ -44,7 +44,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.parameters
 					const parameter:ABCParameter = parameters[i];
 					if(parameter.optional) {
 						const parameterName:String = parameter.label;
-						const parameterQName:ABCQualifiedName = parameter.qname.toQualifiedName();
+						const parameterQName:ABCQualifiedName = parameter.multiname.toQualifiedName();
 						const parameterDefaultValue:* = parameter.defaultValue;
 						
 						JSReservedKind.VAR.write(data);

@@ -39,7 +39,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 						const slotTrait:ABCTraitSlotInfo = ABCTraitSlotInfo(trait);
 						if(slotTrait.isStatic) {
 							
-							const traitQName:ABCQualifiedName = slotTrait.qname.toQualifiedName();
+							const traitQName:ABCQualifiedName = slotTrait.multiname.toQualifiedName();
 							if(null != traitQName) {
 								
 								data.writeUTF(traitQName.label);

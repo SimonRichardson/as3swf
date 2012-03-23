@@ -23,7 +23,7 @@ package com.codeazur.as3swf.data.abc
 		protected function getIntegerIndex(integer:uint):int {
 			const index:int = abcData.constantPool.getIntegerIndex(integer);
 			if(index < 0) {
-				throw new Error('Range Error');
+				throw new Error('Range Error (recieved:' + integer + ')');
 			}
 			return index;
 		}	
@@ -35,7 +35,7 @@ package com.codeazur.as3swf.data.abc
 		protected function getUnsignedIntegerIndex(unsignedInteger:uint):int {
 			const index:int = abcData.constantPool.getUnsignedIntegerIndex(unsignedInteger);
 			if(index < 0) {
-				throw new Error('Range Error');
+				throw new Error('Range Error (recieved:' + unsignedInteger + ')');
 			}
 			return index;
 		}	
@@ -47,7 +47,7 @@ package com.codeazur.as3swf.data.abc
 		protected function getDoubleIndex(double:Number):int {
 			const index:int = abcData.constantPool.getDoubleIndex(double);
 			if(index < 0) {
-				throw new Error('Range Error');
+				throw new Error('Range Error (recieved:' + double + ')');
 			}
 			return index;
 		}	
@@ -63,7 +63,7 @@ package com.codeazur.as3swf.data.abc
 		protected function getStringIndex(string:String):int {
 			const index:int = abcData.constantPool.getStringIndex(string);
 			if(index < 0) {
-				throw new Error('Range Error');
+				throw new Error('Range Error (recieved:' + string + ')');
 			}
 			return index;
 		}

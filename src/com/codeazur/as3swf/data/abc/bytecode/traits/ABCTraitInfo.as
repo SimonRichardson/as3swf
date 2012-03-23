@@ -12,7 +12,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 	 */
 	public class ABCTraitInfo extends ABCSet {
 		
-		public var qname:IABCMultiname;
+		public var multiname:IABCMultiname;
 		
 		public var kind:uint;
 		public var kindType:ABCTraitInfoKind;
@@ -63,7 +63,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 			var str:String = super.toString(indent);
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "QName: ";
-			str += "\n" + qname.toString(indent + 4);
+			str += "\n" + multiname.toString(indent + 4);
 			str += "\n" + StringUtils.repeat(indent + 2) + "Kind: ";
 			str += "\n" + kindType.toString(indent + 4);
 			

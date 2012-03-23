@@ -1,10 +1,8 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
 	import com.codeazur.utils.StringUtils;
 	/**
@@ -12,7 +10,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	 */
 	public class ABCMethodInfo extends ABCSet {
 
-		public var qname:ABCQualifiedName;
+		public var multiname:IABCMultiname;
 		public var methodName:String;
 		public var methodNameLabel:String;
 		public var methodIndex:uint;
@@ -61,9 +59,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			for(var j:uint=0; j<paramTotal; j++) {
 				const paramIndex:uint = data.readEncodedU30();
 				const paramMName:IABCMultiname = getMultinameByIndex(paramIndex);
-				const paramQName:IABCMultiname = paramMName.toQualifiedName();
 				
-				parameters.push(ABCParameter.create(paramQName));
+				parameters.push(ABCParameter.create(paramMName));
 			}
 			
 			const methodNamePosition:uint = scanner.getMethodInfoNameAtIndex(methodIndex);
@@ -177,13 +174,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 			bytes.writeEncodedU32(getMultinameIndex(returnType));
 			
 			for(var i:uint=0; i<paramTotal; i++) {
-				bytes.writeEncodedU32(getMultinameIndex(parameters[i].qname));
+				bytes.writeEncodedU32(getMultinameIndex(parameters[i].multiname));
 			}
 			
 			bytes.writeEncodedU32(getStringIndex(methodName));
 			bytes.writeUI8(flags);
 			
 			if(hasOptional) {
+				trace("Optional" + multiname);
 				bytes.writeEncodedU32(optionalTotal);
 				for(var k:uint=0; k<optionalTotal; k++) {
 					

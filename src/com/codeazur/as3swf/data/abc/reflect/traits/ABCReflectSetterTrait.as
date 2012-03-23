@@ -13,7 +13,7 @@ package com.codeazur.as3swf.data.abc.reflect.traits
 		}
 		
 		public static function create(trait:ABCTraitMethodInfo):ABCReflectSetterTrait {
-			const instance:ABCReflectSetterTrait = new ABCReflectSetterTrait(trait.qname);
+			const instance:ABCReflectSetterTrait = new ABCReflectSetterTrait(trait.multiname);
 			return instance;
 		}
 		

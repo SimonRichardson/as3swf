@@ -24,7 +24,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 		
 		public static function create(data:ABCData, qname:IABCMultiname, kind:uint, kindType:ABCTraitInfoKind, isStatic:Boolean = false):ABCTraitFunctionInfo {
 			const trait:ABCTraitFunctionInfo = new ABCTraitFunctionInfo(data);
-			trait.qname = qname;
+			trait.multiname = qname;
 			trait.kind = kind;
 			trait.kindType = kindType;
 			trait.isStatic = isStatic;
@@ -36,7 +36,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 			
 			const index:uint = data.readEncodedU30();
 			methodInfo = getMethodInfoByIndex(index);
-			methodInfo.methodNameLabel = ABCQualifiedName(qname).label;
+			methodInfo.methodNameLabel = ABCQualifiedName(multiname).label;
 			
 			super.read(data, scanner);
 		}

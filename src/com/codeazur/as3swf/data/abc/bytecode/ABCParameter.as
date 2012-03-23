@@ -7,7 +7,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	 */
 	public class ABCParameter {
 
-		public var qname:IABCMultiname;
+		public var multiname:IABCMultiname;
 		public var optional:Boolean;
 		public var optionalKind:ABCConstantKind;
 
@@ -18,13 +18,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 			optional = false;
 		}
 		
-		public static function create(qname:IABCMultiname, label:String = "", defaultValue:* = null):ABCParameter {
-			if(!qname) {
+		public static function create(mutliname:IABCMultiname, label:String = "", defaultValue:* = null):ABCParameter {
+			if(!mutliname) {
 				throw new ArgumentError('Multiname can not be null');
 			}
 			
 			const argument:ABCParameter = new ABCParameter();
-			argument.qname = qname;
+			argument.multiname = mutliname;
 			argument.label = label;
 			argument.defaultValue = defaultValue;
 			return argument;
@@ -32,7 +32,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function clone():ABCParameter {
 			const parameter:ABCParameter = new ABCParameter();
-			parameter.qname = qname;
+			parameter.multiname = multiname;
 			parameter.optional = optional;
 			parameter.optionalKind = optionalKind;
 			parameter.label = parameter.label;
@@ -50,9 +50,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 				str += "Label: " + label + "";
 			}
 			
-			if(qname) {
-				str += "\n" + StringUtils.repeat(indent + 2) + "QName: ";
-				str += "\n" + qname.toString(indent + 4);
+			if(multiname) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Mutliname: ";
+				str += "\n" + multiname.toString(indent + 4);
 			}
 			
 			if(optional) {

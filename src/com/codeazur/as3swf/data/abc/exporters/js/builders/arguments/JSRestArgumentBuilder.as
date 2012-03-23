@@ -38,7 +38,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders.arguments
 		}
 		
 		public function write(data:ByteArray):void {
-			data.writeUTF(argument.qname.fullName);
+			data.writeUTF(argument.multiname.fullName);
 			JSTokenKind.LEFT_PARENTHESES.write(data);
 			data.writeUTF(argument.label);
 			

@@ -408,7 +408,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 				if(ABCTraitInfoKind.isType(trait.kind, ABCTraitInfoKind.CONST)) {
 					const constTrait:ABCTraitConstInfo = ABCTraitConstInfo(trait);
 					
-					const qname:ABCQualifiedName = trait.qname.toQualifiedName();
+					const qname:ABCQualifiedName = trait.multiname.toQualifiedName();
 					if(qname) {
 						
 						var variable:IABCVariableBuilder;
@@ -486,7 +486,7 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			const total:uint = _arguments.length;
 			for(var i:uint=0; i<total; i++) {
 				const abcParameter:ABCParameter = _arguments[i];
-				if(abcParameter.qname.fullName == local.variable.fullName) {
+				if(abcParameter.multiname.fullName == local.variable.fullName) {
 					exists = true;
 					break;
 				}

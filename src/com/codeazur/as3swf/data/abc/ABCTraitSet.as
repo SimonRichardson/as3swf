@@ -45,7 +45,7 @@ package com.codeazur.as3swf.data.abc
 			for(var i:uint=0; i<total; i++) {
 				const trait:ABCTraitInfo = traits[i];
 				
-				bytes.writeEncodedU32(getMultinameIndex(trait.qname));
+				bytes.writeEncodedU32(getMultinameIndex(trait.multiname));
 				bytes.writeUI8(trait.kind);
 				
 				trait.write(bytes);
