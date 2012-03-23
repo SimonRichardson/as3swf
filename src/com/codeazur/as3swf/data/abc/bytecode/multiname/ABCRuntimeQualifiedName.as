@@ -9,8 +9,8 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		
 		public function ABCRuntimeQualifiedName() {}
 
-		public static function create(name:String, kind:int = -1):ABCQualifiedName {
-			const qname : ABCQualifiedName = new ABCQualifiedName();
+		public static function create(name:String, kind:int = -1):ABCRuntimeQualifiedName {
+			const qname : ABCRuntimeQualifiedName = new ABCRuntimeQualifiedName();
 			qname.label = name;
 			qname.kind = kind < 0? ABCMultinameKind.RUNTIME_QNAME : ABCMultinameKind.getType(kind);
 			return qname;
