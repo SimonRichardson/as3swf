@@ -130,17 +130,20 @@ package com.codeazur.as3swf
 					const tag:TagDoABC = TagDoABC(doABCTags[index]);
 					const tagIndex:int = tags.indexOf(tag);
 					if(tagIndex > -1) {
-						// We want the first TagDoABC
-						if(index > 0) {
-							tags.splice(tagIndex, 1);
-						}
 						trace(">>>>", tag);
 						// Read the abc data via the reader
 						const abcReader:ABCReader = new ABCReader(tag.bytes);
 						const abcData:ABCData = new ABCData();
 						abcReader.read(abcData);
-						// Add it to the stack
-						abcFiles.add(abcData);
+						// We don't want to mess about with alchemy, so don't merge
+						if(!abcData.methodBodySet.hasAlchemyOpcodes) {
+							// We want the first TagDoABC
+							if(index > 0) {
+								tags.splice(tagIndex, 1);
+							}
+							// Add it to the stack
+							abcFiles.add(abcData);
+						}
 					} else {
 						throw new Error("Invalid TagDoABC index");
 					}

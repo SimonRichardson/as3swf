@@ -274,6 +274,32 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 			return result;
 		}
+		
+		public static function isAlchemyOpcode(kind:ABCOpcodeKind):Boolean {
+			var result:Boolean;
+			switch(kind) {
+				case SI8:
+				case SI16:
+				case SI32:
+				case SF32:
+				case SF64:
+				case LI8:
+				case LI16:
+				case LI32:
+				case LF32:
+				case LF64:
+				case SXI1:
+				case SXI8:
+				case SXI16:
+					result = true;
+					break;
+					
+				default:
+					result = false;
+					break;
+			}
+			return result;
+		}
 				
 		public function get type():uint { return _type; }
 		public function get name():String { return "ABCOpcodeKind"; }

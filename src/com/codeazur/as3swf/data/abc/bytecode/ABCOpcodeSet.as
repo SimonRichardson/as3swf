@@ -1,9 +1,9 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAlchemyAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeLookupSwitchAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeIntegerAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.utils.getClassFromInstance;
@@ -17,12 +17,16 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public var opcodes:Vector.<ABCOpcode>;
 		public var jumpTargets:Vector.<ABCOpcodeJumpTarget>;
+		
+		private var _hasAlchemyOpcodes:Boolean; 
 				
 		public function ABCOpcodeSet(abcData:ABCData) {
 			super(abcData);
 			
 			opcodes = new Vector.<ABCOpcode>();
 			jumpTargets = new Vector.<ABCOpcodeJumpTarget>();
+			
+			_hasAlchemyOpcodes = false;
 		}
 		
 		public static function create(abcData:ABCData):ABCOpcodeSet {
@@ -49,6 +53,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 				trace(">>", opcodeKind);
 				const opcode:ABCOpcode = ABCOpcodeFactory.create(abcData, opcodeKind);
 				opcode.read(data);
+				
+				if(opcode.alchemyOpcode) {
+					_hasAlchemyOpcodes = true;
+				}
 				
 				const startLocation:uint = opcodeOffsetPosition;
 				opcodeOffsetPosition += data.position - opcodeStartPosition;
@@ -188,6 +196,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 				opcode.abcData = value;
 			}
 		}
+		
+		public function get hasAlchemyOpcodes():Boolean { return _hasAlchemyOpcodes; }
 		
 		override public function get length():uint { return opcodes.length; }
 		override public function get name():String { return "ABCOpcodeSet"; }

@@ -21,8 +21,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var opcode:ABCOpcodeSet;
 		public var exceptionInfo:ABCExceptionInfoSet;
 		
+		private var _hasAlchemyOpcodes:Boolean; 
+		
 		public function ABCMethodBody(abcData:ABCData) {
 			super(abcData);
+			
+			_hasAlchemyOpcodes = false;
 		}
 		
 		public static function create(abcData:ABCData):ABCMethodBody {
@@ -42,6 +46,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			opcode = ABCOpcodeSet.create(abcData);
 			opcode.read(data);
+			
+			_hasAlchemyOpcodes = opcode.hasAlchemyOpcodes;
 			
 			exceptionInfo = ABCExceptionInfoSet.create(abcData);
 			exceptionInfo.read(data, scanner);
@@ -69,6 +75,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			opcode.abcData = value;
 			exceptionInfo.abcData = value;
 		}
+		
+		public function get hasAlchemyOpcodes():Boolean { return _hasAlchemyOpcodes; }
 		
 		override public function get name():String { return "ABCMethodBody"; }
 		

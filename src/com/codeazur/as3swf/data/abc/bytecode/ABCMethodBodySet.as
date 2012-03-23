@@ -12,8 +12,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public var methodBodies:Vector.<ABCMethodBody>;
 		
+		private var _hasAlchemyOpcodes:Boolean; 
+		
 		public function ABCMethodBodySet(abcData : ABCData) {
 			super(abcData);
+			
+			_hasAlchemyOpcodes = false;
 			
 			methodBodies = new Vector.<ABCMethodBody>();
 		}
@@ -49,6 +53,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 				const methodBodyTraitPositions:Vector.<uint> = scanner.getMethodBodyTraitInfoAtIndex(i);
 				methodBody.read(data, scanner, methodBodyTraitPositions);
 				
+				if(methodBody.hasAlchemyOpcodes) {
+					_hasAlchemyOpcodes = true;
+				}
+				
 				methodBodies.push(methodBody);
 			}
 		}
@@ -62,6 +70,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 				methodBody.write(bytes);
 			}
 		}
+		
+		public function get hasAlchemyOpcodes():Boolean { return _hasAlchemyOpcodes; }
 		
 		override public function get name():String { return "ABCMethodBodySet"; }
 		

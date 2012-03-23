@@ -14,9 +14,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 
 		public var kind:ABCOpcodeKind;
 		public var attribute:ABCOpcodeAttribute;
+		public var alchemyOpcode:Boolean;
 
 		public function ABCOpcode(abcData:ABCData) {
 			super(abcData);
+			
+			alchemyOpcode = false;
 		}
 		
 		public static function create(abcData:ABCData, kind:ABCOpcodeKind, attribute:ABCOpcodeAttribute):ABCOpcode {
