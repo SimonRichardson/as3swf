@@ -130,7 +130,7 @@ package com.codeazur.as3swf
 					const tag:TagDoABC = TagDoABC(doABCTags[index]);
 					const tagIndex:int = tags.indexOf(tag);
 					if(tagIndex > -1) {
-						trace(">>>>", tag);
+						trace("Reading:", tag);
 						// Read the abc data via the reader
 						const abcReader:ABCReader = new ABCReader(tag.bytes);
 						const abcData:ABCData = new ABCData();
@@ -149,9 +149,15 @@ package com.codeazur.as3swf
 					}
 				}
 				
+				trace("Merging");
+				
 				// Merge the abc files into one
 				abcFiles.visit(new ABCMerge(abcFiles.abc));
 				abcFiles.visit(new ABCSortConstantPool(abcFiles.abc));
+				
+				trace("Writing");
+				
+				trace(abcFiles.abc);
 				
 				// Write the merged files to onwe abc file
 				const abcWriter:ABCWriter = new ABCWriter(abcFiles.abc);

@@ -296,8 +296,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			for(i=1; i<total; i++) {
 				const string:String = stringPool[i];
-				bytes.writeEncodedU32(string.length);
-				bytes.writeUTFBytes(string);
+				const stringTotal:uint = string ? string.length : 0;
+				if(stringTotal > 0) {
+					bytes.writeEncodedU32(string.length);
+					bytes.writeUTFBytes(string);
+				} else {
+					bytes.writeEncodedU32(0);
+				}
 			}
 						
 			total = namespacePool.length;

@@ -181,7 +181,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 			bytes.writeUI8(flags);
 			
 			if(hasOptional) {
-				trace("Optional" + multiname);
 				bytes.writeEncodedU32(optionalTotal);
 				for(var k:uint=0; k<optionalTotal; k++) {
 					
