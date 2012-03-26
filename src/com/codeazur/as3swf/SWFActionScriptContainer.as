@@ -1,7 +1,6 @@
 package com.codeazur.as3swf
 {
-	import com.codeazur.as3swf.events.SWFProgressEvent;
-	import flash.events.Event;
+
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCDataSet;
 	import com.codeazur.as3swf.data.abc.io.ABCReader;
@@ -9,14 +8,19 @@ package com.codeazur.as3swf
 	import com.codeazur.as3swf.data.abc.tools.ABCMerge;
 	import com.codeazur.as3swf.data.abc.tools.ABCSortConstantPool;
 	import com.codeazur.as3swf.data.abc.tools.IABCVistor;
+	import com.codeazur.as3swf.events.SWFMergeProgressEvent;
 	import com.codeazur.as3swf.tags.ITag;
 	import com.codeazur.as3swf.tags.TagDoABC;
 
 	import flash.display.Sprite;
+	import flash.events.Event;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
 	public class SWFActionScriptContainer extends SWFTimelineContainer {
+		
+		private static const MERGE_NUM_STEPS:uint = 2;
+		private static const MERGE_FINAL_STEPS:uint = 2;
 		
 		private var _abcTags:Vector.<TagDoABC>;
 		private var _abcDataSet:ABCDataSet;
@@ -56,10 +60,8 @@ package com.codeazur.as3swf
 		
 		private function initialiseMerge():void {
 			_abcTags = Vector.<TagDoABC>(getTagsByClassType(TagDoABC));
-			
 			_mergeTotal = _abcTags.length;
 			_mergeTagIterator = _mergeTotal;
-			
 			_abcDataSet = new ABCDataSet();
 		}
 		
@@ -91,26 +93,48 @@ package com.codeazur.as3swf
 			_enterFrameProvider.removeEventListener(Event.ENTER_FRAME, readABCTagAsyncHandler);
 			if(--_mergeTagIterator > -1) {
 				readABCTag();
+				
+				const index:uint = _mergeTotal - _mergeTagIterator;
+				const total:uint = (_mergeTotal * MERGE_NUM_STEPS) + MERGE_FINAL_STEPS;
+				dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_PROGRESS, index, total));
 				_enterFrameProvider.addEventListener(Event.ENTER_FRAME, readABCTagAsyncHandler);
 			} else {
-				_enterFrameProvider.addEventListener(Event.ENTER_FRAME, mergeDataSetAsyncHandler);
+				mergeDataSetAsync();
 			}
 		}
 		
 		private function mergeDataSet():void {
-			// TODO : make this a much better async version
 			// Merge the abc files into one.
 			_abcDataSet.visit(new ABCMerge(_abcDataSet.abc));
-			
 			// Sort the resulting file.
 			const sort:IABCVistor = new ABCSortConstantPool();
 			sort.visit(_abcDataSet.abc);
 		}
 		
+		private function mergeDataSetAsync():void {
+			_mergeTagIterator = _abcDataSet.length;
+			_enterFrameProvider.addEventListener(Event.ENTER_FRAME, mergeDataSetAsyncHandler);
+		}
+		
 		private function mergeDataSetAsyncHandler(event:Event):void {
 			_enterFrameProvider.removeEventListener(Event.ENTER_FRAME, mergeDataSetAsyncHandler);
-			mergeDataSet();
-			_enterFrameProvider.addEventListener(Event.ENTER_FRAME, writeDataSetAsyncHandler);
+			const index:uint = (_mergeTotal - _mergeTagIterator) + _mergeTotal;
+			const total:uint = (_mergeTotal * MERGE_NUM_STEPS) + MERGE_FINAL_STEPS;
+			
+			if(--_mergeTagIterator > -1) {
+				const abc:ABCData = _abcDataSet.getAt(_mergeTagIterator);
+				const vistor:IABCVistor = new ABCMerge(_abcDataSet.abc);
+				vistor.visit(abc);
+				
+				dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_PROGRESS, index, total));
+				_enterFrameProvider.addEventListener(Event.ENTER_FRAME, mergeDataSetAsyncHandler);
+			} else {
+				// Sort the resulting file.
+				const sort:IABCVistor = new ABCSortConstantPool();
+				sort.visit(_abcDataSet.abc);
+				dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_PROGRESS, index + 1, total));
+				_enterFrameProvider.addEventListener(Event.ENTER_FRAME, writeDataSetAsyncHandler);
+			}
 		}
 		
 		private function writeDataSet():void {
@@ -126,8 +150,10 @@ package com.codeazur.as3swf
 		private function writeDataSetAsyncHandler(event:Event):void {
 			_enterFrameProvider.removeEventListener(Event.ENTER_FRAME, writeDataSetAsyncHandler);
 			writeDataSet();
-			dispatchEvent(new SWFProgressEvent(SWFProgressEvent.PROGRESS, _mergeTagIterator, _mergeTotal));
-			dispatchEvent(new SWFProgressEvent(SWFProgressEvent.COMPLETE, _mergeTagIterator, _mergeTotal));
+			
+			const total:uint = (_mergeTotal * MERGE_NUM_STEPS) + MERGE_FINAL_STEPS;
+			dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_PROGRESS, total, total));
+			dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_COMPLETE, total, total));
 		}
 	}
 }

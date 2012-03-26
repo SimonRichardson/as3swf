@@ -2,16 +2,14 @@ package com.codeazur.as3swf.events
 {
 	import flash.events.Event;
 	
-	public class SWFProgressEvent extends Event
-	{
+	public class SWFProgressEvent extends Event {
 		public static const PROGRESS:String = "progress";
 		public static const COMPLETE:String = "complete";
 		
 		protected var processed:uint;
 		protected var total:uint;
 		
-		public function SWFProgressEvent(type:String, processed:uint, total:uint, bubbles:Boolean=false, cancelable:Boolean=false)
-		{
+		public function SWFProgressEvent(type:String, processed:uint, total:uint, bubbles:Boolean=false, cancelable:Boolean=false){
 			super(type, bubbles, cancelable);
 			this.processed = processed;
 			this.total = total;
