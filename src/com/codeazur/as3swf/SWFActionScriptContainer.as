@@ -126,6 +126,7 @@ package com.codeazur.as3swf
 		private function writeDataSetAsyncHandler(event:Event):void {
 			_enterFrameProvider.removeEventListener(Event.ENTER_FRAME, writeDataSetAsyncHandler);
 			writeDataSet();
+			dispatchEvent(new SWFProgressEvent(SWFProgressEvent.PROGRESS, _mergeTagIterator, _mergeTotal));
 			dispatchEvent(new SWFProgressEvent(SWFProgressEvent.COMPLETE, _mergeTagIterator, _mergeTotal));
 		}
 	}
