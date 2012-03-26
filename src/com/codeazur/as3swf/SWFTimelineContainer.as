@@ -123,6 +123,8 @@ package com.codeazur.as3swf
 		public function mergeABCTags():Boolean {
 			const doABCTags:Vector.<ITag> = getTagsByClassType(TagDoABC);
 			const total:uint = doABCTags.length;
+			var mergedTotal:uint = total;
+			
 			if(total > 1) {
 				const abcFiles:ABCDataSet = new ABCDataSet();
 				
@@ -143,6 +145,8 @@ package com.codeazur.as3swf
 							}
 							// Add it to the stack
 							abcFiles.add(abcData);
+						} else {
+							mergedTotal--;
 						}
 					} else {
 						throw new Error("Invalid TagDoABC index");
@@ -165,7 +169,7 @@ package com.codeazur.as3swf
 			}
 			
 			const result:Vector.<ITag> = getTagsByClassType(TagDoABC);
-			return result && result.length == 1;
+			return result && result.length == mergedTotal;
 		}
 		
 		public function getTagsByClassType(type:Class):Vector.<ITag> {

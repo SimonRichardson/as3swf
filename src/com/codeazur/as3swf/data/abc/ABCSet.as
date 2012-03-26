@@ -79,7 +79,8 @@ package com.codeazur.as3swf.data.abc
 		protected function getMultinameIndex(multiname:IABCMultiname):int {
 			const index:int = abcData.constantPool.getMultinameIndex(multiname);
 			if(index < 0) {
-				throw new Error('Range Error');
+				
+				throw new Error('Range Error (recieved:' + multiname + ', with index:' + index + ')');
 			}
 			return index;
 		}

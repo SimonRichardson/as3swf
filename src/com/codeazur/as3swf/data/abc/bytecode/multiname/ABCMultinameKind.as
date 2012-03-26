@@ -45,7 +45,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		}
 		
 		public static function isType(type:ABCMultinameKind, kind:ABCMultinameKind):Boolean {
-			return type.type == kind.type && type.name == kind.name;
+			return type.equals(kind);
 		}
 
 		public static function getType(type:uint):ABCMultinameKind {
@@ -66,7 +66,13 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			return result;
 		}
 		
+		public function equals(kind:ABCMultinameKind):Boolean {
+			return _type == kind._type && _name == kind._name;
+		}
+		
 		public function get type():uint { return _type; }
+		public function get label():String { return _name; }
+		
 		public function get name():String { return "ABCMultinameKind"; }
 		
 		public function toString(indent:uint = 0) : String {

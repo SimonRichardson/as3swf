@@ -14,6 +14,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		public function ABCNamespace(initKind:ABCNamespaceKind = null, initValue:String = "") {
 			kind = initKind;
 			value = initValue;
+			byte = -1;
 		}
 		
 		public static function create(type:uint, value:String = ""):ABCNamespace {
@@ -32,7 +33,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		}
 		
 		public function equals(ns:ABCNamespace):Boolean {
-			return byte === ns.byte && value == ns.value;
+			return byte == ns.byte && value == ns.value && kind.equals(ns.kind);
 		}
 		
 		public function clone():ABCNamespace {

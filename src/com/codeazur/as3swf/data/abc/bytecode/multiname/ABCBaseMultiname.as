@@ -11,12 +11,15 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		private var _byte:int;
 		private var _kind:ABCMultinameKind;
 		
+		private var _fullName:String;
+		
 		public function ABCBaseMultiname() {
 			_byte = 0;
+			_fullName = ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value;
 		}
 
-		public function equals(qname:IABCMultiname):Boolean {
-			return ABCMultinameKind.isType(kind, qname.kind) && fullName == qname.fullName; 
+		public function equals(multiname:IABCMultiname):Boolean {
+			return ABCMultinameKind.isType(kind, multiname.kind) && fullName == multiname.fullName; 
 		}
 
 		public function get kind():ABCMultinameKind { return _kind; }
@@ -28,7 +31,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		public function get name():String { return "ABCMultiname"; }
 		
 		public function get fullName():String {
-			return ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value;
+			return _fullName;
 		}
 		
 		public function toQualifiedName():ABCQualifiedName {

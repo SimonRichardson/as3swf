@@ -1,6 +1,5 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
@@ -10,7 +9,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameLate;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamedMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespace;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceSet;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
@@ -73,7 +71,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			for(i=0; i<total; i++) {
 				addUnsignedInteger(value.unsignedIntegerPool[i]);
 			}
-			
+
 			total = value.doublePool.length;
 			for(i=0; i<total; i++) {
 				addDouble(value.doublePool[i]);
@@ -373,7 +371,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 					case ABCMultinameKind.GENERIC:
 						const generic:ABCMultinameGeneric = ABCMultinameGeneric(abcMultiname);
 						
-						bytes.writeEncodedU32(getMultinameIndex(generic.qname));
+						bytes.writeEncodedU32(getMultinameIndex(generic.multiname));
 						
 						const multinameTotal:int = generic.params.length;
 						bytes.writeEncodedU32(multinameTotal);
@@ -472,7 +470,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 					case ABCMultinameKind.GENERIC:
 						const generic:ABCMultinameGeneric = ABCMultinameGeneric(multiname);
 						
-						addMultiname(generic.qname);
+						addMultiname(generic.multiname);
 						
 						const multinameTotal:int = generic.params.length;
 						for(var k:int=0; k<multinameTotal; k++) {
@@ -503,13 +501,15 @@ package com.codeazur.as3swf.data.abc.bytecode
 				throw new ArgumentError('Multiname can not be null');
 			}
 			
+			var j:uint = 0;
 			var index:int = -1;
+			var nsTotal:int = 0;
 			var contains:Boolean = false;
 			
 			const total:uint = multinamePool.length;
 			for(var i:uint=0; i<total; i++) {
 				const m:IABCMultiname = multinamePool[i];
-				if(ABCMultinameKind.isType(m.kind, multiname.kind)) {
+				if(m.kind.equals(multiname.kind)) {
 					switch(m.kind) {
 						case ABCMultinameKind.QNAME:
 						case ABCMultinameKind.QNAME_A:
@@ -521,7 +521,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 							const qname1:ABCQualifiedName = multiname.toQualifiedName();
 							if(qname0 == qname1) {
 								return i;
-							} else if(qname0.label == qname1.label && ((qname0.ns && qname1.ns) && ABCNamespaceKind.isType(qname0.ns.kind, qname1.ns.kind))) {
+							} else if(qname0.label == qname1.label && ((qname0.ns && qname1.ns) && qname0.ns.equals(qname1.ns))) {
 								return i;
 							}
 							break;
@@ -534,7 +534,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 								return i;
 							} else if(mname0.label == mname1.label && mname0.namespaces.length == mname1.namespaces.length) {
 								contains = true;
-								for(var j:uint=0; j<mname0.namespaces.length; j++) {
+								nsTotal = mname0.namespaces.length;
+								for(j=0; j<nsTotal; j++) {
 									const mnameNs0:ABCNamespace = mname0.namespaces.getAt(j);
 									const mnameNs1:ABCNamespace = mname1.namespaces.getAt(j);
 									if(!mnameNs0.equals(mnameNs1)) {
@@ -550,13 +551,15 @@ package com.codeazur.as3swf.data.abc.bytecode
 						
 						case ABCMultinameKind.MULTINAME_LATE:
 						case ABCMultinameKind.MULTINAME_LATE_A:
+							
 							const mnameLate0:ABCMultinameLate = ABCMultinameLate(m);
 							const mnameLate1:ABCMultinameLate = ABCMultinameLate(multiname);
 							if(mnameLate0.namespaces.length == mnameLate1.namespaces.length) {
 								contains = true;
-								for(var k:uint=0; k<mnameLate0.namespaces.length; k++) {
-									const mnameLateNs0:ABCNamespace = mnameLate0.namespaces.getAt(k);
-									const mnameLateNs1:ABCNamespace = mnameLate1.namespaces.getAt(k);
+								nsTotal = mnameLate0.namespaces.length;
+								for(j=0; j<nsTotal; j++) {
+									const mnameLateNs0:ABCNamespace = mnameLate0.namespaces.getAt(j);
+									const mnameLateNs1:ABCNamespace = mnameLate1.namespaces.getAt(j);
 									if(!mnameLateNs0.equals(mnameLateNs1)) {
 										contains = false;
 										break;
@@ -571,11 +574,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 						case ABCMultinameKind.GENERIC:
 							const generic0:ABCMultinameGeneric = ABCMultinameGeneric(m);
 							const generic1:ABCMultinameGeneric = ABCMultinameGeneric(multiname);
-							if(generic0.qname.equals(generic1.qname) && generic0.params.length == generic1.params.length) {
+							if(generic0.multiname.equals(generic1.multiname) && generic0.params.length == generic1.params.length) {
 								contains = true;
-								for(var l:uint=0; l<generic0.params.length; l++) {
-									const genericMultiname0:IABCMultiname = generic0.params[l];
-									const genericMultiname1:IABCMultiname = generic1.params[l];
+								nsTotal = generic0.params.length;
+								for(j=0; j<nsTotal; j++) {
+									const genericMultiname0:IABCMultiname = generic0.params[j];
+									const genericMultiname1:IABCMultiname = generic1.params[j];
 									if(!genericMultiname0.equals(genericMultiname1)) {
 										contains = false;
 										break;
@@ -659,8 +663,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 					}
 					
 					if(contains) {
-						index = i;
-						break;
+						return i;
 					}
 				}
 			}

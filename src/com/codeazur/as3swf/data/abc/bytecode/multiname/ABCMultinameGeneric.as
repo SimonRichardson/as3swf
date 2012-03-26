@@ -7,14 +7,14 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 	 */
 	public class ABCMultinameGeneric extends ABCBaseMultiname {
 
-		public var qname:IABCMultiname;
+		public var multiname:IABCMultiname;
 		public var params:Vector.<IABCMultiname>;
 
 		public function ABCMultinameGeneric() {}
 
-		public static function create(qname:IABCMultiname, params:Vector.<IABCMultiname>, kind:int = -1):ABCMultinameGeneric {
+		public static function create(multiname:IABCMultiname, params:Vector.<IABCMultiname>, kind:int = -1):ABCMultinameGeneric {
 			const mname:ABCMultinameGeneric = new ABCMultinameGeneric();
-			mname.qname = qname;
+			mname.multiname = multiname;
 			mname.params = params;
 			mname.kind = kind < 0? ABCMultinameKind.GENERIC : ABCMultinameKind.getType(kind);
 			return mname;
@@ -27,8 +27,8 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		override public function toString(indent : uint = 0) : String {
 			var str:String = super.toString(indent);
 			
-			str += "\n" + StringUtils.repeat(indent + 2) + "QName: ";
-			str += "\n" + qname.toString(indent + 4);
+			str += "\n" + StringUtils.repeat(indent + 2) + "Multiname: ";
+			str += "\n" + multiname.toString(indent + 4);
 			
 			if(params) {
 				str += "\n" + StringUtils.repeat(indent + 2) + "Params: ";
