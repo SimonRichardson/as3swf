@@ -6,7 +6,7 @@ package com.codeazur.as3swf.events
 	
 	public class SWFEventDispatcher implements IEventDispatcher
 	{
-		protected var dispatcher:EventDispatcher;
+		private var dispatcher:EventDispatcher;
 		
 		public function SWFEventDispatcher() {
 			dispatcher = new EventDispatcher(this);

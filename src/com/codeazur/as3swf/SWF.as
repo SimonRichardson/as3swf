@@ -5,7 +5,7 @@
 	
 	import flash.utils.ByteArray;
 
-	public class SWF extends SWFTimelineContainer
+	public class SWF extends SWFActionScriptContainer
 	{
 		public var version:int;
 		public var fileLength:uint;

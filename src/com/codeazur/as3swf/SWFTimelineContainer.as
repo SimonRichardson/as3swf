@@ -1,16 +1,9 @@
 package com.codeazur.as3swf
 {
-	import com.codeazur.as3swf.data.abc.tools.IABCVistor;
 	import com.codeazur.as3swf.data.SWFFrameLabel;
 	import com.codeazur.as3swf.data.SWFRawTag;
 	import com.codeazur.as3swf.data.SWFRecordHeader;
 	import com.codeazur.as3swf.data.SWFScene;
-	import com.codeazur.as3swf.data.abc.ABCData;
-	import com.codeazur.as3swf.data.abc.ABCDataSet;
-	import com.codeazur.as3swf.data.abc.io.ABCReader;
-	import com.codeazur.as3swf.data.abc.io.ABCWriter;
-	import com.codeazur.as3swf.data.abc.tools.ABCMerge;
-	import com.codeazur.as3swf.data.abc.tools.ABCSortConstantPool;
 	import com.codeazur.as3swf.data.consts.SoundCompression;
 	import com.codeazur.as3swf.events.SWFErrorEvent;
 	import com.codeazur.as3swf.events.SWFEventDispatcher;
@@ -22,7 +15,6 @@ package com.codeazur.as3swf
 	import com.codeazur.as3swf.tags.ITag;
 	import com.codeazur.as3swf.tags.TagDefineMorphShape;
 	import com.codeazur.as3swf.tags.TagDefineSceneAndFrameLabelData;
-	import com.codeazur.as3swf.tags.TagDoABC;
 	import com.codeazur.as3swf.tags.TagEnd;
 	import com.codeazur.as3swf.tags.TagFrameLabel;
 	import com.codeazur.as3swf.tags.TagJPEGTables;
@@ -58,28 +50,28 @@ package com.codeazur.as3swf
 		public static var AUTOBUILD_LAYERS:Boolean = false;
 		public static var EXTRACT_SOUND_STREAM:Boolean = true;
 		
-		protected var _tags:Vector.<ITag>;
-		protected var _tagsRaw:Vector.<SWFRawTag>;
-		protected var _dictionary:Dictionary;
-		protected var _scenes:Vector.<Scene>;
-		protected var _frames:Vector.<Frame>;
-		protected var _layers:Vector.<Layer>;
-		protected var _soundStream:SoundStream;
+		private var _tags:Vector.<ITag>;
+		private var _tagsRaw:Vector.<SWFRawTag>;
+		private var _dictionary:Dictionary;
+		private var _scenes:Vector.<Scene>;
+		private var _frames:Vector.<Frame>;
+		private var _layers:Vector.<Layer>;
+		private var _soundStream:SoundStream;
 
-		protected var currentFrame:Frame;
-		protected var frameLabels:Dictionary;
-		protected var hasSoundStream:Boolean = false;
+		private var _currentFrame:Frame;
+		private var _frameLabels:Dictionary;
+		private var _hasSoundStream:Boolean = false;
 
-		protected var enterFrameProvider:Sprite;
-		protected var eof:Boolean;
+		private var _enterFrameProvider:Sprite;
+		private var _eof:Boolean;
 
-		protected var _tmpData:SWFData;
-		protected var _tmpVersion:uint;
-		protected var _tmpTagIterator:int = 0;
+		private var _tmpData:SWFData;
+		private var _tmpVersion:uint;
+		private var _tmpTagIterator:int = 0;
 
-		protected var _tagFactory:ISWFTagFactory;
+		private var _tagFactory:ISWFTagFactory;
 
-		internal var rootTimelineContainer:SWFTimelineContainer;
+		private var _rootTimelineContainer:SWFTimelineContainer;
 		
 		public var backgroundColor:uint = 0xffffff;
 		public var jpegTablesTag:TagJPEGTables;
@@ -95,9 +87,9 @@ package com.codeazur.as3swf
 		
 			_tagFactory = new SWFTagFactory();
 			
-			rootTimelineContainer = this;
+			_rootTimelineContainer = this;
 			
-			enterFrameProvider = new Sprite();
+			_enterFrameProvider = new Sprite();
 		}
 		
 		public function get tags():Vector.<ITag> { return _tags; }
@@ -106,70 +98,19 @@ package com.codeazur.as3swf
 		public function get scenes():Vector.<Scene> { return _scenes; }
 		public function get frames():Vector.<Frame> { return _frames; }
 		public function get layers():Vector.<Layer> { return _layers; }
-
+		
 		public function get soundStream():SoundStream { return _soundStream; }
+		public function get hasSoundStream():Boolean { return _hasSoundStream; }
 		
 		public function get tagFactory():ISWFTagFactory { return _tagFactory; }
 		public function set tagFactory(value:ISWFTagFactory):void { _tagFactory = value; }
 		
 		public function getCharacter(characterId:uint):IDefinitionTag {
-			var tagIndex:int = rootTimelineContainer.dictionary[characterId];
-			if(tagIndex >= 0 && tagIndex < rootTimelineContainer.tags.length) {
-				return rootTimelineContainer.tags[tagIndex] as IDefinitionTag;
+			var tagIndex:int = _rootTimelineContainer.dictionary[characterId];
+			if(tagIndex >= 0 && tagIndex < _rootTimelineContainer.tags.length) {
+				return _rootTimelineContainer.tags[tagIndex] as IDefinitionTag;
 			}
 			return null;
-		}
-		
-		public function mergeABCTags():Boolean {
-			const doABCTags:Vector.<ITag> = getTagsByClassType(TagDoABC);
-			const total:uint = doABCTags.length;
-			var mergedTotal:uint = total;
-			
-			if(total > 1) {
-				const abcFiles:ABCDataSet = new ABCDataSet();
-				
-				var index:int = total;
-				while(--index > -1) {
-					const tag:TagDoABC = TagDoABC(doABCTags[index]);
-					const tagIndex:int = tags.indexOf(tag);
-					if(tagIndex > -1) {
-						// Read the abc data via the reader
-						const abcReader:ABCReader = new ABCReader(tag.bytes);
-						const abcData:ABCData = new ABCData();
-						abcReader.read(abcData);
-						// We don't want to mess about with alchemy, so don't merge
-						if(!abcData.methodBodySet.hasAlchemyOpcodes) {
-							// We want the first TagDoABC
-							if(index > 0) {
-								tags.splice(tagIndex, 1);
-							}
-							// Add it to the stack
-							abcFiles.add(abcData);
-						} else {
-							mergedTotal--;
-						}
-					} else {
-						throw new Error("Invalid TagDoABC index");
-					}
-				}
-				
-				// Merge the abc files into one.
-				abcFiles.visit(new ABCMerge(abcFiles.abc));
-				// Sort the resulting file.
-				const sort:IABCVistor = new ABCSortConstantPool();
-				sort.visit(abcFiles.abc);
-				
-				// Write the merged files to onwe abc file
-				const abcWriter:ABCWriter = new ABCWriter(abcFiles.abc);
-				const bytes:SWFData = new SWFData();
-				abcWriter.write(bytes);
-				
-				// Push the bytes on the first tag
-				TagDoABC(doABCTags[0]).bytes = bytes;
-			}
-			
-			const result:Vector.<ITag> = getTagsByClassType(TagDoABC);
-			return result && result.length == mergedTotal;
 		}
 		
 		public function getTagsByClassType(type:Class):Vector.<ITag> {
@@ -193,11 +134,11 @@ package com.codeazur.as3swf
 		
 		public function parseTagsAsync(data:SWFData, version:uint):void {
 			parseTagsInit(data, version);
-			enterFrameProvider.addEventListener(Event.ENTER_FRAME, parseTagsAsyncHandler);
+			_enterFrameProvider.addEventListener(Event.ENTER_FRAME, parseTagsAsyncHandler);
 		}
 		
 		protected function parseTagsAsyncHandler(event:Event):void {
-			enterFrameProvider.removeEventListener(Event.ENTER_FRAME, parseTagsAsyncHandler);
+			_enterFrameProvider.removeEventListener(Event.ENTER_FRAME, parseTagsAsyncHandler);
 			if(dispatchEvent(new SWFProgressEvent(SWFProgressEvent.PROGRESS, _tmpData.position, _tmpData.length, false, true))) {
 				parseTagsAsyncInternal();
 			}
@@ -208,12 +149,12 @@ package com.codeazur.as3swf
 			var time:int = getTimer();
 			while ((tag = parseTag(_tmpData, true)) && tag.type != TagEnd.TYPE) {
 				if((getTimer() - time) > TIMEOUT) {
-					enterFrameProvider.addEventListener(Event.ENTER_FRAME, parseTagsAsyncHandler);
+					_enterFrameProvider.addEventListener(Event.ENTER_FRAME, parseTagsAsyncHandler);
 					return;
 				}
 			}
 			parseTagsFinalize();
-			if(eof) {
+			if(_eof) {
 				dispatchEvent(new SWFErrorEvent(SWFErrorEvent.ERROR, SWFErrorEvent.REASON_EOF));
 			} else {
 				dispatchEvent(new SWFProgressEvent(SWFProgressEvent.PROGRESS, _tmpData.position, _tmpData.length));
@@ -225,10 +166,11 @@ package com.codeazur.as3swf
 			tags.length = 0;
 			frames.length = 0;
 			layers.length = 0;
+			
 			_dictionary = new Dictionary();
-			currentFrame = new Frame();
-			frameLabels = new Dictionary();
-			hasSoundStream = false;
+			_currentFrame = new Frame();
+			_frameLabels = new Dictionary();
+			_hasSoundStream = false;
 			_tmpData = data;
 			_tmpVersion = version;
 		}
@@ -236,8 +178,8 @@ package com.codeazur.as3swf
 		protected function parseTag(data:SWFData, async:Boolean = false):ITag {
 			var pos:uint = data.position;
 			// Bail out if eof
-			eof = (pos > data.length);
-			if(eof) {
+			_eof = (pos > data.length);
+			if(_eof) {
 				trace("WARNING: end of file encountered, no end tag.");
 				return null;
 			}
@@ -251,7 +193,7 @@ package com.codeazur.as3swf
 					// itself) is TagDefineSprite (MovieClips have their own timeline).
 					// Inject the current tag factory there.
 					timelineContainer.tagFactory = tagFactory;
-					timelineContainer.rootTimelineContainer = this;
+					timelineContainer._rootTimelineContainer = this;
 				}
 				// Parse tag
 				tag.parse(data, tagHeader.contentLength, _tmpVersion, async);
@@ -303,11 +245,11 @@ package com.codeazur.as3swf
 			_tmpData = data;
 			_tmpVersion = version;
 			_tmpTagIterator = 0;
-			enterFrameProvider.addEventListener(Event.ENTER_FRAME, publishTagsAsyncHandler);
+			_enterFrameProvider.addEventListener(Event.ENTER_FRAME, publishTagsAsyncHandler);
 		}
 
 		protected function publishTagsAsyncHandler(event:Event):void {
-			enterFrameProvider.removeEventListener(Event.ENTER_FRAME, publishTagsAsyncHandler);
+			_enterFrameProvider.removeEventListener(Event.ENTER_FRAME, publishTagsAsyncHandler);
 			if(dispatchEvent(new SWFProgressEvent(SWFProgressEvent.PROGRESS, _tmpTagIterator, tags.length))) {
 				publishTagsAsyncInternal();
 			}
@@ -323,7 +265,7 @@ package com.codeazur.as3swf
 				publishTag(_tmpData, tag, tagRaw, _tmpVersion);
 				_tmpTagIterator++;
 				if((getTimer() - time) > TIMEOUT) {
-					enterFrameProvider.addEventListener(Event.ENTER_FRAME, publishTagsAsyncHandler);
+					_enterFrameProvider.addEventListener(Event.ENTER_FRAME, publishTagsAsyncHandler);
 					return;
 				}
 			}
@@ -387,30 +329,30 @@ package com.codeazur.as3swf
 				// value: definition tag index
 				dictionary[tag.characterId] = currentTagIndex;
 				// Register character id in the current frame's character array
-				currentFrame.characters.push(tag.characterId);
+				_currentFrame.characters.push(tag.characterId);
 			}
 		}
 
 		protected function processDisplayListTag(tag:IDisplayListTag, currentTagIndex:uint):void {
 			switch(tag.type) {
 				case TagShowFrame.TYPE:
-					currentFrame.tagIndexEnd = currentTagIndex;
-					if(currentFrame.label == null && frameLabels[currentFrame.frameNumber]) {
-						currentFrame.label = frameLabels[currentFrame.frameNumber];
+					_currentFrame.tagIndexEnd = currentTagIndex;
+					if(_currentFrame.label == null && _frameLabels[_currentFrame.frameNumber]) {
+						_currentFrame.label = _frameLabels[_currentFrame.frameNumber];
 					}
-					frames.push(currentFrame);
-					currentFrame = currentFrame.clone();
-					currentFrame.frameNumber = frames.length;
-					currentFrame.tagIndexStart = currentTagIndex + 1; 
+					frames.push(_currentFrame);
+					_currentFrame = _currentFrame.clone();
+					_currentFrame.frameNumber = frames.length;
+					_currentFrame.tagIndexStart = currentTagIndex + 1; 
 					break;
 				case TagPlaceObject.TYPE:
 				case TagPlaceObject2.TYPE:
 				case TagPlaceObject3.TYPE:
-					currentFrame.placeObject(currentTagIndex, tag as TagPlaceObject);
+					_currentFrame.placeObject(currentTagIndex, tag as TagPlaceObject);
 					break;
 				case TagRemoveObject.TYPE:
 				case TagRemoveObject2.TYPE:
-					currentFrame.removeObject(tag as TagRemoveObject);
+					_currentFrame.removeObject(tag as TagRemoveObject);
 					break;
 			}
 		}
@@ -422,7 +364,7 @@ package com.codeazur.as3swf
 					var i:uint;
 					for(i = 0; i < tagSceneAndFrameLabelData.frameLabels.length; i++) {
 						var frameLabel:SWFFrameLabel = tagSceneAndFrameLabelData.frameLabels[i] as SWFFrameLabel;
-						frameLabels[frameLabel.frameNumber] = frameLabel.name;
+						_frameLabels[frameLabel.frameNumber] = frameLabel.name;
 					}
 					for(i = 0; i < tagSceneAndFrameLabelData.scenes.length; i++) {
 						var scene:SWFScene = tagSceneAndFrameLabelData.scenes[i] as SWFScene;
@@ -431,7 +373,7 @@ package com.codeazur.as3swf
 					break;
 				case TagFrameLabel.TYPE:
 					var tagFrameLabel:TagFrameLabel = tag as TagFrameLabel;
-					currentFrame.label = tagFrameLabel.frameName;
+					_currentFrame.label = tagFrameLabel.frameName;
 					break;
 			}
 		}
@@ -451,9 +393,9 @@ package com.codeazur.as3swf
 					break;
 				case TagSoundStreamBlock.TYPE:
 					if(soundStream != null) {
-						if(!hasSoundStream) {
-							hasSoundStream = true;
-							soundStream.startFrame = currentFrame.frameNumber;
+						if(!_hasSoundStream) {
+							_hasSoundStream = true;
+							soundStream.startFrame = _currentFrame.frameNumber;
 						}
 						var tagSoundStreamBlock:TagSoundStreamBlock = tag as TagSoundStreamBlock;
 						var soundData:ByteArray = tagSoundStreamBlock.soundData;
