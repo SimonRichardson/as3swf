@@ -141,12 +141,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				// Force the reading of a string (Alchemy issue)
 				const currentPosition:int = data.position;
-				const str:String = data.readUTFBytes(strLength);
-				if(str.length != strLength) {
+				var buffer:String = data.readUTFBytes(strLength);
+				if(buffer.length != strLength) {
 					// Move back to the original position and attempt a forced read.
 					data.position = currentPosition;
-					
-					var buffer:String = "";
+					// Reset the buffer.
+					buffer = "";			
 					while(buffer.length < strLength) {
 						buffer += data.readUTFBytes(1);
 					}
@@ -752,7 +752,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 			if(stringPool.length > 0) { 
 				str += "\n" + StringUtils.repeat(indent + 2) + "StringPool:";
 				for(i = 0; i < stringPool.length; i++) {
-					str += "\n" + StringUtils.repeat(indent + 4) + stringPool[i].toString();
+					if(null == stringPool[i]) {
+						str += "\n" + StringUtils.repeat(indent + 4) + "***INVALID***";
+					} else {
+						str += "\n" + StringUtils.repeat(indent + 4) + stringPool[i].toString();
+					}
 				}
 			}
 			if(namespacePool.length > 0) { 

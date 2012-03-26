@@ -1,5 +1,6 @@
 package com.codeazur.as3swf
 {
+	import com.codeazur.as3swf.data.abc.tools.IABCVistor;
 	import com.codeazur.as3swf.data.SWFFrameLabel;
 	import com.codeazur.as3swf.data.SWFRawTag;
 	import com.codeazur.as3swf.data.SWFRecordHeader;
@@ -130,7 +131,6 @@ package com.codeazur.as3swf
 					const tag:TagDoABC = TagDoABC(doABCTags[index]);
 					const tagIndex:int = tags.indexOf(tag);
 					if(tagIndex > -1) {
-						trace("Reading:", tag);
 						// Read the abc data via the reader
 						const abcReader:ABCReader = new ABCReader(tag.bytes);
 						const abcData:ABCData = new ABCData();
@@ -149,15 +149,11 @@ package com.codeazur.as3swf
 					}
 				}
 				
-				trace("Merging");
-				
-				// Merge the abc files into one
+				// Merge the abc files into one.
 				abcFiles.visit(new ABCMerge(abcFiles.abc));
-				abcFiles.visit(new ABCSortConstantPool(abcFiles.abc));
-				
-				trace("Writing");
-				
-				trace(abcFiles.abc);
+				// Sort the resulting file.
+				const sort:IABCVistor = new ABCSortConstantPool();
+				sort.visit(abcFiles.abc);
 				
 				// Write the merged files to onwe abc file
 				const abcWriter:ABCWriter = new ABCWriter(abcFiles.abc);

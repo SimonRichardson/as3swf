@@ -7,15 +7,12 @@ package com.codeazur.as3swf.data.abc.tools
 	 */
 	public class ABCSortConstantPool implements IABCVistor {
 		
-		private var _abc:ABCData;
-		
-		public function ABCSortConstantPool(abc:ABCData) {
-			_abc = abc;
+		public function ABCSortConstantPool() {
 		}
 
 		public function visit(value : ABCData) : void
 		{
-			sort(_abc.constantPool.stringPool, DESCENDING ^ CASEINSENSITIVE);
+			sort(value.constantPool.stringPool, DESCENDING ^ CASEINSENSITIVE);
 		}
 	}
 }
