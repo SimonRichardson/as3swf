@@ -1,9 +1,11 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeLookupSwitchAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeIntegerAttribute;
 	import com.codeazur.utils.StringUtils;
 	/**
@@ -25,7 +27,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			opcodes = new Vector.<ABCOpcode>();
 			jumpTargets = new Vector.<ABCOpcodeJumpTarget>();
 			
-			autoBuildJumpTargets = false;
+			autoBuildJumpTargets = true;
 			
 			_hasAlchemyOpcodes = false;
 			_jumpPositions = new Vector.<ABCOpcodeJumpTargetPosition>();
@@ -106,23 +108,43 @@ package com.codeazur.as3swf.data.abc.bytecode
 					const jumpAttribute:ABCOpcodeAttribute = jumpOpcode.attribute;
 					
 					if(ABCOpcodeJumpTargetKind.isType(jumpTarget, ABCOpcodeKind.LOOKUPSWITCH)) {
-						
+						const switchAttribute:ABCOpcodeLookupSwitchAttribute = ABCOpcodeLookupSwitchAttribute(jumpOpcode.attribute);
+						const offsets:Vector.<int> = switchAttribute.offsets;
+						const offsetsTotal:uint = offsets.length;
+						const switchTarget:ABCOpcodeJumpTargetPosition = getJumpTargetPosition(jumpOpcode);
+						if(switchTarget) {
+							for(var j:uint=0; j<offsetsTotal; j++) {
+								const switchToPosition:uint = switchTarget.start + offsets[j];
+								const switchToTarget:ABCOpcodeJumpTargetPosition = getJumpToTarget(switchToPosition);
+								if(switchToTarget && switchTarget.opcode) {
+									jumpTarget.optionalTargetOpcodes.push(switchTarget.opcode);
+								} else {
+									throw new Error('No such opcode target (recieved:' + switchTarget + ')');
+								}
+							}
+							const defaultPosition:uint = switchTarget.start + switchAttribute.defaultOffset;
+							const defaultToTarget:ABCOpcodeJumpTargetPosition = getJumpToTarget(defaultPosition);
+							if(defaultToTarget && defaultToTarget.opcode) {
+								jumpTarget.targetOpcode = defaultToTarget.opcode;
+							} else {
+								throw new Error('No such opcode target (recieved:' + defaultToTarget + ')');
+							}
+						} else {
+							throw new Error('No such opcode');
+						}
 					} else {
 						if(jumpAttribute is IABCOpcodeIntegerAttribute) {
 							const attribute:IABCOpcodeIntegerAttribute = IABCOpcodeIntegerAttribute(jumpAttribute);
 							
 							const opcodeTarget:ABCOpcodeJumpTargetPosition = getJumpTargetPosition(jumpOpcode);
 							if(opcodeTarget) {
-								
 								const jumpToPosition:uint = opcodeTarget.finish + attribute.integer;
 								const jumpToTarget:ABCOpcodeJumpTargetPosition = getJumpToTarget(jumpToPosition);
-								
 								if(jumpToTarget && jumpToTarget.opcode) {
 									jumpTarget.targetOpcode = jumpToTarget.opcode;
 								} else {
-									throw new Error('No such opcode target');
+									throw new Error('No such opcode target (recieved:' + jumpToTarget + ')');
 								}
-								
 							} else {
 								throw new Error('No such opcode');
 							}
@@ -134,14 +156,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
-		public function isJumpPoint(opcode:ABCOpcode):Boolean {
-			var result:Boolean = false;
+		public function getJumpTargetByOpcode(opcode:ABCOpcode):ABCOpcodeJumpTarget {
+			var result:ABCOpcodeJumpTarget = null;
 			
 			const total:uint = jumpTargets.length;
 			for(var i:uint=0; i<total; i++) {
 				const jumpTarget:ABCOpcodeJumpTarget = jumpTargets[i];
 				if(jumpTarget.opcode == opcode) {
-					result = true;
+					result = jumpTarget;
 					break;
 				}
 			}
@@ -149,14 +171,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return result;
 		}
 		
-		public function getJumpTarget(opcode:ABCOpcode):ABCOpcode {
-			var result:ABCOpcode = null;
+		public function getJumpTargetByTarget(opcode:ABCOpcode):ABCOpcodeJumpTarget {
+			var result:ABCOpcodeJumpTarget = null;
 			
 			const total:uint = jumpTargets.length;
 			for(var i:uint=0; i<total; i++) {
 				const jumpTarget:ABCOpcodeJumpTarget = jumpTargets[i];
-				if(jumpTarget.opcode == opcode) {
-					result = jumpTarget.targetOpcode;
+				if(jumpTarget.targetOpcode == opcode) {
+					result = jumpTarget;
 					break;
 				}
 			}

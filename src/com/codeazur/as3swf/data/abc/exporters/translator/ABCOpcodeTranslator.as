@@ -30,7 +30,7 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 			_opcodes.length = 0;
 			
 			const methodBody:ABCMethodBody = methodInfo.methodBody;
-			const opcodes:ABCOpcodeSet = methodBody.opcode;
+			const opcodes:ABCOpcodeSet = methodBody.opcodes;
 			const total:uint = opcodes.length;
 			
 			for(var i:uint=0; i<total; i++) {
@@ -275,8 +275,8 @@ package com.codeazur.as3swf.data.abc.exporters.translator
 		
 		private function getJumpTarget(opcode:ABCOpcode):ABCOpcode {
 			const methodBody:ABCMethodBody = methodInfo.methodBody;
-			const opcodes:ABCOpcodeSet = methodBody.opcode;
-			return opcodes.getJumpTarget(opcode);
+			const opcodes:ABCOpcodeSet = methodBody.opcodes;
+			return opcodes.getJumpTargetByOpcode(opcode).opcode;
 		}
 	}
 }

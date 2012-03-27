@@ -7,5 +7,6 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 	{
 		
 		function get integer():int;
+		function set integer(value:int):void;
 	}
 }

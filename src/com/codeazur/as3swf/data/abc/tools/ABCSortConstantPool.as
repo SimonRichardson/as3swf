@@ -10,8 +10,7 @@ package com.codeazur.as3swf.data.abc.tools
 		public function ABCSortConstantPool() {
 		}
 
-		public function visit(value : ABCData) : void
-		{
+		public function visit(value : ABCData) : void {
 			sort(value.constantPool.stringPool, DESCENDING ^ CASEINSENSITIVE);
 		}
 	}
