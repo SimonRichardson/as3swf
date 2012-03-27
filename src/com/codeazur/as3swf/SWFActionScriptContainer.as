@@ -1,5 +1,6 @@
 package com.codeazur.as3swf
 {
+	import com.codeazur.as3swf.data.abc.tools.ABCOptimizeMetadata;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
 	import com.codeazur.as3swf.events.SWFMergeProgressEvent;
 	import com.codeazur.as3swf.data.abc.ABCData;
@@ -114,6 +115,7 @@ package com.codeazur.as3swf
 		private function mergeDataSet(index:uint):void {
 			// TODO: split the merging of sets in async
 			const abcDataSet:ABCDataSet = _abcDataSets[index];
+			abcDataSet.visit(new ABCOptimizeMetadata());
 			abcDataSet.visit(new ABCMerge(abcDataSet.abc));
 			trace("MERGE", index);
 		}

@@ -125,6 +125,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return index;
 		}
 		
+		override public function get length():uint { return metadatas.length; }
 		override public function get name():String { return "ABCMetadataSet"; }
 		
 		override public function toString(indent:uint = 0) : String {

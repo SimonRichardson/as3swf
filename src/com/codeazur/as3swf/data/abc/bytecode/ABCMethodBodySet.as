@@ -71,9 +71,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function getAt(index:uint):ABCMethodBody {
+			return methodBodies[index];
+		}
+		
 		public function get hasAlchemyOpcodes():Boolean { return _hasAlchemyOpcodes; }
 		
 		override public function get name():String { return "ABCMethodBodySet"; }
+		override public function get length():uint { return methodBodies.length; }
 		
 		override public function toString(indent:uint = 0) : String {
 			var str:String = super.toString(indent);

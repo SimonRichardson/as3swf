@@ -63,7 +63,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function getAt(index:uint):ABCScriptInfo {
+			return scriptInfos[index];
+		}
+		
 		override public function get name():String { return "ABCScriptInfoSet"; }
+		override public function get length():uint { return scriptInfos.length; }
 		
 		override public function toString(indent:uint=0):String {
 			var str:String = super.toString(indent);

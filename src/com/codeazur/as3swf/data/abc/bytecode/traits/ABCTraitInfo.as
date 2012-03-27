@@ -47,8 +47,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 				}
 			}
 		}
-
-		override public function get name():String { return "ABCTraitInfo"; }
+		
 		public function get isFinal():Boolean {
 			return ABCTraitInfoFlags.isType(kind, ABCTraitInfoFlags.FINAL);
 		}
@@ -58,6 +57,8 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 		public function get hasMetadata():Boolean {
 			return ABCTraitInfoFlags.isType(kind, ABCTraitInfoFlags.METADATA);
 		}
+		
+		override public function get name():String { return "ABCTraitInfo"; }
 		
 		override public function toString(indent:uint = 0):String {
 			var str:String = super.toString(indent);
