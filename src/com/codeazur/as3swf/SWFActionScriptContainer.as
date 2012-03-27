@@ -1,6 +1,6 @@
 package com.codeazur.as3swf
 {
-
+	import com.codeazur.as3swf.events.SWFMergeProgressEvent;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCDataSet;
 	import com.codeazur.as3swf.data.abc.io.ABCReader;
@@ -8,152 +8,171 @@ package com.codeazur.as3swf
 	import com.codeazur.as3swf.data.abc.tools.ABCMerge;
 	import com.codeazur.as3swf.data.abc.tools.ABCSortConstantPool;
 	import com.codeazur.as3swf.data.abc.tools.IABCVistor;
-	import com.codeazur.as3swf.events.SWFMergeProgressEvent;
 	import com.codeazur.as3swf.tags.ITag;
 	import com.codeazur.as3swf.tags.TagDoABC;
 
-	import flash.display.Sprite;
-	import flash.events.Event;
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
 	public class SWFActionScriptContainer extends SWFTimelineContainer {
 		
-		private static const MERGE_NUM_STEPS:uint = 2;
-		private static const MERGE_FINAL_STEPS:uint = 2;
+		private static const ABC_THRESHOLD:uint = 50;
+		private static const TAG_DO_ABC_MERGE_NAME:String = "TagDoABCMerge";
 		
 		private var _abcTags:Vector.<TagDoABC>;
-		private var _abcDataSet:ABCDataSet;
+		private var _abcDataSets:Vector.<ABCDataSet>;
 		
-		private var _mergeTotal:int;
-		private var _mergeTagIterator:int;
+		private var _estimatedNumDataSet:int;
+		private var _estimatedDataSetLength:int;
 		
-		private var _enterFrameProvider:Sprite;
+		private var _tmpIndex:int;
+		private var _tmpTagsIndex:int;
+		
+		private var _timeout:int;
 		
 		public function SWFActionScriptContainer() {
-			_enterFrameProvider = new Sprite();
 		}
 		
-		public function get mergeTotal():int { return _mergeTotal; }
+		private function initialiseMerge():void {
+			clearTimeout(_timeout);
+			
+			_abcTags = Vector.<TagDoABC>(getTagsByClassType(TagDoABC));
+			_abcDataSets = new Vector.<ABCDataSet>();
+			
+			const total:uint = _abcTags.length;
+			const aboveThreshold:Boolean = total > ABC_THRESHOLD;
+			_estimatedNumDataSet = aboveThreshold ? Math.ceil(Math.sqrt(total)) : total;
+			_estimatedDataSetLength = aboveThreshold ? Math.ceil(total / _estimatedNumDataSet) : total;
+		}
 		
 		public function mergeABCTags():Boolean {
 			initialiseMerge();
 			
-			if(_abcTags.length > 1) {
-				while(--_mergeTagIterator > -1) {
-					readABCTag();
+			const total:uint = _abcTags.length;
+			if(total > 1) {
+				var index:int = total;
+				while(--index > -1) {
+					readABCTag(index);
 				}
-				mergeDataSet();
-				writeDataSet();
+				const setsTotal:uint = _abcDataSets.length;
+				index = setsTotal;
+				while(--index > -1) {
+					mergeDataSet(index);
+				}
+				index = setsTotal;
+				while(--index > -1) {
+					writeDataSet(index);
+				}
 			}
 			
 			const result:Vector.<ITag> = getTagsByClassType(TagDoABC);
-			return result && result.length == _mergeTotal;
+			return result && result.length == _estimatedNumDataSet;
 		}
 		
 		public function mergeABCTagsAsync():void {
 			initialiseMerge();
-			if(_abcTags.length > 1) {
-				_enterFrameProvider.addEventListener(Event.ENTER_FRAME, readABCTagAsyncHandler);
+			
+			const total:uint = _abcTags.length;
+			if(total > 1) {
+				_tmpIndex = total;
+				_timeout = setTimeout(readABCTagAsyncHandler, 1);
 			}
 		}
 		
-		private function initialiseMerge():void {
-			_abcTags = Vector.<TagDoABC>(getTagsByClassType(TagDoABC));
-			_mergeTotal = _abcTags.length;
-			_mergeTagIterator = _mergeTotal;
-			_abcDataSet = new ABCDataSet();
-		}
-		
-		private function readABCTag():void {
-			const tag:TagDoABC = _abcTags[_mergeTagIterator];
+		private function readABCTag(index:uint):void {
+			const tag:TagDoABC = _abcTags[index];
 			const tagIndex:int = tags.indexOf(tag);
 			if(tagIndex > -1) {
+				tags.splice(tagIndex, 1);
 				// Read the abc data via the reader
 				const abcReader:ABCReader = new ABCReader(tag.bytes);
-				const abcData:ABCData = new ABCData();
+				const abcData:ABCData = ABCData.create();
 				abcReader.read(abcData);
-				// We don't want to mess about with alchemy, so don't merge
-				if(!abcData.methodBodySet.hasAlchemyOpcodes) {
-					// We want the first TagDoABC
-					if(_abcTags[0] != tag) {
-						tags.splice(tagIndex, 1);
-					}
-					// Add it to the stack
-					_abcDataSet.add(abcData);
-				} else {
-					_mergeTotal--;
-				}
+				// Add abc data to the correct data set
+				const abcDataSet:ABCDataSet = getAvailableABCDataSet();
+				abcDataSet.add(abcData);
+				_tmpTagsIndex = tagIndex;
 			} else {
 				throw new Error("Invalid TagDoABC index");
 			}
+			trace("READ", index, tag);
 		}
 		
-		private function readABCTagAsyncHandler(event:Event):void {
-			_enterFrameProvider.removeEventListener(Event.ENTER_FRAME, readABCTagAsyncHandler);
-			if(--_mergeTagIterator > -1) {
-				readABCTag();
-				
-				const index:uint = _mergeTotal - _mergeTagIterator;
-				const total:uint = (_mergeTotal * MERGE_NUM_STEPS) + MERGE_FINAL_STEPS;
-				dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_PROGRESS, index, total));
-				_enterFrameProvider.addEventListener(Event.ENTER_FRAME, readABCTagAsyncHandler);
+		private function readABCTagAsyncHandler():void {
+			if(--_tmpIndex > -1) {
+				readABCTag(_tmpIndex);
+				_timeout = setTimeout(readABCTagAsyncHandler, 1);
 			} else {
 				mergeDataSetAsync();
 			}
 		}
-		
-		private function mergeDataSet():void {
-			// Merge the abc files into one.
-			_abcDataSet.visit(new ABCMerge(_abcDataSet.abc));
-			// Sort the resulting file.
+			
+		private function mergeDataSet(index:uint):void {
+			const abcDataSet:ABCDataSet = _abcDataSets[index];
+			abcDataSet.visit(new ABCMerge(abcDataSet.abc));
+			// Sort the constants pool
 			const sort:IABCVistor = new ABCSortConstantPool();
-			sort.visit(_abcDataSet.abc);
+			sort.visit(abcDataSet.abc);
+			trace("MERGE", index);
 		}
 		
 		private function mergeDataSetAsync():void {
-			_mergeTagIterator = _abcDataSet.length;
-			_enterFrameProvider.addEventListener(Event.ENTER_FRAME, mergeDataSetAsyncHandler);
+			_tmpIndex = _abcDataSets.length;
+			_timeout = setTimeout(mergeDataSetAsyncHandler, 1);
 		}
 		
-		private function mergeDataSetAsyncHandler(event:Event):void {
-			_enterFrameProvider.removeEventListener(Event.ENTER_FRAME, mergeDataSetAsyncHandler);
-			const index:uint = (_mergeTotal - _mergeTagIterator) + _mergeTotal;
-			const total:uint = (_mergeTotal * MERGE_NUM_STEPS) + MERGE_FINAL_STEPS;
-			
-			if(--_mergeTagIterator > -1) {
-				const abc:ABCData = _abcDataSet.getAt(_mergeTagIterator);
-				const vistor:IABCVistor = new ABCMerge(_abcDataSet.abc);
-				vistor.visit(abc);
-				
-				dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_PROGRESS, index, total));
-				_enterFrameProvider.addEventListener(Event.ENTER_FRAME, mergeDataSetAsyncHandler);
+		private function mergeDataSetAsyncHandler():void {
+			if(--_tmpIndex > -1) {
+				mergeDataSet(_tmpIndex);
+				_timeout = setTimeout(mergeDataSetAsyncHandler, 1);
 			} else {
-				// Sort the resulting file.
-				const sort:IABCVistor = new ABCSortConstantPool();
-				sort.visit(_abcDataSet.abc);
-				dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_PROGRESS, index + 1, total));
-				_enterFrameProvider.addEventListener(Event.ENTER_FRAME, writeDataSetAsyncHandler);
+				writeDataSetAsync();
 			}
 		}
 		
-		private function writeDataSet():void {
-			// Write the merged files to onwe abc file
-			const abcWriter:ABCWriter = new ABCWriter(_abcDataSet.abc);
+		private function writeDataSet(index:uint):void {
+			const abcDataSet:ABCDataSet = _abcDataSets[index];
+			const abcWriter:ABCWriter = new ABCWriter(abcDataSet.abc);
 			const bytes:SWFData = new SWFData();
 			abcWriter.write(bytes);
 			
-			// Push the bytes on the first tag
-			TagDoABC(_abcTags[0]).bytes = bytes;
+			const tag:TagDoABC = TagDoABC.create(bytes, TAG_DO_ABC_MERGE_NAME + index);
+			tags.splice(_tmpTagsIndex, 0, tag);
+			trace("WRITE", index, tags.length);
 		}
 		
-		private function writeDataSetAsyncHandler(event:Event):void {
-			_enterFrameProvider.removeEventListener(Event.ENTER_FRAME, writeDataSetAsyncHandler);
-			writeDataSet();
-			
-			const total:uint = (_mergeTotal * MERGE_NUM_STEPS) + MERGE_FINAL_STEPS;
-			dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_PROGRESS, total, total));
-			dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_COMPLETE, total, total));
+		private function writeDataSetAsync():void {
+			_tmpIndex = _abcDataSets.length;
+			_timeout = setTimeout(writeDataSetAsyncHandler, 1);
+		}
+		
+		private function writeDataSetAsyncHandler():void {
+			if(--_tmpIndex > -1) {
+				writeDataSet(_tmpIndex);
+				_timeout = setTimeout(writeDataSetAsyncHandler, 1);
+			} else {
+				trace("DONE");
+				dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_COMPLETE, 1, 1));
+			}
+		}
+		
+		private function getAvailableABCDataSet():ABCDataSet {
+			var result:ABCDataSet;
+			const total:uint = _abcDataSets.length;
+			for(var i:uint=0; i<total; i++) {
+				const abcDataSet:ABCDataSet = _abcDataSets[i];
+				if(abcDataSet.length < _estimatedDataSetLength) {
+					result = abcDataSet;
+					break;
+				}
+			}
+			if(!result) {
+				result = new ABCDataSet();
+				_abcDataSets.push(result);
+			}
+			return result;
 		}
 	}
 }

@@ -40,6 +40,10 @@ package com.codeazur.as3swf.data.abc
 			methodBodySet = new ABCMethodBodySet(this);
 		}
 		
+		public static function create():ABCData {
+			return new ABCData();
+		}
+		
 		public function get name():String { return 'ABCData'; }
 		
 		public function toString(indent:uint = 0):String {
