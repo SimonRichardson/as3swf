@@ -27,17 +27,14 @@ package com.codeazur.as3swf.data.abc.tools
 			while(--index > -1) {
 				removeTraitMetadata(value.instanceInfoSet.getAt(index).traits);
 			}
-			
 			index = value.classInfoSet.length;
 			while(--index > -1) {
 				removeTraitMetadata(value.classInfoSet.getAt(index).traits);
 			}
-			
 			index = value.scriptInfoSet.length;
 			while(--index > -1) {
 				removeTraitMetadata(value.scriptInfoSet.getAt(index).traits);
 			}
-			
 			index = value.methodBodySet.length;
 			while(--index > -1) {
 				removeTraitMetadata(value.methodBodySet.getAt(index).traits);
