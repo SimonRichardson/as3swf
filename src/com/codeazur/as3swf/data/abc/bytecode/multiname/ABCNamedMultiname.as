@@ -23,6 +23,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		public function get label():String { return _label; }
 		public function set label(value:String):void { _label = StringUtils.clean(value); }
 		
+		override public function get fullName() : String { return label; }
 		override public function get name():String { return "ABCNamedMultiname"; }
 				
 		override public function toString(indent:uint = 0):String {

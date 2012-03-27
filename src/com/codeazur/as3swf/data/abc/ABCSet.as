@@ -136,6 +136,14 @@ package com.codeazur.as3swf.data.abc
 			return abcData.classInfoSet.getAt(index);
 		}
 		
+		protected function getClassInfoIndex(value:ABCClassInfo):int {
+			const index:int = abcData.classInfoSet.classInfos.indexOf(value);
+			if(index < 0) {
+				throw new Error('Range Error');
+			}
+			return index;
+		}
+		
 		protected function getConstantPoolItemByKindAtIndex(kind:ABCConstantKind, index:uint):* {
 			return abcData.constantPool.getPoolItemByKindAtIndex(kind, index);
 		}

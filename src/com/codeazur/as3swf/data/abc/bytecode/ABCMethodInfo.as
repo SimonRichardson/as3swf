@@ -90,56 +90,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 					
 					const kind:ABCConstantKind = ABCConstantKind.getType(optionalValueKind);
 					optionalParam.optionalKind = kind;
-					
-					switch(kind) {
-						case ABCConstantKind.INT:
-							optionalParam.defaultValue = getIntegerByIndex(optionalValueIndex);
-							break;
-							
-						case ABCConstantKind.UINT:
-							optionalParam.defaultValue = getUnsignedIntegerByIndex(optionalValueIndex);
-							break;
-						
-						case ABCConstantKind.DOUBLE:
-							optionalParam.defaultValue = getDoubleByIndex(optionalValueIndex);
-							break;
-						
-						case ABCConstantKind.UTF8:
-							optionalParam.defaultValue = getStringByIndex(optionalValueIndex);
-							break;
-						
-						case ABCConstantKind.TRUE:
-							optionalParam.defaultValue = true;
-							break;
-						
-						case ABCConstantKind.FALSE:
-							optionalParam.defaultValue = false;
-							break;
-							
-						case ABCConstantKind.NULL:
-							optionalParam.defaultValue = null;
-							break;
-						
-						case ABCConstantKind.UNDEFINED:
-							optionalParam.defaultValue = undefined;
-							break;
-						
-						case ABCConstantKind.EXPLICIT_NAMESPACE:
-						case ABCConstantKind.NAMESPACE:
-						case ABCConstantKind.PACKAGE_NAMESPACE:
-						case ABCConstantKind.PACKAGE_INTERNAL_NAMESPACE:
-						case ABCConstantKind.PRIVATE_NAMESPACE:
-						case ABCConstantKind.PROTECTED_NAMESPACE:
-						case ABCConstantKind.STATIC_PROTECTED_NAMESPACE:
-							optionalParam.defaultValue = getNamespaceByIndex(optionalValueIndex);
-							break;
-						
-						default:
-							throw new Error();
-					}
+					optionalParam.defaultValue = getConstantPoolItemByKindAtIndex(kind, optionalValueIndex);
 				}
 			}
-			
 			
 			for(var l:uint=0; l<paramTotal; l++) {
 				const nameParam:ABCParameter = parameters[l];
@@ -186,46 +139,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 					
 					const optionalParamIndex:uint = (paramTotal - optionalTotal) + k;
 					const optionalParam:ABCParameter = parameters[optionalParamIndex];
-					
-					var position:int;
-					switch(optionalParam.optionalKind) {
-						case ABCConstantKind.INT:
-							position = getIntegerIndex(optionalParam.defaultValue);
-							break;
-							
-						case ABCConstantKind.UINT:
-							position = getUnsignedIntegerIndex(optionalParam.defaultValue);
-							break;
-						
-						case ABCConstantKind.DOUBLE:
-							position = getDoubleIndex(optionalParam.defaultValue);
-							break;
-						
-						case ABCConstantKind.UTF8:
-							position = getStringIndex(optionalParam.defaultValue);
-							break;
-						
-						case ABCConstantKind.EXPLICIT_NAMESPACE:
-						case ABCConstantKind.NAMESPACE:
-						case ABCConstantKind.PACKAGE_NAMESPACE:
-						case ABCConstantKind.PACKAGE_INTERNAL_NAMESPACE:
-						case ABCConstantKind.PRIVATE_NAMESPACE:
-						case ABCConstantKind.PROTECTED_NAMESPACE:
-						case ABCConstantKind.STATIC_PROTECTED_NAMESPACE:
-							position = getNamespaceIndex(optionalParam.defaultValue);
-							break;
-							
-						case ABCConstantKind.TRUE:
-						case ABCConstantKind.FALSE:
-						case ABCConstantKind.NULL:
-						case ABCConstantKind.UNDEFINED:
-							position = optionalParam.optionalKind.type;
-							break;
-						
-						default:
-							throw new Error();
-					}
-					
+					const optionalKind:ABCConstantKind = optionalParam.optionalKind;
+					const position:int = getConstantPoolIndexByKindWithValue(optionalKind, optionalParam.defaultValue);
 					bytes.writeEncodedU32(position);
 					bytes.writeUI8(optionalParam.optionalKind.type);
 				}

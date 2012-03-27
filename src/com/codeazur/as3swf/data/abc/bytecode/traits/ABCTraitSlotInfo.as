@@ -53,7 +53,11 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 		override public function write(bytes : SWFData) : void {			
 			bytes.writeEncodedU32(id);
 			bytes.writeEncodedU32(getMultinameIndex(typeMultiname));
-			bytes.writeEncodedU32(valueIndex);
+			if(valueIndex > 0) {
+				bytes.writeEncodedU32(getConstantPoolIndexByKindWithValue(valueKind, defaultValue));
+			} else {
+				bytes.writeEncodedU32(valueIndex);
+			}
 			
 			if(valueKind) {
 				bytes.writeUI8(valueKind.type);
@@ -61,15 +65,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 			
 			super.write(bytes);
 		}
-			
-		override public function set abcData(value : ABCData) : void {
-			super.abcData = value;
-			
-			if(valueKind) {
-				valueIndex = getConstantPoolIndexByKindWithValue(valueKind, defaultValue);
-			}
-		}
-		
+				
 		public function get hasDefaultValue():Boolean { return valueIndex > 0; }
 		
 		override public function get name():String { return "ABCTraitSlotInfo"; }

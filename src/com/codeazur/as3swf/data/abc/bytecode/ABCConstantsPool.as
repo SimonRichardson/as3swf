@@ -669,7 +669,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				case ABCConstantKind.FALSE:
 				case ABCConstantKind.NULL:
 				case ABCConstantKind.UNDEFINED:
-					result = 0;
+					result = kind.type;
 					break;
 				
 				default:

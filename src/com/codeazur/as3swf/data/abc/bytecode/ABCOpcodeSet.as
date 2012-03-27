@@ -27,9 +27,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			autoBuildJumpTargets = false;
 			
-			_jumpPositions = new Vector.<ABCOpcodeJumpTargetPosition>();
-			
 			_hasAlchemyOpcodes = false;
+			_jumpPositions = new Vector.<ABCOpcodeJumpTargetPosition>();
 		}
 		
 		public static function create(abcData:ABCData):ABCOpcodeSet {

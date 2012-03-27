@@ -1,5 +1,6 @@
 package com.codeazur.as3swf
 {
+	import com.codeazur.as3swf.data.abc.io.ABCScanner;
 	import com.codeazur.as3swf.events.SWFMergeProgressEvent;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCDataSet;
@@ -19,7 +20,7 @@ package com.codeazur.as3swf
 	public class SWFActionScriptContainer extends SWFTimelineContainer {
 		
 		private static const ABC_THRESHOLD:uint = 50;
-		private static const TAG_DO_ABC_MERGE_NAME:String = "TagDoABCMerge";
+		private static const TAG_DO_ABC_MERGE_NAME:String = "tags/merge";
 		
 		private var _abcTags:Vector.<TagDoABC>;
 		private var _abcDataSets:Vector.<ABCDataSet>;
@@ -83,6 +84,7 @@ package com.codeazur.as3swf
 		
 		private function readABCTag(index:uint):void {
 			const tag:TagDoABC = _abcTags[(_abcTags.length - 1) - index];
+			trace(tag);
 			const tagIndex:int = tags.indexOf(tag);
 			if(tagIndex > -1) {
 				tags.splice(tagIndex, 1);
@@ -113,9 +115,6 @@ package com.codeazur.as3swf
 			// TODO: split the merging of sets in async
 			const abcDataSet:ABCDataSet = _abcDataSets[index];
 			abcDataSet.visit(new ABCMerge(abcDataSet.abc));
-			// Sort the constants pool
-			//const sort:IABCVistor = new ABCSortConstantPool();
-			//sort.visit(abcDataSet.abc);
 			trace("MERGE", index);
 		}
 		
@@ -138,10 +137,13 @@ package com.codeazur.as3swf
 			const abcWriter:ABCWriter = new ABCWriter(abcDataSet.abc);
 			const bytes:SWFData = new SWFData();
 			abcWriter.write(bytes);
-			
+			// Verify by scanning the resulting data
+			const scanner:ABCScanner = new ABCScanner();
+			scanner.scan(bytes);
+			// Inject the tag back in
 			const tag:TagDoABC = TagDoABC.create(bytes, TAG_DO_ABC_MERGE_NAME + index);
 			tags.splice(_tmpTagsIndex, 0, tag);
-			trace("WRITE", index, tags.length);
+			trace("WRITE", index, tags);
 		}
 		
 		private function writeDataSetAsync():void {

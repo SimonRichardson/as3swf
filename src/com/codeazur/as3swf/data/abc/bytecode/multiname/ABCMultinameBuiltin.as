@@ -41,8 +41,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 				result = true;
 				
 			} else {
-				switch(qname.fullName)
-				{
+				switch(qname.fullName) {
 					case ANY_NAME:
 					case ARRAY_NAME:
 					case BOOLEAN_NAME:
