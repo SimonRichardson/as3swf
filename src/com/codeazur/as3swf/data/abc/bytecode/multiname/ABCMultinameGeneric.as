@@ -19,6 +19,33 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			mname.kind = kind < 0? ABCMultinameKind.GENERIC : ABCMultinameKind.getType(kind);
 			return mname;
 		}
+		
+		override public function equals(abcMultiname : IABCMultiname) : Boolean {
+			if(this == abcMultiname) {
+				return true;
+			} else if(abcMultiname is ABCMultinameGeneric) {
+				const generic:ABCMultinameGeneric = ABCMultinameGeneric(abcMultiname);
+				if(multiname.equals(generic.multiname)) {
+					var valid:Boolean = true;
+					const total:uint = params.length;
+					if(total == generic.params.length) {
+						for(var i:uint=0; i<total; i++) {
+							const m0:IABCMultiname = params[i];
+							const m1:IABCMultiname = generic.params[i];
+							if(!m0.equals(m1)) {
+								valid = false;
+								break;
+							}
+						}
+						
+						if(valid) {
+							return super.equals(abcMultiname);
+						}
+					}
+				}
+			}
+			return false;
+		}
 
 		public function get length():uint { return params.length; }
 		

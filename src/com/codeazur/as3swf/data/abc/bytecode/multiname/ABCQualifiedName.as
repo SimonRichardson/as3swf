@@ -1,6 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
-
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.utils.StringUtils;
 	/**
@@ -22,6 +22,15 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			qname.ns = ns;
 			qname.kind = kind < 0 ? ABCMultinameKind.QNAME : ABCMultinameKind.getType(kind);
 			return qname;
+		}
+		
+		override public function equals(multiname : IABCMultiname) : Boolean {
+			if(this == multiname) {
+				return true;
+			} else if(multiname is ABCQualifiedName && ns.equals(ABCQualifiedName(multiname).ns)) {
+				return super.equals(multiname);
+			} 
+			return false;
 		}
 		
 		public function get hasValidNamespace():Boolean {

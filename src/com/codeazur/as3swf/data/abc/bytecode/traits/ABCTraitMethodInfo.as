@@ -49,8 +49,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 			super.read(data, scanner);
 		}
 		
-		override public function write(bytes : SWFData) : void
-		{
+		override public function write(bytes : SWFData) : void {
 			bytes.writeEncodedU32(id);
 			bytes.writeEncodedU32(getMethodInfoIndex(methodInfo));
 			

@@ -50,17 +50,24 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 			super.read(data, scanner);
 		}
 		
-		override public function write(bytes : SWFData) : void
-		{
+		override public function write(bytes : SWFData) : void {			
 			bytes.writeEncodedU32(id);
 			bytes.writeEncodedU32(getMultinameIndex(typeMultiname));
 			bytes.writeEncodedU32(valueIndex);
 			
-			if(valueIndex > 0) {
+			if(valueKind) {
 				bytes.writeUI8(valueKind.type);
 			}
 			
 			super.write(bytes);
+		}
+			
+		override public function set abcData(value : ABCData) : void {
+			super.abcData = value;
+			
+			if(valueKind) {
+				valueIndex = getConstantPoolIndexByKindWithValue(valueKind, defaultValue);
+			}
 		}
 		
 		public function get hasDefaultValue():Boolean { return valueIndex > 0; }

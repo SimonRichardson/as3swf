@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
@@ -15,6 +16,15 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			mname.namespaces = namespaces;
 			mname.kind = kind < 0? ABCMultinameKind.MULTINAME_LATE : ABCMultinameKind.getType(kind);
 			return mname;
+		}
+		
+		override public function equals(multiname : IABCMultiname) : Boolean {
+			if(this == multiname) {
+				return true;
+			} else if(multiname is ABCMultinameLate && namespaces.equals(ABCMultinameLate(multiname).namespaces)) {
+				return super.equals(multiname);
+			}
+			return false;
 		}
 		
 		override public function get name():String { return "ABCMultinameLate"; }

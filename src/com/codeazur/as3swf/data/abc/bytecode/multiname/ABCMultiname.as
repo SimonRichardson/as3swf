@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.utils.StringUtils;
 	/**
@@ -19,7 +20,14 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			return mname;
 		}
 		
-		override public function get name() : String { return "ABCMultiname"; }
+		override public function equals(multiname : IABCMultiname) : Boolean {
+			if(this == multiname) {
+				return true;
+			} else if(multiname is ABCMultiname && namespaces.equals(ABCMultiname(multiname).namespaces)) {
+				return super.equals(multiname);
+			}
+			return false;
+		}
 		
 		override public function toQualifiedName():ABCQualifiedName {
 			var result:ABCQualifiedName;
@@ -44,6 +52,8 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			
 			return result;
 		}
+		
+		override public function get name() : String { return "ABCMultiname"; }
 		
 		override public function toString(indent:uint = 0):String {
 			var str:String = ABC.toStringCommon(name, indent);

@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
@@ -9,6 +10,15 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		private var _label:String;
 
 		public function ABCNamedMultiname() {}
+		
+		override public function equals(multiname : IABCMultiname) : Boolean {
+			if(this == multiname) {
+				return true;
+			} else if(multiname is ABCNamedMultiname && _label == ABCNamedMultiname(multiname).label) {
+				return super.equals(multiname);
+			}
+			return false;
+		}
 		
 		public function get label():String { return _label; }
 		public function set label(value:String):void { _label = StringUtils.clean(value); }

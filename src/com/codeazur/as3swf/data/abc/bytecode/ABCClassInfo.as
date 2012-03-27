@@ -6,8 +6,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class ABCClassInfo extends ABCTraitSet
-	{
+	public class ABCClassInfo extends ABCTraitSet {
 
 		public var qname:IABCMultiname;
 		public var staticInitialiser:ABCMethodInfo;
@@ -23,6 +22,12 @@ package com.codeazur.as3swf.data.abc.bytecode
 			classInfo.qname = qname;
 			classInfo.staticInitialiser = staticInitialiser;
 			return classInfo;
+		}
+			
+		override public function set abcData(value : ABCData) : void {
+			super.abcData = value;
+
+			staticInitialiser.abcData = value;
 		}
 				
 		override public function get name() : String { return "ABCClassInfo"; }

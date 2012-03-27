@@ -79,7 +79,6 @@ package com.codeazur.as3swf.data.abc
 		protected function getMultinameIndex(multiname:IABCMultiname):int {
 			const index:int = abcData.constantPool.getMultinameIndex(multiname);
 			if(index < 0) {
-				
 				throw new Error('Range Error (recieved:' + multiname + ', with index:' + index + ')');
 			}
 			return index;
@@ -139,6 +138,10 @@ package com.codeazur.as3swf.data.abc
 		
 		protected function getConstantPoolItemByKindAtIndex(kind:ABCConstantKind, index:uint):* {
 			return abcData.constantPool.getPoolItemByKindAtIndex(kind, index);
+		}
+		
+		protected function getConstantPoolIndexByKindWithValue(kind:ABCConstantKind, defaultValue:*):int {
+			return abcData.constantPool.getPoolIndexByKindWithValue(kind, defaultValue);
 		}
 
 		public function get abcData():ABCData { return _abcData; }

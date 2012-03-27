@@ -82,7 +82,7 @@ package com.codeazur.as3swf
 		}
 		
 		private function readABCTag(index:uint):void {
-			const tag:TagDoABC = _abcTags[index];
+			const tag:TagDoABC = _abcTags[(_abcTags.length - 1) - index];
 			const tagIndex:int = tags.indexOf(tag);
 			if(tagIndex > -1) {
 				tags.splice(tagIndex, 1);
@@ -108,13 +108,14 @@ package com.codeazur.as3swf
 				mergeDataSetAsync();
 			}
 		}
-			
+		
 		private function mergeDataSet(index:uint):void {
+			// TODO: split the merging of sets in async
 			const abcDataSet:ABCDataSet = _abcDataSets[index];
 			abcDataSet.visit(new ABCMerge(abcDataSet.abc));
 			// Sort the constants pool
-			const sort:IABCVistor = new ABCSortConstantPool();
-			sort.visit(abcDataSet.abc);
+			//const sort:IABCVistor = new ABCSortConstantPool();
+			//sort.visit(abcDataSet.abc);
 			trace("MERGE", index);
 		}
 		

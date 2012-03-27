@@ -20,12 +20,31 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			return nsSet; 
 		}
 		
+		public function equals(namespaceSet:ABCNamespaceSet):Boolean {
+			var result:Boolean = false;
+			if(this == namespaceSet) {
+				result = true;
+			} else if(this.length == namespaceSet.length) {
+				result = true;
+				const total:uint = namespaces.length;
+				for(var i:uint=0; i<total; i++) {
+					const ns0:ABCNamespace = getAt(i);
+					const ns1:ABCNamespace = namespaceSet.getAt(i);
+					if(!ns0.equals(ns1)) {
+						result = false;
+						break;
+					}
+				}
+			}
+			return result;
+		}
+		
 		public function getAt(index:uint):ABCNamespace {
 			return namespaces[index];
 		}
 		
 		override public function get name():String { return "ABCNamespaceSet"; }
-		override public function get length():uint { return namespaces.length; }
+		override public function get length():uint { return namespaces ? namespaces.length : 0; }
 		
 		override public function toString(indent:uint = 0) : String {
 			var str:String = super.toString(indent);

@@ -20,7 +20,7 @@
 		public static function create(abcData:ByteArray = null, aName:String = "", aLazyInitializeFlag:Boolean = true):TagDoABC {
 			var doABC:TagDoABC = new TagDoABC();
 			if (abcData != null && abcData.length > 0) {
-				doABC.bytes.writeBytes(abcData);
+				doABC.bytes = abcData;
 			}
 			doABC.abcName = aName;
 			doABC.lazyInitializeFlag = aLazyInitializeFlag;
@@ -31,7 +31,7 @@
 		public function set bytes(value:ByteArray):void { 
 			_bytes.position = 0;
 			_bytes.length = 0;
-			_bytes.writeBytes(value, 0, value.length); 
+			_bytes.writeBytes(value); 
 		}
 
 		public function parse(data:SWFData, length:uint, version:uint, async:Boolean = false):void {

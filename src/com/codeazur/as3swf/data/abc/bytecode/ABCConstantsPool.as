@@ -388,13 +388,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function addInteger(integer:int):void {
-			if(getIntegerIndex(integer) < 0) {
+			const index:int = getIntegerIndex(integer);
+			if(index <= 0) {
 				integerPool.push(integer);
 			}
 		}
 		
 		public function getIntegerIndex(integer:int):int {
-			return integerPool.indexOf(integer);
+			return integerPool.lastIndexOf(integer);
 		}
 		
 		public function getIntegerByIndex(index:uint):int {
@@ -402,13 +403,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function addUnsignedInteger(unsignedInteger:uint):void {
-			if(getUnsignedIntegerIndex(unsignedInteger) < 0) {
+			const index:int = getUnsignedIntegerIndex(unsignedInteger);
+			if(index <= 0) {
 				unsignedIntegerPool.push(unsignedInteger);
 			}
 		}
 		
 		public function getUnsignedIntegerIndex(unsignedInteger:uint):int {
-			return unsignedIntegerPool.indexOf(unsignedInteger);
+			return unsignedIntegerPool.lastIndexOf(unsignedInteger);
 		}
 		
 		public function getUnsignedIntegerByIndex(index:uint):uint {
@@ -416,13 +418,14 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function addDouble(double:Number):void {
-			if(getDoubleIndex(double) < 0) {
+			const index:int = getDoubleIndex(double);
+			if(index <= 0) {
 				doublePool.push(double);
 			}
 		}
 		
 		public function getDoubleIndex(double:Number):int {
-			return doublePool.indexOf(double);
+			return doublePool.lastIndexOf(double);
 		}
 		
 		public function getDoubleByIndex(index:uint):Number {
@@ -487,9 +490,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 					addString(nmname.label);
 				}
 				
-				const qname:ABCQualifiedName = multiname.toQualifiedName();
-				if(qname && qname.ns) {
-					addNamespace(qname.ns);
+				if(multiname is ABCQualifiedName) {
+					const qname:ABCQualifiedName = ABCQualifiedName(multiname);
+					if(qname.ns){
+						addNamespace(qname.ns);
+					}
 				}
 						
 				multinamePool.push(multiname);
@@ -501,99 +506,15 @@ package com.codeazur.as3swf.data.abc.bytecode
 				throw new ArgumentError('Multiname can not be null');
 			}
 			
-			var j:uint = 0;
 			var index:int = -1;
-			var nsTotal:int = 0;
-			var contains:Boolean = false;
 			
+			const multiname1:IABCMultiname = multiname;
 			const total:uint = multinamePool.length;
 			for(var i:uint=0; i<total; i++) {
-				const m:IABCMultiname = multinamePool[i];
-				if(m.kind.equals(multiname.kind)) {
-					switch(m.kind) {
-						case ABCMultinameKind.QNAME:
-						case ABCMultinameKind.QNAME_A:
-						case ABCMultinameKind.RUNTIME_QNAME:
-						case ABCMultinameKind.RUNTIME_QNAME_A:
-						case ABCMultinameKind.RUNTIME_QNAME_LATE:
-						case ABCMultinameKind.RUNTIME_QNAME_LATE_A:
-							const qname0:ABCQualifiedName = m.toQualifiedName();
-							const qname1:ABCQualifiedName = multiname.toQualifiedName();
-							if(qname0 == qname1) {
-								return i;
-							} else if(qname0.label == qname1.label && ((qname0.ns && qname1.ns) && qname0.ns.equals(qname1.ns))) {
-								return i;
-							}
-							break;
-							
-						case ABCMultinameKind.MULTINAME:
-						case ABCMultinameKind.MULTINAME_A:
-							const mname0:ABCMultiname = ABCMultiname(m);
-							const mname1:ABCMultiname = ABCMultiname(multiname);
-							if(	mname0 === mname1) {
-								return i;
-							} else if(mname0.label == mname1.label && mname0.namespaces.length == mname1.namespaces.length) {
-								contains = true;
-								nsTotal = mname0.namespaces.length;
-								for(j=0; j<nsTotal; j++) {
-									const mnameNs0:ABCNamespace = mname0.namespaces.getAt(j);
-									const mnameNs1:ABCNamespace = mname1.namespaces.getAt(j);
-									if(!mnameNs0.equals(mnameNs1)) {
-										contains = false;
-										break;
-									}
-								}
-								if(contains) {
-									return i;
-								}
-							}
-							break;
-						
-						case ABCMultinameKind.MULTINAME_LATE:
-						case ABCMultinameKind.MULTINAME_LATE_A:
-							
-							const mnameLate0:ABCMultinameLate = ABCMultinameLate(m);
-							const mnameLate1:ABCMultinameLate = ABCMultinameLate(multiname);
-							if(mnameLate0.namespaces.length == mnameLate1.namespaces.length) {
-								contains = true;
-								nsTotal = mnameLate0.namespaces.length;
-								for(j=0; j<nsTotal; j++) {
-									const mnameLateNs0:ABCNamespace = mnameLate0.namespaces.getAt(j);
-									const mnameLateNs1:ABCNamespace = mnameLate1.namespaces.getAt(j);
-									if(!mnameLateNs0.equals(mnameLateNs1)) {
-										contains = false;
-										break;
-									}
-								}
-								if(contains) {
-									return i;
-								}
-							}
-							break;
-							
-						case ABCMultinameKind.GENERIC:
-							const generic0:ABCMultinameGeneric = ABCMultinameGeneric(m);
-							const generic1:ABCMultinameGeneric = ABCMultinameGeneric(multiname);
-							if(generic0.multiname.equals(generic1.multiname) && generic0.params.length == generic1.params.length) {
-								contains = true;
-								nsTotal = generic0.params.length;
-								for(j=0; j<nsTotal; j++) {
-									const genericMultiname0:IABCMultiname = generic0.params[j];
-									const genericMultiname1:IABCMultiname = generic1.params[j];
-									if(!genericMultiname0.equals(genericMultiname1)) {
-										contains = false;
-										break;
-									}
-								}
-								if(contains) {
-									return i;
-								}
-							}
-							break;
-						
-						default:	
-							throw new Error();
-					}
+				const multiname0:IABCMultiname = multinamePool[i];
+				if(multiname0.equals(multiname1)) {
+					index = i;
+					break;
 				}
 			}
 			
@@ -617,8 +538,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const total:uint = namespacePool.length;
 			for(var i:uint=0; i<total; i++) {
 				const n:ABCNamespace = namespacePool[i];
-				
-				if(ABCNamespace.isType(n, ns)) {
+				if(n.equals(ns)) {
 					index = i;
 					break;
 				}
@@ -647,24 +567,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function getNamespaceSetIndex(namespaceSet:ABCNamespaceSet):int {
 			var index:int = -1;
 			
+			const set1:ABCNamespaceSet = namespaceSet;
 			const total:uint = namespaceSetPool.length;
 			for(var i:uint=0; i<total; i++) {
-				const ns:ABCNamespaceSet = namespaceSetPool[i];
-				if(ns.length == namespaceSet.length) {
-					var contains:Boolean = true;
-					
-					const namespaceSetTotal:uint = namespaceSet.length;
-					for(var j:uint=0; j<namespaceSetTotal; j++) {
-						const nsNamespace:ABCNamespace = ns.getAt(j);
-						if(getNamespaceIndex(nsNamespace) < 0) {
-							contains = false;
-							break;
-						}
-					}
-					
-					if(contains) {
-						return i;
-					}
+				const set0:ABCNamespaceSet = namespaceSetPool[i];
+				if(set0.equals(set1)) {
+					index = i;
+					break;
 				}
 			}
 			
@@ -719,9 +628,55 @@ package com.codeazur.as3swf.data.abc.bytecode
 				case ABCConstantKind.UNDEFINED:
 					item = undefined;
 					break;
+					
+				default:
+					throw new Error("Unknown kind");
 			}
 			
 			return item;
+		}
+		
+		public function getPoolIndexByKindWithValue(kind:ABCConstantKind, defaultValue:*):int {
+			var result:int;
+			switch(kind) {
+				case ABCConstantKind.INT:
+					result = getIntegerIndex(defaultValue);
+					break;
+					
+				case ABCConstantKind.UINT:
+					result = getUnsignedIntegerIndex(defaultValue);
+					break;	
+				
+				case ABCConstantKind.DOUBLE:
+					result = getDoubleIndex(defaultValue);
+					break;
+				
+				case ABCConstantKind.UTF8:
+					result = getStringIndex(defaultValue);
+					break;
+				
+				case ABCConstantKind.NAMESPACE:
+				case ABCConstantKind.PACKAGE_NAMESPACE:
+				case ABCConstantKind.PACKAGE_INTERNAL_NAMESPACE:
+				case ABCConstantKind.PROTECTED_NAMESPACE:
+				case ABCConstantKind.EXPLICIT_NAMESPACE:
+				case ABCConstantKind.STATIC_PROTECTED_NAMESPACE:
+				case ABCConstantKind.PRIVATE_NAMESPACE:
+					result = getNamespaceIndex(defaultValue);
+					break;
+				
+				case ABCConstantKind.TRUE:
+				case ABCConstantKind.FALSE:
+				case ABCConstantKind.NULL:
+				case ABCConstantKind.UNDEFINED:
+					result = 0;
+					break;
+				
+				default:
+					throw new Error("Unknown kind (recieved=" + kind + ")");
+			}
+			
+			return result;
 		}
 		
 		private function calculatePoolTotal(value:uint):uint {

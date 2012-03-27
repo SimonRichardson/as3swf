@@ -72,6 +72,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		override public function set abcData(value : ABCData) : void {
 			super.abcData = value;
 			
+			methodInfo.abcData = value;
 			opcode.abcData = value;
 			exceptionInfo.abcData = value;
 		}

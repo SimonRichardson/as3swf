@@ -19,7 +19,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		}
 
 		public function equals(multiname:IABCMultiname):Boolean {
-			return ABCMultinameKind.isType(kind, multiname.kind) && fullName == multiname.fullName; 
+			return kind.equals(multiname.kind); 
 		}
 
 		public function get kind():ABCMultinameKind { return _kind; }
