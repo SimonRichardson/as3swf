@@ -1,5 +1,6 @@
 package com.codeazur.as3swf
 {
+	import com.codeazur.as3swf.data.abc.tools.ABCSortConstantPool;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCDataSet;
 	import com.codeazur.as3swf.data.abc.io.ABCReader;
@@ -77,7 +78,6 @@ package com.codeazur.as3swf
 			initialiseMerge();
 			
 			const total:uint = _abcTags.length;
-			trace("total", total);
 			if(total > 1) {
 				_tmpIndex = total;
 				_timeout = setTimeout(readABCTagAsyncHandler, 1);
@@ -88,7 +88,6 @@ package com.codeazur.as3swf
 		
 		private function readABCTag(index:uint):void {
 			const tag:TagDoABC = _abcTags[(_abcTags.length - 1) - index];
-			trace(tag);
 			const tagIndex:int = tags.indexOf(tag);
 			if(tagIndex > -1) {
 				tags.splice(tagIndex, 1);
@@ -103,7 +102,6 @@ package com.codeazur.as3swf
 			} else {
 				throw new Error("Invalid TagDoABC index");
 			}
-			trace("READ", index, tag);
 		}
 		
 		private function readABCTagAsyncHandler():void {
@@ -118,11 +116,13 @@ package com.codeazur.as3swf
 		private function mergeDataSet(index:uint):void {
 			// TODO: split the merging of sets in async
 			const abcDataSet:ABCDataSet = _abcDataSets[index];
-			//abcDataSet.visit(new ABCOptimizeMetadata());
-			//abcDataSet.visit(new ABCRemoveDebugOpcodes());
-			//abcDataSet.visit(new ABCRemoveTraceOpcodes());
+			abcDataSet.visit(new ABCOptimizeMetadata());
+			abcDataSet.visit(new ABCRemoveDebugOpcodes());
+//			abcDataSet.visit(new ABCRemoveTraceOpcodes());
 			abcDataSet.visit(new ABCMerge(abcDataSet.abc));
-			trace("MERGE", index);
+			
+//			const sort:ABCSortConstantPool = new ABCSortConstantPool();
+//			sort.visit(abcDataSet.abc);
 		}
 		
 		private function mergeDataSetAsync():void {
@@ -150,7 +150,6 @@ package com.codeazur.as3swf
 			// Inject the tag back in
 			const tag:TagDoABC = TagDoABC.create(bytes, TAG_DO_ABC_MERGE_NAME + index);
 			tags.splice(_tmpTagsIndex, 0, tag);
-			trace("WRITE", index);
 		}
 		
 		private function writeDataSetAsync():void {
@@ -163,7 +162,6 @@ package com.codeazur.as3swf
 				writeDataSet(_tmpIndex);
 				_timeout = setTimeout(writeDataSetAsyncHandler, 1);
 			} else {
-				trace("DONE");
 				dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_COMPLETE, 1, 1));
 			}
 		}
