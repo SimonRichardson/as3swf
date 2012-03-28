@@ -34,12 +34,13 @@ package com.codeazur.as3swf.data.abc.tools
 							// A debug target should not be a jump target.
 							throw new Error('Invalid opcode jump target');
 						}
-						
+						// Locate any jump targets surrounding the opcode. 
 						const targetPosition:ABCOpcodeJumpTargetPosition = opcodes.getJumpTargetPosition(opcode);
 						if(targetPosition) {
 							const delta:int = targetPosition.finish - targetPosition.start;
+							// Play it safe and locate the center of the opcode length.
 							const position:int = int(targetPosition.start + (delta / 2));
-							
+							// Go through the targets and alter the code jump point length, removing the opcode length.
 							const targets:Vector.<ABCOpcodeJumpTarget> = opcodes.getJumpToTargetsByPosition(position);
 							const targetsTotal:uint = targets.length;
 							for(var j:uint=0; j<targetsTotal; j++) {
@@ -56,11 +57,11 @@ package com.codeazur.as3swf.data.abc.tools
 									}
 								}
 							}
-							
-							opcodes.opcodes.splice(index, 1);
 						} else {
 							throw new Error('Invalid opcode target position');
 						}
+						// Finally remove the debug opcode.
+						opcodes.opcodes.splice(index, 1);
 					}
 				}
 				
