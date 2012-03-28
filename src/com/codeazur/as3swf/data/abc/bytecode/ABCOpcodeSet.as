@@ -199,7 +199,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			return result;
 		}
-		
+				
 		public function getJumpToTargetPosition(position:uint):ABCOpcodeJumpTargetPosition {
 			var result:ABCOpcodeJumpTargetPosition = null;
 			
@@ -209,6 +209,23 @@ package com.codeazur.as3swf.data.abc.bytecode
 				if(targetPosition.contains(position)) {
 					result = targetPosition;
 					break;
+				}
+			}
+			
+			return result;
+		}
+		
+		public function getJumpToTargetsByPosition(position:uint):Vector.<ABCOpcodeJumpTarget> {
+			var result:Vector.<ABCOpcodeJumpTarget> = new Vector.<ABCOpcodeJumpTarget>();
+			
+			const total:uint = jumpTargets.length;
+			for(var i:uint=0; i<total; i++) {
+				const jumpTarget:ABCOpcodeJumpTarget = jumpTargets[i];
+				const pos0:ABCOpcodeJumpTargetPosition = getJumpTargetPosition(jumpTarget.opcode);
+				const pos1:ABCOpcodeJumpTargetPosition = getJumpTargetPosition(jumpTarget.targetOpcode);
+				
+				if(position >= pos0.start && position <= pos1.finish) {
+					result.push(jumpTarget);
 				}
 			}
 			

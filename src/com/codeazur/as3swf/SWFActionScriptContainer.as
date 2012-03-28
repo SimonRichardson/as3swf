@@ -146,7 +146,7 @@ package com.codeazur.as3swf
 			// Inject the tag back in
 			const tag:TagDoABC = TagDoABC.create(bytes, TAG_DO_ABC_MERGE_NAME + index);
 			tags.splice(_tmpTagsIndex, 0, tag);
-			trace("WRITE", index, tags);
+			trace("WRITE", index);
 		}
 		
 		private function writeDataSetAsync():void {
