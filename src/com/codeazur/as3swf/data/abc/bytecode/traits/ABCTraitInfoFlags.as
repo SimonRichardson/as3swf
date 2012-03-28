@@ -22,5 +22,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 		public static function isType(flag:uint, type:ABCTraitInfoFlags):Boolean {
 			return ((flag >> 4) & type._type) != 0; 
 		}
+		
+		public function get type():uint { return _type; }
 	}
 }

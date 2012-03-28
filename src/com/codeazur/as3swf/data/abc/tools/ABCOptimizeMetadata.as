@@ -3,6 +3,7 @@ package com.codeazur.as3swf.data.abc.tools
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMetadata;
 	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoFlags;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -55,7 +56,11 @@ package com.codeazur.as3swf.data.abc.tools
 						}
 					}
 					if(metadatas.length == 0) {
-						// TODO : remove has metadata flag
+						info.kind &= ~(ABCTraitInfoFlags.METADATA.type << 4);
+						// Check to make sure we remove the metadata bitwise.
+						if(info.hasMetadata) {
+							throw new Error("Unknown error");
+						}
 					}
 				}
 			}
