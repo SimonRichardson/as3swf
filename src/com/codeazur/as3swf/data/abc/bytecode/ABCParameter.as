@@ -11,7 +11,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var optional:Boolean;
 		public var optionalKind:ABCConstantKind;
 
-		public var label : String;
+		public var label:String;
 		public var defaultValue : *;
 
 		public function ABCParameter() {

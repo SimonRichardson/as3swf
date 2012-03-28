@@ -337,7 +337,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 					case ABCMultinameKind.QNAME:
 					case ABCMultinameKind.QNAME_A:
 						
-						const qname:ABCQualifiedName = abcMultiname.toQualifiedName();
+						const qname:ABCQualifiedName = ABCQualifiedName(abcMultiname);
 						bytes.writeEncodedU32(getNamespaceIndex(qname.ns));
 						bytes.writeEncodedU32(getStringIndex(qname.label));
 						break;

@@ -11,8 +11,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public class ABCTraitMethodInfo extends ABCTraitInfo
-	{
+	public class ABCTraitMethodInfo extends ABCTraitInfo {
 		
 		public var id:uint;
 		public var isStatic:Boolean;

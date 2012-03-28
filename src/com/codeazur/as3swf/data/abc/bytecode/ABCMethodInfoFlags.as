@@ -23,5 +23,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return ((flag & type._type) != 0); 
 		}
 		
+		public function get type():uint { return _type; }
 	}
 }

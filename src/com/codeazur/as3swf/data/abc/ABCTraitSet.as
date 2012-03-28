@@ -20,6 +20,27 @@ package com.codeazur.as3swf.data.abc
 			isStatic = false;
 			traits = new Vector.<ABCTraitInfo>();
 		}
+		
+		public function addTrait(trait:ABCTraitInfo):void{
+			addTraitAt(trait, traits.length);
+		}
+		
+		public function addTraitAt(trait:ABCTraitInfo, index:uint):void{
+			const traitIndex:int = traits.indexOf(trait);
+			if(traitIndex >= 0) {
+				throw new Error('Trait already exists');
+			}
+			
+			if(index == 0) {
+				traits.unshift(trait);
+			} else if(index == traits.length) {
+				traits.push(trait);
+			} else if(index > 0 && index < traits.length) {
+				traits.splice(index, 0, trait);
+			} else {
+				throw new RangeError("Invalid index");
+			}
+		}
 
 		public function read(data:SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>) : void {
 			const total:uint = data.readEncodedU30();

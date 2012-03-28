@@ -322,52 +322,40 @@ package com.codeazur.as3swf.data.abc.io
 				
 	            const kind:uint = input.readUI8();
 	            switch(kind) {
-		            case 7: // '\007'
-		            case 13: // '\r'
+		            case 0x07:
+		            case 0x0D:
 		                input.readEncodedU32();
 		                input.readEncodedU32();
 		                break;
 		
-		            case 15: // '\017'
-		            case 16: // '\020'
+		            case 0x0f:
+		            case 0x10:
+		                input.readEncodedU32();
+		                break;
+					
+					case 0x11:
+		            case 0x12:
+		                break;
+		
+		            case 0x09:
+		            case 0x0E:
+		                input.readEncodedU32();
 		                input.readEncodedU32();
 		                break;
 		
-		            case 9: // '\t'
-		            case 14: // '\016'
-		                input.readEncodedU32();
-		                input.readEncodedU32();
-		                break;
-		
-		            case 27: // '\033'
-		            case 28: // '\034'
+		            case 0x1B:
+		            case 0x1C:
 		                input.readEncodedU32();
 		                break;
 		
-		            case 29: // '\035'
+		            case 0x1D:
 		                input.readEncodedU32();
 		                const count:uint = input.readEncodedU32();
 		                input.skipEntries(count);
 		                break;
-		
-		            case 8: // '\b'
-		            case 10: // '\n'
-		            case 11: // '\013'
-		            case 12: // '\f'
-		            case 19: // '\023'
-		            case 20: // '\024'
-		            case 21: // '\025'
-		            case 22: // '\026'
-		            case 23: // '\027'
-		            case 24: // '\030'
-		            case 25: // '\031'
-		            case 26: // '\032'
+
 		            default:
-		                throw new Error("Invalid constant type: " + kind);
-		
-		            case 17: // '\021'
-		            case 18: // '\022'
-		                break;
+		                throw new Error("Invalid constant type: " + kind + ' at index: ' + i);
 	            }
 	        }
 	    }

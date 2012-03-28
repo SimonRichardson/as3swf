@@ -22,6 +22,38 @@ package com.codeazur.as3swf.data.abc.bytecode
 			methodBodies = new Vector.<ABCMethodBody>();
 		}
 		
+		public function add(methodBody:ABCMethodBody):void {
+			addAt(methodBody, length);
+		}
+		
+		public function addAt(methodBody:ABCMethodBody, index:uint):void {
+			const methodInfo:ABCMethodInfo = methodBody.methodInfo;
+			const methodName:String = methodInfo.methodName;
+			const total:uint = length;
+			for(var i:uint=0; i<total; i++) {
+				const m:ABCMethodBody = methodBodies[i];
+				if(methodName == m.methodInfo.methodName) {
+					throw new Error('Method name already exists');
+				}
+			}
+			abcData.methodInfoSet.addAt(methodInfo, index);
+			
+			const methodIndex:uint = getMethodInfoIndex(methodInfo);
+			
+			methodBody.methodInfoIndex = methodIndex;
+			methodInfo.methodIndex = methodIndex;
+			
+			if(index == 0) {
+				methodBodies.unshift(methodBody);
+			} else if(index == length) {
+				methodBodies.push(methodBody);
+			} else if(index > 0 && index < length) {
+				methodBodies.splice(index, 0, methodBody);
+			} else {
+				throw new RangeError("Invalid index");
+			}
+		}
+		
 		public function merge(methodBodySet:ABCMethodBodySet):void {
 			methodBodySet.abcData = abcData;
 			

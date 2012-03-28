@@ -18,6 +18,43 @@ package com.codeazur.as3swf.data.abc.bytecode
 			methodInfos = new Vector.<ABCMethodInfo>();
 		}
 		
+		public function add(methodInfo:ABCMethodInfo):void {
+			addAt(methodInfo, length);
+		}
+		
+		public function addAt(methodInfo:ABCMethodInfo, index:uint):void {
+			if(contains(methodInfo)) {
+				throw new Error('Method info already exists');
+			}
+			if(methodInfo.multiname) {
+				addMultiname(methodInfo.multiname);
+			}
+			addString(methodInfo.methodName);
+			addMultiname(methodInfo.returnType);
+			
+			const parameters:Vector.<ABCParameter> = methodInfo.parameters;
+			const total:uint = parameters.length;
+			for(var i:uint=0; i<total; i++) {
+				const parameter:ABCParameter = parameters[i];
+				if(parameter.multiname) {
+					addMultiname(parameter.multiname);
+				}
+				if(parameter.label) {
+					addString(parameter.label);
+				}
+			}
+			
+			if(index == 0) {
+				methodInfos.unshift(methodInfo);
+			} else if(index == length) {
+				methodInfos.push(methodInfo);
+			} else if(index > 0 && index < length) {
+				methodInfos.splice(index, 0, methodInfo);
+			} else {
+				throw new RangeError("Invalid index");
+			}
+		}
+		
 		public function merge(methodInfoSet:ABCMethodInfoSet):void {
 			methodInfoSet.abcData = abcData;
 			
@@ -54,6 +91,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public function getAt(index:uint):ABCMethodInfo {
 			return methodInfos[index];
+		}
+		
+		public function contains(methodInfo:ABCMethodInfo):Boolean {
+			return methodInfos.indexOf(methodInfo) >= 0;
 		}
 				
 		override public function get name():String { return "ABCMethodInfoSet"; }

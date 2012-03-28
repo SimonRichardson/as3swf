@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameBuilder;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
@@ -20,27 +21,16 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var scopeName:String;
 		public var flags:uint;
 		public var optionalTotal:int;
-		public var isConstructor:Boolean;
 		public var isValidMethodName:Boolean;
 
 		public function ABCMethodInfo(abcData:ABCData) {
 			super(abcData);
+			
+			isValidMethodName = false;
 		}
 		
 		public static function create(abcData:ABCData):ABCMethodInfo {
 			return new ABCMethodInfo(abcData);
-		}
-		
-		private static function getScopeName(methodName:String):String {
-			var result:String = "";
-			if (null != methodName && methodName.length > 0) {
-				const parts:Array = methodName.split(".");
-				if (parts.length > 1) {
-					parts.pop();
-					result = parts.join(".");
-				}
-			}
-			return result;
 		}
 		
 		public function read(data:SWFData, scanner:ABCScanner):void {
@@ -73,7 +63,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 			methodName = getStringByIndex(methodIndex);
 			
 			methodNameLabel = methodName;
-			scopeName = getScopeName(methodName);
+			
+			const normalised:String = ABCQualifiedNameBuilder.create(methodName).fullName;
+			const parts:Array = normalised.split(".");
+			if(parts.length > 1) {
+				parts.pop();
+			}
+			scopeName = parts.join("."); 
 			
 			flags = data.readUI8();
 						
@@ -104,20 +100,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 				} else {
 					nameParam.label = "";
 				}
-			}
-			
-			if(isValidMethodName && !StringUtils.isEmpty(methodNameLabel)){
-				const parts:Array = methodNameLabel.split("/");
-				if(parts.length == 2) {
-					const qname:String = parts[0];
-					const name:String = parts[1];
-					const diff:int = qname.lastIndexOf(name) - name.length;
-					isConstructor = diff >= 0;
-				} else {
-					isConstructor = false;
-				}
-			} else {
-				isConstructor = false;
 			}
 		}
 		
@@ -173,6 +155,11 @@ package com.codeazur.as3swf.data.abc.bytecode
 			
 			str += "\n" + StringUtils.repeat(indent + 2);
 			str += "MethodName: " + methodNameLabel;
+			
+			if(multiname) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Multiname: ";
+				str += "\n" + multiname.toString(indent + 4);
+			}
 			
 			const total:int = parameters.length;
 			if(total > 0) {
