@@ -63,38 +63,38 @@ package com.codeazur.as3swf.data.abc.bytecode
 			var total:uint;
 			
 			total = value.integerPool.length;
-			for(i=0; i<total; i++) {
+			for(i=1; i<total; i++) {
 				addInteger(value.integerPool[i]);
 			}
 			
 			total = value.unsignedIntegerPool.length;
-			for(i=0; i<total; i++) {
+			for(i=1; i<total; i++) {
 				addUnsignedInteger(value.unsignedIntegerPool[i]);
 			}
 
 			total = value.doublePool.length;
-			for(i=0; i<total; i++) {
+			for(i=1; i<total; i++) {
 				addDouble(value.doublePool[i]);
 			}
 			
 			total = value.stringPool.length;
-			for(i=0; i<total; i++) {
+			for(i=1; i<total; i++) {
 				addString(value.stringPool[i]);
 			}
 			
 			total = value.namespacePool.length;
-			for(i=0; i<total; i++) {
+			for(i=1; i<total; i++) {
 				addNamespace(value.namespacePool[i]);
 			}
 			
 			total = value.namespaceSetPool.length;
-			for(i=0; i<total; i++) {
+			for(i=1; i<total; i++) {
 				const nsSet:ABCNamespaceSet = value.namespaceSetPool[i];
 				addNamespaceSet(nsSet);
 			}
 			
 			total = value.multinamePool.length;
-			for(i=0; i<total; i++) {
+			for(i=1; i<total; i++) {
 				const abcMultiname:IABCMultiname = value.multinamePool[i];
 				addMultiname(abcMultiname);
 			}

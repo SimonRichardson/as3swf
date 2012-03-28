@@ -77,9 +77,12 @@ package com.codeazur.as3swf
 			initialiseMerge();
 			
 			const total:uint = _abcTags.length;
+			trace("total", total);
 			if(total > 1) {
 				_tmpIndex = total;
 				_timeout = setTimeout(readABCTagAsyncHandler, 1);
+			} else {
+				dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_COMPLETE, 1, 1));
 			}
 		}
 		
@@ -115,9 +118,9 @@ package com.codeazur.as3swf
 		private function mergeDataSet(index:uint):void {
 			// TODO: split the merging of sets in async
 			const abcDataSet:ABCDataSet = _abcDataSets[index];
-			abcDataSet.visit(new ABCOptimizeMetadata());
-			abcDataSet.visit(new ABCRemoveDebugOpcodes());
-			abcDataSet.visit(new ABCRemoveTraceOpcodes());
+			//abcDataSet.visit(new ABCOptimizeMetadata());
+			//abcDataSet.visit(new ABCRemoveDebugOpcodes());
+			//abcDataSet.visit(new ABCRemoveTraceOpcodes());
 			abcDataSet.visit(new ABCMerge(abcDataSet.abc));
 			trace("MERGE", index);
 		}

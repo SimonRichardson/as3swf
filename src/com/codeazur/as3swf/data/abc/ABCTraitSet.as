@@ -44,6 +44,7 @@ package com.codeazur.as3swf.data.abc
 
 		public function read(data:SWFData, scanner:ABCScanner, traitPositions:Vector.<uint>) : void {
 			const total:uint = data.readEncodedU30();
+			
 			for(var i:uint=0; i<total; i++) {
 				data.position = traitPositions[i];
 				

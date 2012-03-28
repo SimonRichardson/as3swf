@@ -1,6 +1,5 @@
 package com.codeazur.as3swf.data.abc.bytecode.attributes
 {
-
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	/**
@@ -44,13 +43,16 @@ package com.codeazur.as3swf.data.abc.bytecode.attributes
 				case ABCOpcodeKind.INCLOCAL_I:
 				case ABCOpcodeKind.KILL:
 				case ABCOpcodeKind.NEWARRAY:
-				case ABCOpcodeKind.NEWCLASS:
 				case ABCOpcodeKind.NEWFUNCTION:
 				case ABCOpcodeKind.NEWOBJECT:
 				case ABCOpcodeKind.SETGLOBALSLOT:
 				case ABCOpcodeKind.SETLOCAL:
 				case ABCOpcodeKind.SETSLOT:
 					attribute = ABCOpcodeIntAttribute.create(abcData);
+					break;
+				
+				case ABCOpcodeKind.NEWCLASS:
+					attribute = ABCOpcodeNewClassAttribute.create(abcData);
 					break;
 				
 				case ABCOpcodeKind.BKPTLINE:
