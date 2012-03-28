@@ -5,10 +5,9 @@ package com.codeazur.as3swf.data.abc.tools
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeJumpTarget;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeJumpTargetPosition;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
-	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeIntegerAttribute;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -30,29 +29,28 @@ package com.codeazur.as3swf.data.abc.tools
 						// Patch jump positions.
 						const jumpTarget:ABCOpcodeJumpTarget = opcodes.getJumpTargetByTarget(opcode);
 						if(jumpTarget) {
-							if(index < opcodes.length) { 
+							if(index < opcodes.length) {
 								jumpTarget.targetOpcode = opcodes.getAt(index + 1);
 							} else {
 								throw new Error('Invalid opcode jump position');
 							}
 						}
 						
-						opcodes.opcodes.splice(index, 1);
-						
-						const tailIndex:int = opcodes.length;
-						while(--tailIndex>index - 1) {
-							const tail:ABCOpcode = opcodes.getAt(tailIndex);
-							const possible:ABCOpcodeJumpTarget = opcodes.getJumpTargetByOpcode(tail);
-							if(possible && tail == possible.opcode) {
-								const tailAttribute:ABCOpcodeAttribute = tail.attribute;
-								if(tailAttribute is IABCOpcodeIntegerAttribute) {
-									const attribute:IABCOpcodeIntegerAttribute = IABCOpcodeIntegerAttribute(tailAttribute);
-									trace(index, attribute.integer, attribute.integer - 1);
-									attribute.integer--;
-								}
-							}
+						const targetPosition:ABCOpcodeJumpTargetPosition = opcodes.getJumpTargetPosition(opcode);
+						if(targetPosition) {
+							const delta:int = targetPosition.finish - targetPosition.start;
+							
+							opcodes.opcodes.splice(index, 1);
+							
+							// TODO : move the jump positions back by the delta
+						} else {
+							throw new Error('Invalid opcode target position');
 						}
 					}
+				}
+				
+				if(opcodes.autoBuildJumpTargets) {
+					opcodes.buildJumpTargets();
 				}
 			}
 		}

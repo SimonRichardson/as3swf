@@ -68,10 +68,9 @@ package com.codeazur.as3swf.data.abc.bytecode
 					
 					const start:uint = dataPositionOffset;
 					const finish:uint = dataPositionOffset + (data.position - dataPosition);
+					dataPositionOffset = finish;
 					
 					_jumpPositions.push(ABCOpcodeJumpTargetPosition.create(opcode, start, finish));
-					
-					dataPositionOffset = finish;
 				}
 				
 				if(autoBuildJumpTargets) {
@@ -115,7 +114,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 						if(switchTarget) {
 							for(var j:uint=0; j<offsetsTotal; j++) {
 								const switchToPosition:uint = switchTarget.start + offsets[j];
-								const switchToTarget:ABCOpcodeJumpTargetPosition = getJumpToTarget(switchToPosition);
+								const switchToTarget:ABCOpcodeJumpTargetPosition = getJumpToTargetPosition(switchToPosition);
 								if(switchToTarget && switchTarget.opcode) {
 									jumpTarget.optionalTargetOpcodes.push(switchTarget.opcode);
 								} else {
@@ -123,7 +122,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 								}
 							}
 							const defaultPosition:uint = switchTarget.start + switchAttribute.defaultOffset;
-							const defaultToTarget:ABCOpcodeJumpTargetPosition = getJumpToTarget(defaultPosition);
+							const defaultToTarget:ABCOpcodeJumpTargetPosition = getJumpToTargetPosition(defaultPosition);
 							if(defaultToTarget && defaultToTarget.opcode) {
 								jumpTarget.targetOpcode = defaultToTarget.opcode;
 							} else {
@@ -139,7 +138,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 							const opcodeTarget:ABCOpcodeJumpTargetPosition = getJumpTargetPosition(jumpOpcode);
 							if(opcodeTarget) {
 								const jumpToPosition:uint = opcodeTarget.finish + attribute.integer;
-								const jumpToTarget:ABCOpcodeJumpTargetPosition = getJumpToTarget(jumpToPosition);
+								const jumpToTarget:ABCOpcodeJumpTargetPosition = getJumpToTargetPosition(jumpToPosition);
 								if(jumpToTarget && jumpToTarget.opcode) {
 									jumpTarget.targetOpcode = jumpToTarget.opcode;
 								} else {
@@ -186,7 +185,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return result;
 		}
 		
-		private function getJumpTargetPosition(opcode:ABCOpcode):ABCOpcodeJumpTargetPosition {
+		public function getJumpTargetPosition(opcode:ABCOpcode):ABCOpcodeJumpTargetPosition {
 			var result:ABCOpcodeJumpTargetPosition = null;
 			
 			const total:uint = _jumpPositions.length;
@@ -201,7 +200,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return result;
 		}
 		
-		private function getJumpToTarget(position:uint):ABCOpcodeJumpTargetPosition {
+		public function getJumpToTargetPosition(position:uint):ABCOpcodeJumpTargetPosition {
 			var result:ABCOpcodeJumpTargetPosition = null;
 			
 			const total:uint = _jumpPositions.length;
