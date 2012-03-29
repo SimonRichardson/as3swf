@@ -52,6 +52,16 @@ package com.codeazur.as3swf.data.abc.tools
 					while(--index1 > -1) {
 						const metadata:ABCMetadata = metadatas[index1];
 						if(metadata.label.indexOf(GO_TO) == 0) {
+							// Remove the info from constants pool.
+							info.abcData.constantPool.removeString(metadata.label);
+							// Remove the properties from the constants pool.
+							for(var key:String in metadata.properties) {
+								info.abcData.constantPool.removeString(key);
+								
+								const prop:String = metadata.properties[key];
+								info.abcData.constantPool.removeString(prop);
+							}
+							
 							metadatas.splice(index1, 1);
 						}
 					}

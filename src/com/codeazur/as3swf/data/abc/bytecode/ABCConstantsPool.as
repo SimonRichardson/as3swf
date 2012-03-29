@@ -394,6 +394,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function removeInteger(integer:uint):void {
+			const index:int = getIntegerIndex(integer);
+			if(index >= 0) {
+				integerPool.splice(index, 1);
+			}
+		}
+		
 		public function getIntegerIndex(integer:int):int {
 			return integerPool.lastIndexOf(integer);
 		}
@@ -406,6 +413,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const index:int = getUnsignedIntegerIndex(unsignedInteger);
 			if(index <= 0) {
 				unsignedIntegerPool.push(unsignedInteger);
+			}
+		}
+		
+		public function removeUnsignedInteger(unsignedInteger:uint):void {
+			const index:int = getUnsignedIntegerIndex(unsignedInteger);
+			if(index >= 0) {
+				unsignedIntegerPool.splice(index, 1);
 			}
 		}
 		
@@ -424,6 +438,13 @@ package com.codeazur.as3swf.data.abc.bytecode
 			}
 		}
 		
+		public function removeDouble(double:Number):void {
+			const index:int = getDoubleIndex(double);
+			if(index >= 0) {
+				doublePool.splice(index, 1);
+			}
+		}
+		
 		public function getDoubleIndex(double:Number):int {
 			return doublePool.lastIndexOf(double);
 		}
@@ -433,8 +454,16 @@ package com.codeazur.as3swf.data.abc.bytecode
 		}
 		
 		public function addString(string:String):void {
-			if(getStringIndex(string) < 0) {
+			const index:int = getStringIndex(string);
+			if(index < 0) {
 				stringPool.push(string);
+			}
+		}
+		
+		public function removeString(string:String):void {
+			const index:int = getStringIndex(string);
+			if(index >= 0) {
+				stringPool.splice(index, 1);
 			}
 		}
 		

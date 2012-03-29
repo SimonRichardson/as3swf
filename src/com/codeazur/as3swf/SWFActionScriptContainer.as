@@ -119,10 +119,11 @@ package com.codeazur.as3swf
 			abcDataSet.visit(new ABCOptimizeMetadata());
 			abcDataSet.visit(new ABCRemoveDebugOpcodes());
 //			abcDataSet.visit(new ABCRemoveTraceOpcodes());
+			abcDataSet.visit(new ABCSortConstantPool());
 			abcDataSet.visit(new ABCMerge(abcDataSet.abc));
 			
-//			const sort:ABCSortConstantPool = new ABCSortConstantPool();
-//			sort.visit(abcDataSet.abc);
+			const sort:ABCSortConstantPool = new ABCSortConstantPool();
+			//sort.visit(abcDataSet.abc);
 		}
 		
 		private function mergeDataSetAsync():void {

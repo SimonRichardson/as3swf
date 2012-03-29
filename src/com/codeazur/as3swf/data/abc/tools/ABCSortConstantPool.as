@@ -11,7 +11,11 @@ package com.codeazur.as3swf.data.abc.tools
 		}
 
 		public function visit(value : ABCData) : void {
+			const total:uint = value.constantPool.stringPool.length;
 			sort(value.constantPool.stringPool, DESCENDING ^ CASEINSENSITIVE);
+			if(total != value.constantPool.stringPool.length) {
+				throw new Error('Invalid ConstantPool size after sort');
+			}
 		}
 	}
 }

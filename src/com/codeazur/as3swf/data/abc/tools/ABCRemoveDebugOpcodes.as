@@ -1,6 +1,5 @@
 package com.codeazur.as3swf.data.abc.tools
 {
-
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
@@ -9,6 +8,7 @@ package com.codeazur.as3swf.data.abc.tools
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
+	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeStringAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.IABCOpcodeIntegerAttribute;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -61,6 +61,11 @@ package com.codeazur.as3swf.data.abc.tools
 							throw new Error('Invalid opcode target position');
 						}
 						// Finally remove the debug opcode.
+						if(ABCOpcodeKind.isType(kind, ABCOpcodeKind.DEBUGFILE)) {
+							const debugAttribute:ABCOpcodeStringAttribute = ABCOpcodeStringAttribute(opcode.attribute);
+							value.constantPool.removeString(debugAttribute.string);
+						}
+						
 						opcodes.opcodes.splice(index, 1);
 					}
 				}
