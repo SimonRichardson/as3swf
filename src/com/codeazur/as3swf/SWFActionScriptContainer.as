@@ -1,6 +1,5 @@
 package com.codeazur.as3swf
 {
-	import com.codeazur.as3swf.data.abc.tools.ABCSortConstantPool;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCDataSet;
 	import com.codeazur.as3swf.data.abc.io.ABCReader;
@@ -10,6 +9,7 @@ package com.codeazur.as3swf
 	import com.codeazur.as3swf.data.abc.tools.ABCOptimizeMetadata;
 	import com.codeazur.as3swf.data.abc.tools.ABCRemoveDebugOpcodes;
 	import com.codeazur.as3swf.data.abc.tools.ABCRemoveTraceOpcodes;
+	import com.codeazur.as3swf.data.abc.tools.ABCSortConstantPool;
 	import com.codeazur.as3swf.events.SWFMergeProgressEvent;
 	import com.codeazur.as3swf.tags.ITag;
 	import com.codeazur.as3swf.tags.TagDoABC;
@@ -118,12 +118,9 @@ package com.codeazur.as3swf
 			const abcDataSet:ABCDataSet = _abcDataSets[index];
 			abcDataSet.visit(new ABCOptimizeMetadata());
 			abcDataSet.visit(new ABCRemoveDebugOpcodes());
-//			abcDataSet.visit(new ABCRemoveTraceOpcodes());
+			abcDataSet.visit(new ABCRemoveTraceOpcodes());
 			abcDataSet.visit(new ABCSortConstantPool());
 			abcDataSet.visit(new ABCMerge(abcDataSet.abc));
-			
-			const sort:ABCSortConstantPool = new ABCSortConstantPool();
-			//sort.visit(abcDataSet.abc);
 		}
 		
 		private function mergeDataSetAsync():void {
