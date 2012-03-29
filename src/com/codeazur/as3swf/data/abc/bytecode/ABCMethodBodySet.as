@@ -33,7 +33,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			for(var i:uint=0; i<total; i++) {
 				const m:ABCMethodBody = methodBodies[i];
 				if(methodName == m.methodInfo.methodName) {
-					throw new Error('Method name already exists');
+					throw new Error('Method name already exists (recieved:' + methodName + ')');
 				}
 			}
 			abcData.methodInfoSet.addAt(methodInfo, index);

@@ -21,6 +21,7 @@ package com.codeazur.as3swf
 	 */
 	public class SWFActionScriptContainer extends SWFTimelineContainer {
 		
+		private static const NUM_MERGE_PASSES:uint = 3;
 		private static const ABC_THRESHOLD:uint = 50;
 		private static const TAG_DO_ABC_MERGE_NAME:String = "tags/merge";
 		
@@ -81,8 +82,10 @@ package com.codeazur.as3swf
 			if(total > 1) {
 				_tmpIndex = total;
 				_timeout = setTimeout(readABCTagAsyncHandler, 1);
+				dispatchMergeProgress(0);
 			} else {
-				dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_COMPLETE, 1, 1));
+				dispatchMergeProgress(0);
+				dispatchMergeComplete();
 			}
 		}
 		
@@ -107,6 +110,7 @@ package com.codeazur.as3swf
 		private function readABCTagAsyncHandler():void {
 			if(--_tmpIndex > -1) {
 				readABCTag(_tmpIndex);
+				dispatchMergeProgress(_tmpIndex);
 				_timeout = setTimeout(readABCTagAsyncHandler, 1);
 			} else {
 				mergeDataSetAsync();
@@ -131,6 +135,7 @@ package com.codeazur.as3swf
 		private function mergeDataSetAsyncHandler():void {
 			if(--_tmpIndex > -1) {
 				mergeDataSet(_tmpIndex);
+				dispatchMergeProgress(_tmpIndex);
 				_timeout = setTimeout(mergeDataSetAsyncHandler, 1);
 			} else {
 				writeDataSetAsync();
@@ -158,9 +163,11 @@ package com.codeazur.as3swf
 		private function writeDataSetAsyncHandler():void {
 			if(--_tmpIndex > -1) {
 				writeDataSet(_tmpIndex);
+				dispatchMergeProgress(_tmpIndex);
 				_timeout = setTimeout(writeDataSetAsyncHandler, 1);
 			} else {
-				dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_COMPLETE, 1, 1));
+				dispatchMergeProgress(_tmpIndex);
+				dispatchMergeComplete();
 			}
 		}
 		
@@ -179,6 +186,17 @@ package com.codeazur.as3swf
 				_abcDataSets.push(result);
 			}
 			return result;
+		}
+		
+		private function dispatchMergeProgress(value:uint):void {
+			const total:uint = _estimatedDataSetLength * NUM_MERGE_PASSES;
+			const inverted:int = total - value;
+			dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_PROGRESS, inverted, total));
+		}
+		
+		private function dispatchMergeComplete():void {
+			const total:uint = _estimatedDataSetLength * NUM_MERGE_PASSES;
+			dispatchEvent(new SWFMergeProgressEvent(SWFMergeProgressEvent.MERGE_COMPLETE, total, total));
 		}
 	}
 }

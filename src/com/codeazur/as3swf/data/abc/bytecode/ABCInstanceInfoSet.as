@@ -78,6 +78,21 @@ package com.codeazur.as3swf.data.abc.bytecode
 			return instanceInfos[index];
 		}
 		
+		public function getByMultiname(multiname:IABCMultiname):ABCInstanceInfo {
+			var result:ABCInstanceInfo;
+			
+			const total:uint = instanceInfos.length;
+			for(var i:uint=0; i<total; i++) {
+				const instanceInfo:ABCInstanceInfo = instanceInfos[i];
+				if(instanceInfo.qname.equals(multiname)) {
+					result = instanceInfo;
+					break;
+				}
+			}
+			
+			return result;
+		}
+		
 		override public function get name() : String { return "ABCInstanceInfoSet"; }
 		override public function get length():uint { return instanceInfos.length; }
 		

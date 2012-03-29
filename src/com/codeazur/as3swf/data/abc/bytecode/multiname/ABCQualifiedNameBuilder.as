@@ -12,6 +12,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			const ns:ABCNamespace = ABCNamespace.create(nsType.type, parts.join('.'));
 			const qname:ABCQualifiedName = ABCQualifiedName.create(name, ns);
 			qname.byte = ABCMultinameKind.QNAME.type;
+			qname.ns.byte = nsType.type;
 			return qname;
 		}
 		

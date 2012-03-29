@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc
 {
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitMethodInfo;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfo;
@@ -72,6 +73,22 @@ package com.codeazur.as3swf.data.abc
 				
 				trait.write(bytes);
 			}
+		}
+		
+		public function hasTrait(kind:ABCTraitInfoKind, multiname:IABCMultiname):Boolean {
+			var result:Boolean = false;
+			const total:uint = traits.length;
+			
+			for(var i:uint=0; i<total; i++) {
+				const trait:ABCTraitInfo = traits[i];
+				if(ABCTraitInfoKind.isType(trait.kind, kind)) {
+					if(trait.multiname.equals(multiname)){
+						result = true;
+					}
+				}
+			}
+			
+			return result;
 		}
 		
 		public function get numMethodTraits():uint {

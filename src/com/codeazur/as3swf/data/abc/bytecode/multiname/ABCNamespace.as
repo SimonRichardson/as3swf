@@ -33,7 +33,12 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		}
 		
 		public function equals(ns:ABCNamespace):Boolean {
-			return (this == ns) || (byte == ns.byte && value == ns.value && kind.equals(ns.kind));
+			if(this == ns) {
+				return true;
+			} else if(byte == ns.byte && value == ns.value && kind.equals(ns.kind)) {
+				return true;
+			}
+			return false;
 		}
 		
 		public function clone():ABCNamespace {
