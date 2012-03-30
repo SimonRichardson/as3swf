@@ -7,12 +7,12 @@ package com.codeazur.as3swf.data.abc.reflect
 	 */
 	public class ABCReflectInterface extends ABCReflectInstance {
 		
-		public function ABCReflectInterface(qname:IABCMultiname){
-			super(qname);
+		public function ABCReflectInterface(multiname:IABCMultiname){
+			super(multiname);
 		}
 		
-		public static function create(qname:IABCMultiname):ABCReflectInterface{
-			return new ABCReflectInterface(qname);
+		public static function create(multiname:IABCMultiname):ABCReflectInterface{
+			return new ABCReflectInterface(multiname);
 		}
 		
 		override public function get name():String { return "ABCReflectInterface"; }

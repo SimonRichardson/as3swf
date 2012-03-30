@@ -137,14 +137,14 @@ package com.codeazur.as3swf.data.abc.reflect
 		}
 		
 		public function getTraitByQualifiedName(qname:ABCQualifiedName):IABCReflectTrait {
-			if(qname.ns && (qname.ns.value == super.qname.fullName || qname.ns.value.length == 0)) {
+			if(qname.ns && (qname.ns.value == super.multiname.fullName || qname.ns.value.length == 0)) {
 				const label:String = qname.label;
 				
 				const traits:Vector.<IABCReflectTrait> = getInstanceTraits();
 				const total:uint = traits.length;
 				for(var i:uint=0; i<total; i++) {
 					const trait:IABCReflectTrait = traits[i];
-					const traitQName:ABCQualifiedName = trait.qname.toQualifiedName();
+					const traitQName:ABCQualifiedName = trait.multiname.toQualifiedName();
 					if(traitQName && (traitQName.label == label || traitQName.fullName == qname.fullName)) {
 						return trait;
 					}
@@ -166,7 +166,7 @@ package com.codeazur.as3swf.data.abc.reflect
 		
 		private function getTraitItemForVisibilty(trait:IABCReflectTrait, visiblity:ABCReflectMemberVisibility):IABCReflectTrait {
 			var instance:IABCReflectTrait = null;
-			const traitQName:ABCQualifiedName = trait.qname.toQualifiedName();
+			const traitQName:ABCQualifiedName = trait.multiname.toQualifiedName();
 			if(traitQName.ns && traitQName.ns.kind) {
 				if(ABCReflectMemberVisibility.isType(visiblity, ABCReflectMemberVisibility.ALL)) {
 					instance = trait;

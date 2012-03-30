@@ -8,8 +8,8 @@ package com.codeazur.as3swf.data.abc.reflect.traits
 	 */
 	public class ABCReflectFunctionTrait extends ABCReflectTrait {
 
-		public function ABCReflectFunctionTrait(qname : IABCMultiname) {
-			super(qname);
+		public function ABCReflectFunctionTrait(multiname : IABCMultiname) {
+			super(multiname);
 		}
 		
 		public static function create(trait:ABCTraitFunctionInfo):ABCReflectFunctionTrait {

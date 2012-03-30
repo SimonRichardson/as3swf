@@ -73,7 +73,7 @@ package com.codeazur.as3swf.data.abc.reflect
 			const total:uint = instances.length;
 			for(var i:uint=0; i<total; i++) {
 				const item:IABCReflectInstance = instances[i];
-				if(item.qname.equals(qname)) {
+				if(item.multiname.equals(qname)) {
 					result = item;
 					break;
 				}

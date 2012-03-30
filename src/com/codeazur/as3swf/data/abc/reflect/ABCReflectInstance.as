@@ -9,21 +9,21 @@ package com.codeazur.as3swf.data.abc.reflect
 	 */
 	public class ABCReflectInstance implements IABCReflectInstance {
 
-		private var _qname:IABCMultiname;
+		private var _multiname:IABCMultiname;
 
-		public function ABCReflectInstance(qname:IABCMultiname) {
-			_qname = qname;
+		public function ABCReflectInstance(multiname:IABCMultiname) {
+			_multiname = multiname;
 		}
 		
 		public function get kind():ABCReflectKind { return null; }
-		public function get qname():IABCMultiname { return _qname; }
+		public function get multiname():IABCMultiname { return _multiname; }
 		public function get name():String { return "ABCReflectInstance"; }
 		
 		public function toString(indent:uint=0):String {
 			var str:String = ABC.toStringCommon(name, indent);
 			
-			str += "\n" + StringUtils.repeat(indent + 2) + "QName:";
-			str += "\n" + qname.toString(indent + 4);
+			str += "\n" + StringUtils.repeat(indent + 2) + "Multiname:";
+			str += "\n" + multiname.toString(indent + 4);
 			
 			return str;
 		}
