@@ -1,12 +1,10 @@
 package com.codeazur.as3swf.data.abc.reflect.traits
 {
-
-	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.reflect.IABCReflectObject;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public interface IABCReflectTrait {
+	public interface IABCReflectTrait extends IABCReflectObject {
 		
-		function get multiname():IABCMultiname;
 	}
 }

@@ -65,6 +65,14 @@ package com.codeazur.as3swf.data.abc.reflect
 			return classes;
 		}
 		
+		public function search(value:String):IABCReflectInstance {
+			return null;
+		}
+		
+		public function getObjectByQualifiedName(qname:ABCQualifiedName):IABCReflectInstance {
+			return null;
+		}
+		
 		public function getInstanceByQualifiedName(qname:ABCQualifiedName):IABCReflectInstance {
 			var result:IABCReflectInstance = null;
 			
