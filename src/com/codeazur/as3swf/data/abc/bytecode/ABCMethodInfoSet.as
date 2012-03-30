@@ -29,7 +29,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			if(methodInfo.multiname) {
 				addMultiname(methodInfo.multiname);
 			}
-			addString(methodInfo.methodName);
+			addString(methodInfo.multiname ? methodInfo.multiname.fullPath : methodInfo.methodName);
 			addMultiname(methodInfo.returnType);
 			
 			const parameters:Vector.<ABCParameter> = methodInfo.parameters;

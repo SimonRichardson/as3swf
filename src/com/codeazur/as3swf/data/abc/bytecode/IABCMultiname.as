@@ -17,6 +17,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		function set byte(value:int):void;
 		
 		function get fullName():String;
+		function get fullPath():String;
 		
 		function toQualifiedName():ABCQualifiedName;
 		

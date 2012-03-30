@@ -1,4 +1,4 @@
-package com.codeazur.as3swf.data.abc.bytecode.utils
+package com.codeazur.as3swf.data.abc.utils
 {
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;

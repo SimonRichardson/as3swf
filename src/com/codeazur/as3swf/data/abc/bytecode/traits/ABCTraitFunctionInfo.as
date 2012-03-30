@@ -4,8 +4,9 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameBuilder;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
+	import com.codeazur.as3swf.data.abc.utils.NAMESPACE_SEPARATOR;
 	import com.codeazur.utils.StringUtils;
 
 	/**
@@ -36,7 +37,9 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 			
 			const index:uint = data.readEncodedU30();
 			methodInfo = getMethodInfoByIndex(index);
-			methodInfo.methodNameLabel = ABCQualifiedName(multiname).label;
+			
+			const name:String = methodInfo.scopeName + NAMESPACE_SEPARATOR + multiname.fullName;
+			methodInfo.multiname = ABCQualifiedNameBuilder.create(name);
 			
 			super.read(data, scanner);
 		}

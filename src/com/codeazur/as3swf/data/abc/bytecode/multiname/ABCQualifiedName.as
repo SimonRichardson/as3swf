@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
+	import com.codeazur.as3swf.data.abc.utils.normaliseInstanceName;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.utils.StringUtils;
@@ -43,11 +44,35 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		override public function get fullName():String {
 			var result:String;
 			if(label != ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) {
-				if(hasValidNamespace) {
-					result = label;
-				} else {
-					result = ns.value + "." + label;
+				result = normaliseInstanceName(ns.value, label);
+			} else {
+				result = super.fullName;
+			}
+			
+			return result;
+		}
+		override public function get fullPath():String {
+			var result:String;
+			if(label != ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) {
+				result = normaliseInstanceName(ns.value, label);
+				
+				var replace:String;
+				switch(ns.kind)
+				{
+					case ABCNamespaceKind.PACKAGE_NAMESPACE:
+					case ABCNamespaceKind.PRIVATE_NAMESPACE:
+						replace = "/";
+						break;
+					
+					case ABCNamespaceKind.PROTECTED_NAMESPACE:
+						replace = "/protected:";
+						break;
+					
+					default:
+						throw new Error("Unknown namespace kind");
 				}
+				
+				result = result.replace(/:(?!.*:)/, replace);
 			} else {
 				result = super.fullName;
 			}

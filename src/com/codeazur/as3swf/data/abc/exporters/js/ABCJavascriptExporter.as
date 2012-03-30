@@ -66,8 +66,8 @@ package com.codeazur.as3swf.data.abc.exporters.js
 					const methodInfoOffset:int = methodOffset + j + 2;
 					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(methodInfoOffset);
 
-					if(	!(StringUtils.isEmpty(methodInfo.methodNameLabel) || 
-						  ABCNamespaceType.isTypeByValue(methodInfo.methodNameLabel, ABCNamespaceType.ASTERISK))) {
+					if(	!(StringUtils.isEmpty(methodInfo.label) || 
+						  ABCNamespaceType.isTypeByValue(methodInfo.label, ABCNamespaceType.ASTERISK))) {
 						
 						JSTokenKind.COMMA.write(data);
 												

@@ -44,7 +44,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				
 				const instanceInfo:ABCInstanceInfo = getInstanceInfoByIndex(i);
 				
-				const classQName:IABCMultiname = instanceInfo.qname;
+				const classQName:IABCMultiname = instanceInfo.multiname;
 				
 				const staticIndex:uint = data.readEncodedU30();
 				const staticInitialiser:ABCMethodInfo = getMethodInfoByIndex(staticIndex);

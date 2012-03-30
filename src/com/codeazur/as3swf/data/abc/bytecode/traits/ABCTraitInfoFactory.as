@@ -33,6 +33,9 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 				case ABCTraitInfoKind.FUNCTION:
 					traitInfo = ABCTraitFunctionInfo.create(abcData, traitQName, kind, kindType, isStatic);
 					break;
+				
+				default:
+					throw new Error('Unexpected kind (kind:' + kind + ')');
 			}
 			
 			return traitInfo;

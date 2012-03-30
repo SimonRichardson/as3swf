@@ -105,10 +105,10 @@ package com.codeazur.as3swf.data.abc.reflect
 				for(var j:uint=0; j<classesTotal; j++) {
 					const instance:ABCInstanceInfo = data.instanceInfoSet.getAt(j);
 					if(instance.isInterface) {
-						const reflectInterface:ABCReflectInterface = ABCReflectInterface.create(instance.qname);
+						const reflectInterface:ABCReflectInterface = ABCReflectInterface.create(instance.multiname);
 						_instances.push(reflectInterface);
 					} else {
-						const reflectClass:ABCReflectClass = ABCReflectClass.create(instance.qname, instance.traits);
+						const reflectClass:ABCReflectClass = ABCReflectClass.create(instance.multiname, instance.traits);
 						_instances.push(reflectClass);
 					}
 				}

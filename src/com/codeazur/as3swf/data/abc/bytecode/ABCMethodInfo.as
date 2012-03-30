@@ -1,10 +1,12 @@
 package com.codeazur.as3swf.data.abc.bytecode
 {
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameBuilder;
+	import com.codeazur.as3swf.data.abc.utils.getInstanceName;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCSet;
 	import com.codeazur.as3swf.data.abc.io.ABCScanner;
+	import com.codeazur.as3swf.data.abc.utils.getScopeName;
+	import com.codeazur.as3swf.data.abc.utils.normaliseInstanceName;
 	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
@@ -13,20 +15,17 @@ package com.codeazur.as3swf.data.abc.bytecode
 
 		public var multiname:IABCMultiname;
 		public var methodName:String;
-		public var methodNameLabel:String;
 		public var methodIndex:uint;
 		public var methodBody:ABCMethodBody;
 		public var parameters:Vector.<ABCParameter>;
 		public var returnType:IABCMultiname;
 		public var scopeName:String;
+		public var label:String;
 		public var flags:uint;
 		public var optionalTotal:int;
-		public var isValidMethodName:Boolean;
 
 		public function ABCMethodInfo(abcData:ABCData) {
 			super(abcData);
-			
-			isValidMethodName = false;
 		}
 		
 		public static function create(abcData:ABCData):ABCMethodInfo {
@@ -60,16 +59,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 			data.position = methodNamePosition;
 			
 			const methodIndex:uint = data.readEncodedU30();
-			methodName = getStringByIndex(methodIndex);
 			
-			methodNameLabel = methodName;
-			
-			const normalised:String = ABCQualifiedNameBuilder.create(methodName).fullName;
-			const parts:Array = normalised.split(".");
-			if(parts.length > 1) {
-				parts.pop();
-			}
-			scopeName = parts.join("."); 
+			label = normaliseInstanceName(getStringByIndex(methodIndex));
+			methodName = getInstanceName(label);
+			scopeName = getScopeName(label);
 			
 			flags = data.readUI8();
 						
@@ -112,7 +105,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 				bytes.writeEncodedU32(getMultinameIndex(parameters[i].multiname));
 			}
 			
-			bytes.writeEncodedU32(getStringIndex(methodName));
+			bytes.writeEncodedU32(getStringIndex(multiname ? multiname.fullPath : methodName));
 			bytes.writeUI8(flags);
 			
 			if(hasOptional) {
@@ -154,7 +147,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			var str:String = super.toString(indent);
 			
 			str += "\n" + StringUtils.repeat(indent + 2);
-			str += "MethodName: " + methodNameLabel;
+			str += "MethodName: " + methodName;
 			
 			if(multiname) {
 				str += "\n" + StringUtils.repeat(indent + 2) + "Multiname: ";

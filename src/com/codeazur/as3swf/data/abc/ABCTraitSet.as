@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc
 {
-	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitMethodInfo;
+	import com.codeazur.as3swf.data.abc.utils.normaliseInstanceName;
+	import com.codeazur.as3swf.data.abc.utils.getInstanceName;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfo;
@@ -83,6 +84,25 @@ package com.codeazur.as3swf.data.abc
 				const trait:ABCTraitInfo = traits[i];
 				if(ABCTraitInfoKind.isType(trait.kind, kind)) {
 					if(trait.multiname.equals(multiname)){
+						result = true;
+					}
+				}
+			}
+			
+			return result;
+		}
+		
+		public function hasTraitByMultinameName(kind:ABCTraitInfoKind, multiname:IABCMultiname):Boolean {
+			var result:Boolean = false;
+			const total:uint = traits.length;
+			
+			const name0:String = getInstanceName(normaliseInstanceName(multiname.fullName));
+			
+			for(var i:uint=0; i<total; i++) {
+				const trait:ABCTraitInfo = traits[i];
+				if(ABCTraitInfoKind.isType(trait.kind, kind)) {
+					const name1:String = getInstanceName(normaliseInstanceName(trait.multiname.fullName));
+					if(trait.multiname.kind.equals(multiname.kind) && name0 == name1){
 						result = true;
 					}
 				}

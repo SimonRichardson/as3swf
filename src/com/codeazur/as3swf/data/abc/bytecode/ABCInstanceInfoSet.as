@@ -65,7 +65,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			for(var i:uint=0; i<total; i++) {
 				const instanceInfo:ABCInstanceInfo = instanceInfos[i];
 				
-				bytes.writeEncodedU32(getMultinameIndex(instanceInfo.qname));
+				bytes.writeEncodedU32(getMultinameIndex(instanceInfo.multiname));
 				bytes.writeEncodedU32(getMultinameIndex(instanceInfo.superMultiname));
 				
 				bytes.writeUI8(instanceInfo.flags);
@@ -84,7 +84,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			const total:uint = instanceInfos.length;
 			for(var i:uint=0; i<total; i++) {
 				const instanceInfo:ABCInstanceInfo = instanceInfos[i];
-				if(instanceInfo.qname.equals(multiname)) {
+				if(instanceInfo.multiname.equals(multiname)) {
 					result = instanceInfo;
 					break;
 				}

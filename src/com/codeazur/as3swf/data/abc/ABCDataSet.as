@@ -1,5 +1,7 @@
 package com.codeazur.as3swf.data.abc
 {
+	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.tools.IABCVistor;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -35,6 +37,22 @@ package com.codeazur.as3swf.data.abc
 					vistor.visit(_data[i]);
 				}
 			}
+		}
+		
+		public function getInstanceInfoByMultiname(multiname:IABCMultiname):ABCInstanceInfo {
+			var result:ABCInstanceInfo;
+			
+			const total:uint = _data.length;
+			for(var i:uint=0; i<total; i++){
+				const data:ABCData = _data[i];
+				const info:ABCInstanceInfo = data.instanceInfoSet.getByMultiname(multiname);
+				if(info){
+					result = info;
+					break;
+				}
+			}
+			
+			return result;
 		}
 		
 		public function get abc():ABCData { return _abc; }

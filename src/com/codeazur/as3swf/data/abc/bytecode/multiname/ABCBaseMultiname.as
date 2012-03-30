@@ -30,9 +30,8 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		
 		public function get name():String { return "ABCMultiname"; }
 		
-		public function get fullName():String {
-			return _fullName;
-		}
+		public function get fullName():String { return _fullName; }
+		public function get fullPath():String { return _fullName; }
 		
 		public function toQualifiedName():ABCQualifiedName {
 			return null;

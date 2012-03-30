@@ -11,7 +11,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	 */
 	public class ABCInstanceInfo extends ABCTraitSet {
 		
-		public var qname:IABCMultiname;
+		public var multiname:IABCMultiname;
 		public var superMultiname:IABCMultiname;
 		public var protectedNamespace:ABCNamespace;
 		public var instanceInitialiser:ABCMethodInfo;
@@ -31,7 +31,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		public static function create(abcData:ABCData, qname:IABCMultiname, superMultiname:IABCMultiname, flags:uint=0):ABCInstanceInfo {
 			const instance:ABCInstanceInfo = new ABCInstanceInfo(abcData);
-			instance.qname = qname;
+			instance.multiname = qname;
 			instance.superMultiname = superMultiname;
 			instance.flags = flags;
 			return instance;
@@ -92,7 +92,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			var str:String = super.toString(indent);
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "QualifiedName: ";
-			str += "\n" + qname.toString(indent + 4);
+			str += "\n" + multiname.toString(indent + 4);
 			str += "\n" + StringUtils.repeat(indent + 2) + "SuperMultiname: ";
 			str += "\n" + superMultiname.toString(indent + 4);
 			
