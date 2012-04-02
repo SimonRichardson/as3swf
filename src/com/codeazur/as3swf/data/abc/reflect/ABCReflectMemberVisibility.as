@@ -1,6 +1,7 @@
 package com.codeazur.as3swf.data.abc.reflect
 {
 
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.ABC;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -20,7 +21,36 @@ package com.codeazur.as3swf.data.abc.reflect
 			_type = type;
 		}
 		
+		public static function getType(type:ABCNamespaceKind):ABCReflectMemberVisibility {
+			var result:ABCReflectMemberVisibility;
+			
+			switch(type) {
+				case ABCNamespaceKind.NAMESPACE:
+					result = NAMESPACE;
+					break;
+				case ABCNamespaceKind.PACKAGE_NAMESPACE:
+					result = PUBLIC;
+					break;
+				case ABCNamespaceKind.PROTECTED_NAMESPACE:
+					result = PROTECTED;
+					break;
+				case ABCNamespaceKind.PRIVATE_NAMESPACE:
+					result = PRIVATE;
+					break;
+				case ABCNamespaceKind.PACKAGE_INTERNAL_NAMESPACE:
+					result = INTERNAL;
+					break;
+				default:
+					throw new Error('Unkown type (type:' + type + ')');
+			}
+			
+			return result;
+		}
+		
 		public static function isType(type:ABCReflectMemberVisibility, kind:ABCReflectMemberVisibility):Boolean {
+			if(type == ALL || kind == ALL) {
+				return true;
+			}
 			return type.type == kind.type;
 		}
 		

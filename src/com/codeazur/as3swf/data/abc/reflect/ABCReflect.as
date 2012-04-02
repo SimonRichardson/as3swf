@@ -1,13 +1,16 @@
 package com.codeazur.as3swf.data.abc.reflect
 {
-
 	import com.codeazur.as3swf.SWF;
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCDataSet;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoKind;
 	import com.codeazur.as3swf.data.abc.io.ABCReader;
+	import com.codeazur.as3swf.data.abc.utils.getInstanceName;
 	import com.codeazur.as3swf.tags.ITag;
 	import com.codeazur.as3swf.tags.TagDoABC;
 	
@@ -26,14 +29,16 @@ package com.codeazur.as3swf.data.abc.reflect
 			_abcDataSet = new ABCDataSet();
 			
 			loadABCData();
-			populateInstances();
 		}
 		
 		public function getAllInstances():Vector.<IABCReflectInstance> {
+			if(!_instances) {
+				populateInstances();
+			}
 			return _instances;
 		}
 		
-		public function getAllClasses():Vector.<ABCReflectClass> {
+		public function getClasses():Vector.<ABCReflectClass> {
 			const classes:Vector.<ABCReflectClass> = new Vector.<ABCReflectClass>();
 			
 			const instances:Vector.<IABCReflectInstance> = getAllInstances();
@@ -49,7 +54,7 @@ package com.codeazur.as3swf.data.abc.reflect
 			return classes;
 		}
 		
-		public function getAllInterfaces():Vector.<ABCReflectInterface> {
+		public function getInterfaces():Vector.<ABCReflectInterface> {
 			const classes:Vector.<ABCReflectInterface> = new Vector.<ABCReflectInterface>();
 			
 			const instances:Vector.<IABCReflectInstance> = getAllInstances();
@@ -64,13 +69,24 @@ package com.codeazur.as3swf.data.abc.reflect
 			
 			return classes;
 		}
-		
-		public function search(value:String):IABCReflectInstance {
-			return null;
-		}
-		
-		public function getObjectByQualifiedName(qname:ABCQualifiedName):IABCReflectInstance {
-			return null;
+				
+		public function getObjectByQualifiedName(qname:ABCQualifiedName):IABCReflectObject {
+			var result:IABCReflectObject = null;
+			
+			const instances:Vector.<IABCReflectInstance> = getAllInstances();
+			
+			const total:uint = instances.length;
+			for(var i:uint=0; i<total; i++) {
+				const item:IABCReflectInstance = instances[i];
+				if(item.multiname.equals(qname)) {
+					result = item;
+					break;
+				} else {
+					
+				}
+			}
+			
+			return result;
 		}
 		
 		public function getInstanceByQualifiedName(qname:ABCQualifiedName):IABCReflectInstance {
@@ -112,15 +128,34 @@ package com.codeazur.as3swf.data.abc.reflect
 				const classesTotal:uint = data.instanceInfoSet.length;
 				for(var j:uint=0; j<classesTotal; j++) {
 					const instance:ABCInstanceInfo = data.instanceInfoSet.getAt(j);
-					if(instance.isInterface) {
-						const reflectInterface:ABCReflectInterface = ABCReflectInterface.create(instance.multiname);
-						_instances.push(reflectInterface);
-					} else {
-						const reflectClass:ABCReflectClass = ABCReflectClass.create(instance.multiname, instance.traits);
-						_instances.push(reflectClass);
-					}
+					const methods:Vector.<ABCMethodInfo> = getMethodInfos(data, instance);
+					
+					_instances.push(ABCReflectInstanceFactory.create(instance, methods));
 				}
 			}	
+		}
+		
+		private function getMethodInfos(data:ABCData, instance:ABCInstanceInfo):Vector.<ABCMethodInfo> {
+			const methods:Vector.<ABCMethodInfo> = new Vector.<ABCMethodInfo>();
+			
+			const total:uint = instance.traits.length;
+			for(var i:uint=0; i<total; i++) {
+				const trait:ABCTraitInfo = instance.traits[i];
+				if(ABCTraitInfoKind.isType(trait.kind, ABCTraitInfoKind.METHOD)){
+					
+					const methodsTotal:uint = data.methodInfoSet.length;
+					for(var j:uint=0; j<methodsTotal; j++) {
+						const method:ABCMethodInfo = data.methodInfoSet.getAt(j);
+						if((method.multiname && method.methodName) && 
+							getInstanceName(trait.multiname.fullName) == method.methodName && 
+							method.multiname.fullName.indexOf(instance.multiname.fullName) == 0) {
+							methods.push(method);
+						}
+					}
+				}
+			}
+			
+			return methods;
 		}
 		
 		public function get swf():SWF { return _swf; }
