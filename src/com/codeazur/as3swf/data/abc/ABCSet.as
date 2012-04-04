@@ -63,7 +63,7 @@ package com.codeazur.as3swf.data.abc
 		protected function getStringIndex(string:String):int {
 			const index:int = abcData.constantPool.getStringIndex(string);
 			if(index < 0) {
-				throw new Error('Range Error (recieved:' + string + ')');
+				throw new Error('Range Error (recieved: ' + string + ')');
 			}
 			return index;
 		}

@@ -13,22 +13,26 @@ package com.codeazur.as3swf.data.abc.utils
 		for(var i:uint=0; i<total; i++) {
 			var value:String = rest[i];
 			
-			value = StringUtils.clean(value);
-			value = value.replace(/ /g, '');
-			value = value.replace(/\./g, separator);
-			value = value.replace(/\Anull(\Z|:)/g, '');
-			value = value.replace(/\//g, separator);
-			value = value.replace(/\A:/, '');
-			
-			if(i < total - 1) {
-				value += separator;
+			if(!StringUtils.isEmpty(value)) {
+				value = StringUtils.clean(value);
+				value = value.replace(/ /g, '');
+				value = value.replace(/\./g, separator);
+				value = value.replace(/\Anull(\Z|:)/g, '');
+				value = value.replace(/\//g, separator);
+				value = value.replace(/\A:/, '');
+				
+				if(i < total - 1) {
+					value += separator;
+				}
+				
+				result += value;
 			}
-			
-			result += value;
 		}
 		
-		result = result.replace(/\Anull(\Z|:)/g, '');
-		result = result.replace(/\A:/, '');
+		if(!StringUtils.isEmpty(result)) {
+			result = result.replace(/\Anull(\Z|:)/g, '');
+			result = result.replace(/\A:/, '');
+		}
 		
 		return result;
 	}

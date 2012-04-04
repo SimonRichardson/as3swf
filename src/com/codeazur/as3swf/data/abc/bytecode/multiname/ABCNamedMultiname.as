@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
+	import com.codeazur.as3swf.data.abc.utils.normaliseInstanceName;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.utils.StringUtils;
 	/**
@@ -21,7 +22,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		}
 		
 		public function get label():String { return _label; }
-		public function set label(value:String):void { _label = StringUtils.clean(value); }
+		public function set label(value:String):void { _label = normaliseInstanceName(value); }
 		
 		override public function get fullName() : String { return label; }
 		override public function get name():String { return "ABCNamedMultiname"; }
