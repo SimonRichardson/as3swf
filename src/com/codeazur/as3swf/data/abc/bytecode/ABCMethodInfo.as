@@ -104,8 +104,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 				bytes.writeEncodedU32(getMultinameIndex(parameters[i].multiname));
 			}
 			
-			trace(">>", (multiname ? multiname.fullPath : "_") + "<->"+ methodName);
-			
 			bytes.writeEncodedU32(getStringIndex(multiname ? multiname.fullPath : methodName));
 			bytes.writeUI8(flags);
 			
@@ -137,10 +135,10 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public function get hasParamNames():Boolean {
 			return ABCMethodInfoFlags.isType(flags, ABCMethodInfoFlags.HAS_PARAM_NAMES);
 		}
-		public function get needRest():Boolean {
+		public function get hasRest():Boolean {
 			return ABCMethodInfoFlags.isType(flags, ABCMethodInfoFlags.NEED_REST);
 		}
-		public function get needArguments():Boolean {
+		public function get hasArguments():Boolean {
 			return ABCMethodInfoFlags.isType(flags, ABCMethodInfoFlags.NEED_ARGUMENTS);
 		}
 		

@@ -3,8 +3,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
 	 */
-	public class ABCMethodInfoFlags
-	{
+	public class ABCMethodInfoFlags {
 		
 		public static const NEED_ARGUMENTS:ABCMethodInfoFlags = new ABCMethodInfoFlags(0x01);
 		public static const NEED_ACTIVATION:ABCMethodInfoFlags = new ABCMethodInfoFlags(0x02);

@@ -460,9 +460,9 @@ package com.codeazur.as3swf.data.abc.exporters.js.builders
 			} else if(index <= methodInfo.parameters.length) {
 				result = JSArgumentBuilder.create(_arguments[index - 1]);
 			} else {
-				if(!(methodInfo.needRest || methodInfo.needArguments)) {
+				if(!(methodInfo.hasRest || methodInfo.hasArguments)) {
 					result = JSArgumentBuilder.create(_arguments[index - 1]);
-				} else if(methodInfo.needRest){
+				} else if(methodInfo.hasRest){
 					result = JSArgumentsBuilder.create();
 				} else {
 					throw new Error();
