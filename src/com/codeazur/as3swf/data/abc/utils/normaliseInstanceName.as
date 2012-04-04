@@ -16,6 +16,7 @@ package com.codeazur.as3swf.data.abc.utils
 			if(!StringUtils.isEmpty(value)) {
 				value = StringUtils.clean(value);
 				value = value.replace(/ /g, '');
+				value = value.replace(/::/g, separator);
 				value = value.replace(/\./g, separator);
 				value = value.replace(/\Anull(\Z|:)/g, '');
 				value = value.replace(/\//g, separator);

@@ -51,28 +51,32 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			
 			return result;
 		}
+		
 		override public function get fullPath():String {
 			var result:String;
 			if(label != ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) {
 				result = normaliseInstanceName(ns.value, label);
 				
+				var pattern:RegExp;
 				var replace:String;
-				switch(ns.kind)
-				{
+				switch(ns.kind) {
 					case ABCNamespaceKind.PACKAGE_NAMESPACE:
-					case ABCNamespaceKind.PRIVATE_NAMESPACE:
+						pattern = /:(?!.*:)/;
 						replace = "/";
 						break;
-					
+						
+					case ABCNamespaceKind.EXPLICIT_NAMESPACE:
+					case ABCNamespaceKind.PRIVATE_NAMESPACE:
 					case ABCNamespaceKind.PROTECTED_NAMESPACE:
-						replace = "/protected:";
+						pattern = /:([^:]+):(?!.*:)/;
+						replace = "/$1:";
 						break;
 					
 					default:
-						throw new Error("Unknown namespace kind");
+						throw new Error("Unknown namespace kind (" + ns.kind + ")");
 				}
 				
-				result = result.replace(/:(?!.*:)/, replace);
+				result = result.replace(pattern, replace);
 			} else {
 				result = super.fullName;
 			}

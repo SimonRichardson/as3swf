@@ -14,6 +14,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 
 		public var multiname:IABCMultiname;
 		public var methodName:String;
+		public var methodNamespace:String;
 		public var methodIndex:uint;
 		public var methodBody:ABCMethodBody;
 		public var parameters:Vector.<ABCParameter>;
@@ -102,6 +103,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			for(var i:uint=0; i<paramTotal; i++) {
 				bytes.writeEncodedU32(getMultinameIndex(parameters[i].multiname));
 			}
+			
+			trace(">>", (multiname ? multiname.fullPath : "_") + "<->"+ methodName);
 			
 			bytes.writeEncodedU32(getStringIndex(multiname ? multiname.fullPath : methodName));
 			bytes.writeUI8(flags);
