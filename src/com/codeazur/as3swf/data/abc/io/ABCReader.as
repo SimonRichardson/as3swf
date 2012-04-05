@@ -2,6 +2,10 @@ package com.codeazur.as3swf.data.abc.io
 {
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameBuilder;
+	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
 
@@ -53,8 +57,26 @@ package com.codeazur.as3swf.data.abc.io
 		}
 		
 		protected function resolve(abcData:ABCData):void {
-			// TODO (Simon) Resolve any issues that happen after the reading.
-			
+			resolveMethodMultinames(abcData);
+		}
+		
+		private function resolveMethodMultinames(abcData:ABCData):void {
+			const total:uint = abcData.instanceInfoSet.length;
+			for(var i:uint=0; i<total; i++) {
+				const instance:ABCInstanceInfo = abcData.instanceInfoSet.getAt(i);
+				const fullName:String = instance.multiname.fullName;
+				
+				const methodInfoTotal:uint = abcData.methodInfoSet.length;
+				for(var j:uint=0; j<methodInfoTotal; j++) {
+					
+					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
+					const label:String = methodInfo.label;
+					const scopeName:String = methodInfo.scopeName;
+					if(!StringUtils.isEmpty(label) && scopeName.indexOf(fullName) == 0) {
+						methodInfo.multiname = ABCQualifiedNameBuilder.create(label);
+					}
+				}
+			}
 		}
 				
 		public function get scanner():ABCScanner {

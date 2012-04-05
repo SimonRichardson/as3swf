@@ -10,6 +10,8 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		public var kind:ABCNamespaceKind;
 		public var value:String;
 		public var byte:int;
+		
+		public var explicit:String;
 
 		public function ABCNamespace(initKind:ABCNamespaceKind = null, initValue:String = "") {
 			kind = initKind;

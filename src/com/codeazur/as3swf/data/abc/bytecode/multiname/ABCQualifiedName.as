@@ -2,6 +2,8 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.utils.getQualifiedNameFullName;
+	import com.codeazur.as3swf.data.abc.utils.getQualifiedNameFullPath;
 	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
@@ -43,7 +45,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		override public function get fullName():String {
 			var result:String;
 			if(label != ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) {
-				result = ns.value + "/" + label;
+				result = getQualifiedNameFullName(ns.value, label);
 			} else {
 				result = super.fullName;
 			}
@@ -54,32 +56,10 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		override public function get fullPath():String {
 			var result:String;
 			if(label != ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) {
-				result = ns.value + ":" + label;
-				
-				var pattern:RegExp;
-				var replace:String;
-				switch(ns.kind) {
-					case ABCNamespaceKind.PACKAGE_NAMESPACE:
-						pattern = /:(?!.*:)/;
-						replace = "/";
-						break;
-						
-					case ABCNamespaceKind.EXPLICIT_NAMESPACE:
-					case ABCNamespaceKind.PRIVATE_NAMESPACE:
-					case ABCNamespaceKind.PROTECTED_NAMESPACE:
-						pattern = /:([^:]+):(?!.*:)/;
-						replace = "/$1:";
-						break;
-					
-					default:
-						throw new Error("Unknown namespace kind (" + ns.kind + ")");
-				}
-				
-				result = result.replace(pattern, replace);
+				result = getQualifiedNameFullPath(ns, label);
 			} else {
-				result = super.fullName;
+				result = super.fullPath;
 			}
-			
 			return result;
 		}
 		

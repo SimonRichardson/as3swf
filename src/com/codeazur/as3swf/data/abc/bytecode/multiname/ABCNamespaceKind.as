@@ -1,7 +1,7 @@
 package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
-
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.utils.getExplicitNamespaceIndentifier;
 
 	import flash.utils.Dictionary;
 	/**
@@ -44,6 +44,30 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		
 		public static function isType(type:ABCNamespaceKind, kind:ABCNamespaceKind):Boolean {
 			 return type.equals(kind);
+		}
+		
+		public static function getName(kind:ABCNamespaceKind):String {
+			var result:String;
+			switch(kind) {
+				case PACKAGE_NAMESPACE:
+					result = "public";
+					break;
+				case PACKAGE_INTERNAL_NAMESPACE:
+					result = "public";
+					break;
+				case PRIVATE_NAMESPACE:
+					result = "private";
+					break;
+				case PROTECTED_NAMESPACE:
+					result = "protected";
+					break;
+				case EXPLICIT_NAMESPACE:
+					result = getExplicitNamespaceIndentifier();
+					break;
+				default:
+					throw new Error("Unknown namespace kind (kind: " + kind + ")");
+			}
+			return result;
 		}
 		
 		public function equals(kind:ABCNamespaceKind):Boolean {
