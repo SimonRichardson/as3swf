@@ -2,6 +2,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
+	import com.codeazur.as3swf.data.abc.utils.normaliseName;
 	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
@@ -32,6 +33,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		
 		public function get fullName():String { return _fullName; }
 		public function get fullPath():String { return _fullName; }
+		public function get normalisedFullPath():String { return normaliseName(fullPath); }
 		
 		public function toQualifiedName():ABCQualifiedName {
 			return null;

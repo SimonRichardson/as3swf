@@ -93,18 +93,16 @@ package com.codeazur.as3swf.data.abc
 			var result:Boolean = false;
 			const total:uint = traits.length;
 			
-			// TODO (Simon) Fix this.
-//			const name0:String = getInstanceName(normaliseInstanceName(multiname.fullName));
-//			
-//			for(var i:uint=0; i<total; i++) {
-//				const trait:ABCTraitInfo = traits[i];
-//				if(ABCTraitInfoKind.isType(trait.kind, kind)) {
-//					const name1:String = getInstanceName(normaliseInstanceName(trait.multiname.fullName));
-//					if(trait.multiname.kind.equals(multiname.kind) && name0 == name1){
-//						result = true;
-//					}
-//				}
-//			}
+			const name0:String = multiname.normalisedFullPath;
+			for(var i:uint=0; i<total; i++) {
+				const trait:ABCTraitInfo = traits[i];
+				if(ABCTraitInfoKind.isType(trait.kind, kind)) {
+					const name1:String = trait.multiname.normalisedFullPath;
+					if(trait.multiname.kind.equals(multiname.kind) && name0 == name1){
+						result = true;
+					}
+				}
+			}
 			
 			return result;
 		}

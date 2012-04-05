@@ -18,6 +18,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 		
 		function get fullName():String;
 		function get fullPath():String;
+		function get normalisedFullPath():String;
 		
 		function toQualifiedName():ABCQualifiedName;
 		
