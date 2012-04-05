@@ -122,7 +122,7 @@ package com.codeazur.as3swf
 			const abcDataSet:ABCDataSet = _abcDataSets[index];
 			abcDataSet.visit(new ABCOptimizeMetadata());
 			abcDataSet.visit(new ABCRemoveDebugOpcodes());
-			//abcDataSet.visit(new ABCRemoveTraceOpcodes(abcDataSet));
+			abcDataSet.visit(new ABCRemoveTraceOpcodes(abcDataSet));
 			abcDataSet.visit(new ABCSortConstantPool());
 			abcDataSet.visit(new ABCMerge(abcDataSet.abc));
 		}
