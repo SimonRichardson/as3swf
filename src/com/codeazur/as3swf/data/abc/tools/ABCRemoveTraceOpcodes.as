@@ -1,7 +1,5 @@
 package com.codeazur.as3swf.data.abc.tools
 {
-	import com.codeazur.as3swf.data.abc.utils.getQualifiedNameFullPath;
-	import com.codeazur.as3swf.data.abc.utils.getMethodName;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCDataSet;
 	import com.codeazur.as3swf.data.abc.ABC_PREFIX;
@@ -27,7 +25,8 @@ package com.codeazur.as3swf.data.abc.tools
 	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoFlags;
 	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoKind;
 	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitMethodInfo;
-	import com.codeazur.as3swf.data.abc.utils.NAMESPACE_SEPARATOR;
+	import com.codeazur.as3swf.data.abc.utils.getMethodName;
+	import com.codeazur.as3swf.data.abc.utils.getQualifiedNameFullPath;
 	import com.codeazur.as3swf.data.abc.utils.getScopeName;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
@@ -55,6 +54,7 @@ package com.codeazur.as3swf.data.abc.tools
 					// Make sure we don't do this on a invalid item
 					if(	methodInfo.methodName == "" ||
 						methodInfo.methodName == ABCNamespaceType.ASTERISK.ns.value || 
+						methodInfo.methodName == NULL_TRACE_NAME ||
 						methodInfo.multiname && methodInfo.multiname.equals(ABCMultinameBuiltin.ANY)) {
 						continue;
 					}
