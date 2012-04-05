@@ -52,13 +52,20 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		public function get name():String { return "ABCNamespace"; }
 		
 		public function toString(indent:uint = 0):String {
-			return ABC.toStringCommon(name, indent) +
-				"\n" + StringUtils.repeat(indent + 2) + "Type:" +
-				"\n" + kind.toString(indent + 4) + "" +
-				"\n" + StringUtils.repeat(indent + 2) + "Value:" + 
-				" " + value;
-				"\n" + StringUtils.repeat(indent + 2) + "Explicit:" + 
-				" " + explicit;  
+			var result:String = ABC.toStringCommon(name, indent);
+			
+			result += "\n" + StringUtils.repeat(indent + 2) + "Type:";
+			result += "\n" + kind.toString(indent + 4) + "";
+			
+			result += "\n" + StringUtils.repeat(indent + 2) + "Value:";
+			result += " " + value;
+			
+			if(!StringUtils.isEmpty(explicit)) {
+				result += "\n" + StringUtils.repeat(indent + 2) + "Explicit:";
+				result += " " + explicit;
+			}
+			
+			return result;  
 		}
 	}
 }

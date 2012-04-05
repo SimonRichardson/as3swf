@@ -49,8 +49,19 @@ package com.codeazur.as3swf.data.abc.reflect
 					}
 				}
 			}
-			
 			return instances;
+		}
+		
+		public function getGetters(visbility:ABCReflectMemberVisibility=null):Vector.<ABCReflectGetter> {
+			visbility = visbility || ABCReflectMemberVisibility.ALL;
+			
+			return null;
+		}
+		
+		public function getSetters(visbility:ABCReflectMemberVisibility=null):Vector.<ABCReflectSetter> {
+			visbility = visbility || ABCReflectMemberVisibility.ALL;
+			
+			return null;
 		}
 		
 		private function populateMethods():void {

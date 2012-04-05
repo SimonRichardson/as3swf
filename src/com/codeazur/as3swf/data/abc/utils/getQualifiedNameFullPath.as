@@ -16,8 +16,6 @@ package com.codeazur.as3swf.data.abc.utils
 			}
 		}
 				
-		const replace:String = StringUtils.isEmpty(ns.explicit) ? "" : ns.explicit;
-		
 		var methodNamespace:String = "";
 		switch(ns.kind) {
 			case ABCNamespaceKind.PACKAGE_NAMESPACE:
@@ -26,13 +24,13 @@ package com.codeazur.as3swf.data.abc.utils
 			case ABCNamespaceKind.EXPLICIT_NAMESPACE:
 				methodNamespace = ABCNamespaceKind.getName(ns.kind) + NAMESPACE_SEPARATOR;
 				// Replace the exlicit namespace identifier
-				methodNamespace = methodNamespace.replace(EXPLICIT_NAMESPACE_IDENTIFIER, replace);
+				methodNamespace = methodNamespace.replace(EXPLICIT_NAMESPACE_IDENTIFIER, ns.explicit);
 				break;
 				
 			case ABCNamespaceKind.NAMESPACE:
 				methodNamespace = ABCNamespaceKind.getName(ns.kind);
 				// Replace the namespace identifier
-				methodNamespace = methodNamespace.replace(NAMESPACE_IDENTIFIER, replace);
+				methodNamespace = methodNamespace.replace(NAMESPACE_IDENTIFIER, ns.explicit);
 				methodNamespace = methodNamespace.replace(ABCNamespaceType.BUILTIN.ns.value, "");
 				// Add the separator after the fact
 				if(!StringUtils.isEmpty(methodNamespace)) {
