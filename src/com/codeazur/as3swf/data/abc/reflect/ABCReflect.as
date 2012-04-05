@@ -10,7 +10,6 @@ package com.codeazur.as3swf.data.abc.reflect
 	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoKind;
 	import com.codeazur.as3swf.data.abc.io.ABCReader;
-	import com.codeazur.as3swf.data.abc.utils.getInstanceName;
 	import com.codeazur.as3swf.tags.ITag;
 	import com.codeazur.as3swf.tags.TagDoABC;
 	
@@ -146,11 +145,12 @@ package com.codeazur.as3swf.data.abc.reflect
 					const methodsTotal:uint = data.methodInfoSet.length;
 					for(var j:uint=0; j<methodsTotal; j++) {
 						const method:ABCMethodInfo = data.methodInfoSet.getAt(j);
-						if((method.multiname && method.methodName) && 
-							getInstanceName(trait.multiname.fullName) == method.methodName && 
-							method.multiname.fullName.indexOf(instance.multiname.fullName) == 0) {
-							methods.push(method);
-						}
+						// TODO (Simon) Fix this so we only get the correct method for the instance.
+//						if((method.multiname && method.methodName) && 
+//							getInstanceName(trait.multiname.fullName) == method.methodName && 
+//							method.multiname.fullName.indexOf(instance.multiname.fullName) == 0) {
+//							methods.push(method);
+//						}
 					}
 				}
 			}

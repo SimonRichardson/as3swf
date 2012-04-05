@@ -118,6 +118,8 @@ package com.codeazur.as3swf
 		}
 		
 		private function mergeDataSet(index:uint):void {
+			// FIXME (Simon) Remove this
+			return;
 			// TODO: split the merging of sets in async
 			const abcDataSet:ABCDataSet = _abcDataSets[index];
 			abcDataSet.visit(new ABCOptimizeMetadata());

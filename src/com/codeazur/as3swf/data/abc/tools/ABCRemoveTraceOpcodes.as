@@ -1,34 +1,23 @@
 package com.codeazur.as3swf.data.abc.tools
 {
-	import com.codeazur.as3swf.data.abc.ABC_PREFIX;
-	import com.codeazur.as3swf.data.abc.utils.NAMESPACE_SEPARATOR;
-	import com.codeazur.as3swf.data.abc.utils.getInstanceName;
-	import com.codeazur.as3swf.data.abc.utils.getScopeName;
-	import com.codeazur.as3swf.data.abc.utils.normaliseInstanceName;
 	import com.codeazur.as3swf.data.abc.ABCData;
 	import com.codeazur.as3swf.data.abc.ABCDataSet;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCExceptionInfoSet;
+	import com.codeazur.as3swf.data.abc.ABC_PREFIX;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodBody;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfoFlags;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcode;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeKind;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCOpcodeSet;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCParameter;
 	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.attributes.ABCOpcodeMultinameUIntAttribute;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCMultinameBuiltin;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameBuilder;
-	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoFactory;
-	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoFlags;
 	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoKind;
-	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitMethodInfo;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
@@ -116,58 +105,60 @@ package com.codeazur.as3swf.data.abc.tools
 		}
 		
 		private function createEmptyMethod(abcData:ABCData, instanceInfo:ABCInstanceInfo):IABCMultiname {
-			// Seems we already have a null trace method, use it!
-			const traitName:String = instanceInfo.multiname.fullName + NAMESPACE_SEPARATOR + NULL_TRACE_NAME;
-			const traitQName:IABCMultiname = ABCQualifiedNameBuilder.create(traitName, ABCNamespaceKind.PROTECTED_NAMESPACE.type);
-			if(instanceInfo.hasTrait(ABCTraitInfoKind.METHOD, traitQName)) {
-				return traitQName;
-			}
-			
-			// TODO: change this so that we can use a builder.
-			const empty:ABCMethodBody = ABCMethodBody.create(abcData);
-			
-			const normalised:String = normaliseInstanceName(traitQName.fullName);
-			
-			empty.methodInfo = ABCMethodInfo.create(abcData);
-			empty.methodInfo.returnType = ABCQualifiedNameBuilder.create("void");
-			empty.methodInfo.label = normalised;
-			empty.methodInfo.scopeName = getScopeName(normalised);
-			empty.methodInfo.methodName = getInstanceName(normalised);
-			empty.methodInfo.multiname = traitQName;
-			empty.methodInfo.methodBody = empty;
-			empty.methodInfo.flags = ABCMethodInfoFlags.NEED_REST.type ^ ABCMethodInfoFlags.HAS_PARAM_NAMES.type;
-			empty.methodInfo.parameters = new Vector.<ABCParameter>();
-			
-			empty.exceptionInfo = ABCExceptionInfoSet.create(abcData);
-			
-			empty.maxStack = 1;
-			empty.localCount = 2;
-			empty.initScopeDepth = 9;
-			empty.maxScopeDepth = 10;
-			
-			empty.opcodes = ABCOpcodeSet.create(abcData);
-			empty.opcodes.opcodes.push(ABCOpcode.create(abcData, ABCOpcodeKind.GETLOCAL_0, ABCOpcodeAttribute.create(abcData)));
-			empty.opcodes.opcodes.push(ABCOpcode.create(abcData, ABCOpcodeKind.PUSHSCOPE, ABCOpcodeAttribute.create(abcData)));
-			empty.opcodes.opcodes.push(ABCOpcode.create(abcData, ABCOpcodeKind.RETURNVOID, ABCOpcodeAttribute.create(abcData)));
-			
-			abcData.methodBodySet.addAt(empty, abcData.methodBodySet.length - 1);
-			
-			abcData.constantPool.addMultiname(traitQName);
-			
-			const trait:ABCTraitMethodInfo = ABCTraitMethodInfo(ABCTraitInfoFactory.create(abcData, ABCTraitInfoKind.METHOD.type, traitQName));
-			trait.id = 0;
-			trait.methodInfo = empty.methodInfo;
-			
-			if(hasTrait(instanceInfo, traitQName)) {
-				empty.initScopeDepth = 10;
-				empty.maxScopeDepth = 11;
-				
-				trait.kind ^= ABCTraitInfoFlags.OVERRIDE.type << 4;
-			}
-			
-			instanceInfo.addTrait(trait);
-			
-			return traitQName;
+			// FIXME (Simon) This needs updating.
+//			// Seems we already have a null trace method, use it!
+//			const traitName:String = instanceInfo.multiname.fullName + NAMESPACE_SEPARATOR + NULL_TRACE_NAME;
+//			const traitQName:IABCMultiname = ABCQualifiedNameBuilder.create(traitName, ABCNamespaceKind.PROTECTED_NAMESPACE.type);
+//			if(instanceInfo.hasTrait(ABCTraitInfoKind.METHOD, traitQName)) {
+//				return traitQName;
+//			}
+//			
+//			// TODO: change this so that we can use a builder.
+//			const empty:ABCMethodBody = ABCMethodBody.create(abcData);
+//			
+//			const normalised:String = normaliseInstanceName(traitQName.fullName);
+//			
+//			empty.methodInfo = ABCMethodInfo.create(abcData);
+//			empty.methodInfo.returnType = ABCQualifiedNameBuilder.create("void");
+//			empty.methodInfo.label = normalised;
+//			empty.methodInfo.scopeName = getScopeName(normalised);
+//			empty.methodInfo.methodName = getInstanceName(normalised);
+//			empty.methodInfo.multiname = traitQName;
+//			empty.methodInfo.methodBody = empty;
+//			empty.methodInfo.flags = ABCMethodInfoFlags.NEED_REST.type ^ ABCMethodInfoFlags.HAS_PARAM_NAMES.type;
+//			empty.methodInfo.parameters = new Vector.<ABCParameter>();
+//			
+//			empty.exceptionInfo = ABCExceptionInfoSet.create(abcData);
+//			
+//			empty.maxStack = 1;
+//			empty.localCount = 2;
+//			empty.initScopeDepth = 9;
+//			empty.maxScopeDepth = 10;
+//			
+//			empty.opcodes = ABCOpcodeSet.create(abcData);
+//			empty.opcodes.opcodes.push(ABCOpcode.create(abcData, ABCOpcodeKind.GETLOCAL_0, ABCOpcodeAttribute.create(abcData)));
+//			empty.opcodes.opcodes.push(ABCOpcode.create(abcData, ABCOpcodeKind.PUSHSCOPE, ABCOpcodeAttribute.create(abcData)));
+//			empty.opcodes.opcodes.push(ABCOpcode.create(abcData, ABCOpcodeKind.RETURNVOID, ABCOpcodeAttribute.create(abcData)));
+//			
+//			abcData.methodBodySet.addAt(empty, abcData.methodBodySet.length - 1);
+//			
+//			abcData.constantPool.addMultiname(traitQName);
+//			
+//			const trait:ABCTraitMethodInfo = ABCTraitMethodInfo(ABCTraitInfoFactory.create(abcData, ABCTraitInfoKind.METHOD.type, traitQName));
+//			trait.id = 0;
+//			trait.methodInfo = empty.methodInfo;
+//			
+//			if(hasTrait(instanceInfo, traitQName)) {
+//				empty.initScopeDepth = 10;
+//				empty.maxScopeDepth = 11;
+//				
+//				trait.kind ^= ABCTraitInfoFlags.OVERRIDE.type << 4;
+//			}
+//			
+//			instanceInfo.addTrait(trait);
+//			
+//			return traitQName;
+return null;
 		}
 		
 		private function hasTrait(info:ABCInstanceInfo, traitQName:IABCMultiname):Boolean {

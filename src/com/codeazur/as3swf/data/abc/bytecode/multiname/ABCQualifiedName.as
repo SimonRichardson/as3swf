@@ -1,8 +1,7 @@
 package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
-	import com.codeazur.as3swf.data.abc.utils.normaliseInstanceName;
-	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.as3swf.data.abc.ABC;
+	import com.codeazur.as3swf.data.abc.bytecode.IABCMultiname;
 	import com.codeazur.utils.StringUtils;
 	/**
 	 * @author Simon Richardson - stickupkid@gmail.com
@@ -44,7 +43,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		override public function get fullName():String {
 			var result:String;
 			if(label != ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) {
-				result = normaliseInstanceName(ns.value, label);
+				result = ns.value + "/" + label;
 			} else {
 				result = super.fullName;
 			}
@@ -55,7 +54,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 		override public function get fullPath():String {
 			var result:String;
 			if(label != ABCNamespaceType.getType(ABCNamespaceType.ASTERISK).value) {
-				result = normaliseInstanceName(ns.value, label);
+				result = ns.value + ":" + label;
 				
 				var pattern:RegExp;
 				var replace:String;

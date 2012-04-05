@@ -1,16 +1,7 @@
 package com.codeazur.as3swf.data.abc.io
 {
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKindFactory;
-	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedNameBuilder;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.abc.ABCData;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
-	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
-	import com.codeazur.as3swf.data.abc.utils.getInstanceName;
-	import com.codeazur.as3swf.data.abc.utils.getInstanceNamespace;
-	import com.codeazur.as3swf.data.abc.utils.normaliseInstanceName;
-	import com.codeazur.utils.StringUtils;
 
 	import flash.utils.ByteArray;
 
@@ -62,44 +53,10 @@ package com.codeazur.as3swf.data.abc.io
 		}
 		
 		protected function resolve(abcData:ABCData):void {
-			// Resolve any issues that happen after the reading.
-			resolveNames(abcData);
+			// TODO (Simon) Resolve any issues that happen after the reading.
+			
 		}
-		
-		private function resolveNames(abcData:ABCData):void {
-			const total:uint = abcData.instanceInfoSet.length;
-			for(var i:uint=0; i<total; i++) {
-				const instance:ABCInstanceInfo = abcData.instanceInfoSet.getAt(i);
-				const fullName:String = instance.multiname.fullName;
 				
-				const methodInfoTotal:uint = abcData.methodInfoSet.length;
-				for(var j:uint=0; j<methodInfoTotal; j++) {
-					
-					const methodInfo:ABCMethodInfo = abcData.methodInfoSet.getAt(j);
-					const label:String = methodInfo.label;
-					if(!StringUtils.isEmpty(label)) {
-						
-						const index:uint = label.indexOf(fullName);
-						if(index == 0) {
-							methodInfo.scopeName = fullName;
-							
-							const partial:String = normaliseInstanceName(methodInfo.label.substr(fullName.length));
-							const methodName:String = getInstanceName(partial);
-							const possibleNamespace:String = getInstanceNamespace(partial);
-							const methodNamespace:String = methodName != possibleNamespace ? possibleNamespace : "";
-							
-							methodInfo.methodName = methodName;
-							methodInfo.methodNamespace = methodNamespace;
-							
-							const kind:ABCNamespaceKind = ABCNamespaceKindFactory.create(methodNamespace);
-							
-							methodInfo.multiname = ABCQualifiedNameBuilder.create(methodInfo.label, kind.type); 
-						}
-					}
-				}
-			}
-		}
-		
 		public function get scanner():ABCScanner {
 			return _scanner;
 		}
