@@ -21,7 +21,8 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 			const nsType:ABCNamespaceKind = type>0 ? ABCNamespaceKind.getType(type) : defaultNs;
 			const ns:ABCNamespace = ABCNamespace.create(nsType.type, scopeName);
 			
-			if(nsType == ABCNamespaceKind.EXPLICIT_NAMESPACE) {
+			if(	nsType == ABCNamespaceKind.EXPLICIT_NAMESPACE || 
+				nsType == ABCNamespaceKind.NAMESPACE) {
 				ns.explicit = methodNamespace;
 			}
 			

@@ -56,7 +56,9 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 				"\n" + StringUtils.repeat(indent + 2) + "Type:" +
 				"\n" + kind.toString(indent + 4) + "" +
 				"\n" + StringUtils.repeat(indent + 2) + "Value:" + 
-				" " + value; 
+				" " + value;
+				"\n" + StringUtils.repeat(indent + 2) + "Explicit:" + 
+				" " + explicit;  
 		}
 	}
 }

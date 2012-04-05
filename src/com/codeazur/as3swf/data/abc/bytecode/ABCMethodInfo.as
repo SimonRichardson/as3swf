@@ -173,6 +173,7 @@ package com.codeazur.as3swf.data.abc.bytecode
 			str += "\n" + returnType.toString(indent + 4);
 			str += "\n" + StringUtils.repeat(indent + 2);
 			str += "ScopeName: " + scopeName;
+			str += "\n" + StringUtils.repeat(indent + 2);
 			str += "MethodNamespace: " + methodNamespace;
 			str += "\n" + StringUtils.repeat(indent + 2);
 			str += "Flags: " + flags;

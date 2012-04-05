@@ -34,7 +34,7 @@ package com.codeazur.as3swf.data.abc.bytecode.traits
 			
 			const index:uint = data.readEncodedU30();
 			methodInfo = getMethodInfoByIndex(index);
-									
+						
 			super.read(data, scanner);
 		}
 		

@@ -50,10 +50,9 @@ package com.codeazur.as3swf.data.abc
 				
 				const index:uint = data.readEncodedU30();
 
-				const traitMName:IABCMultiname = getMultinameByIndex(index);
-				
+				const traitMultiname:IABCMultiname = getMultinameByIndex(index);
 				const traitKind:uint = data.readUI8();
-				const trait:ABCTraitInfo = ABCTraitInfoFactory.create(abcData, traitKind, traitMName, isStatic);
+				const trait:ABCTraitInfo = ABCTraitInfoFactory.create(abcData, traitKind, traitMultiname, isStatic);
 				trait.read(data, scanner);
 				
 				traits.push(trait); 

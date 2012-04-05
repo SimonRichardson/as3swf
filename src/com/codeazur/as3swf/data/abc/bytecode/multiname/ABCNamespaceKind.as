@@ -2,6 +2,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 {
 	import com.codeazur.as3swf.data.abc.ABC;
 	import com.codeazur.as3swf.data.abc.utils.getExplicitNamespaceIndentifier;
+	import com.codeazur.as3swf.data.abc.utils.getNamespaceIndentifier;
 
 	import flash.utils.Dictionary;
 	/**
@@ -53,7 +54,7 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 					result = "public";
 					break;
 				case PACKAGE_INTERNAL_NAMESPACE:
-					result = "public";
+					result = "internal";
 					break;
 				case PRIVATE_NAMESPACE:
 					result = "private";
@@ -63,6 +64,9 @@ package com.codeazur.as3swf.data.abc.bytecode.multiname
 					break;
 				case EXPLICIT_NAMESPACE:
 					result = getExplicitNamespaceIndentifier();
+					break;
+				case NAMESPACE:
+					result = getNamespaceIndentifier();
 					break;
 				default:
 					throw new Error("Unknown namespace kind (kind: " + kind + ")");
