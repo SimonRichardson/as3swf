@@ -56,10 +56,12 @@ package com.codeazur.as3swf.data.abc.reflect
 		
 		public function get name():String { return "ABCReflectMethod"; }
 		
+		public function get isStatic():Boolean { return _methodInfo.isStatic; }
+		
 		public function get hasOptional():Boolean { return _methodInfo.hasOptional; }
 		public function get hasParamNames():Boolean { return _methodInfo.hasParamNames; }
-		public function get needRest():Boolean { return _methodInfo.hasRest; }
-		public function get needArguments():Boolean { return _methodInfo.hasArguments; }
+		public function get hasRest():Boolean { return _methodInfo.hasRest; }
+		public function get hasArguments():Boolean { return _methodInfo.hasArguments; }
 		
 		public function toString(indent:uint=0):String {
 			var str:String = ABC.toStringCommon(name, indent);
@@ -73,8 +75,8 @@ package com.codeazur.as3swf.data.abc.reflect
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "hasParamNames: " + hasParamNames;
 			str += "\n" + StringUtils.repeat(indent + 2) + "hasOptional: " + hasOptional;
-			str += "\n" + StringUtils.repeat(indent + 2) + "needRest: " + needRest;
-			str += "\n" + StringUtils.repeat(indent + 2) + "needArguments: " + needArguments;
+			str += "\n" + StringUtils.repeat(indent + 2) + "needRest: " + hasRest;
+			str += "\n" + StringUtils.repeat(indent + 2) + "needArguments: " + hasArguments;
 			
 			return str;
 		}

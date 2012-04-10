@@ -29,8 +29,10 @@ package com.codeazur.as3swf.data.abc.reflect
 		}
 		
 		private function populateParameters():void {
-			const methodParam:ABCParameter = _methodInfo.parameters[0];
-			_parameter = ABCReflectParameter.create(methodParam);
+			if(_methodInfo.parameters.length > 0) {
+				const methodParam:ABCParameter = _methodInfo.parameters[0];
+				_parameter = ABCReflectParameter.create(methodParam);
+			}
 		}
 		
 		public function get parameter():ABCReflectParameter { 
@@ -50,8 +52,6 @@ package com.codeazur.as3swf.data.abc.reflect
 		
 		public function get hasOptional():Boolean { return _methodInfo.hasOptional; }
 		public function get hasParamNames():Boolean { return _methodInfo.hasParamNames; }
-		public function get needRest():Boolean { return _methodInfo.hasRest; }
-		public function get needArguments():Boolean { return _methodInfo.hasArguments; }
 		
 		public function toString(indent:uint=0):String {
 			var str:String = ABC.toStringCommon(name, indent);
@@ -59,12 +59,15 @@ package com.codeazur.as3swf.data.abc.reflect
 			str += "\n" + StringUtils.repeat(indent + 2) + "Multiname:";
 			str += "\n" + StringUtils.repeat(indent + 4) + multiname.fullPath;
 			
+			if(parameter) {
+				str += "\n" + StringUtils.repeat(indent + 2) + "Parameter:";
+				str += "\n" + parameter.toString(indent + 4);
+			}
+			
 			str += "\n" + StringUtils.repeat(indent + 2) + "numOpcodes: " + numOpcodes;
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "hasParamNames: " + hasParamNames;
 			str += "\n" + StringUtils.repeat(indent + 2) + "hasOptional: " + hasOptional;
-			str += "\n" + StringUtils.repeat(indent + 2) + "needRest: " + needRest;
-			str += "\n" + StringUtils.repeat(indent + 2) + "needArguments: " + needArguments;
 			
 			return str;
 		}

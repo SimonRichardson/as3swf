@@ -24,6 +24,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 		public var label:String;
 		public var flags:uint;
 		public var optionalTotal:int;
+		// TODO (Simon) Implement is static
+		public var isStatic:Boolean;
 
 		public function ABCMethodInfo(abcData:ABCData) {
 			super(abcData);
@@ -67,8 +69,6 @@ package com.codeazur.as3swf.data.abc.bytecode
 			methodName = getMethodName(label);
 			methodNamespace = getMethodNamespace(label);
 			
-			trace(">>", label, methodName);
-									
 			flags = data.readUI8();
 						
 			if(hasOptional) {

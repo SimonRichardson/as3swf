@@ -3,13 +3,18 @@ package com.codeazur.as3swf.data.abc.reflect
 	import com.codeazur.as3swf.data.abc.bytecode.ABCInstanceInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.ABCMethodInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCQualifiedName;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitConstInfo;
 	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfo;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitInfoKind;
+	import com.codeazur.as3swf.data.abc.bytecode.traits.ABCTraitSlotInfo;
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
 	public class ABCReflectClass extends ABCReflectInstance {
 		
 		private var _instance:ABCInstanceInfo;
+		private var _constants:Vector.<ABCReflectConstant>;
+		private var _variables:Vector.<ABCReflectVariable>;
 		private var _methods:Vector.<ABCReflectMethod>;
 		private var _getters:Vector.<ABCReflectGetter>;
 		private var _setters:Vector.<ABCReflectSetter>;
@@ -37,6 +42,56 @@ package com.codeazur.as3swf.data.abc.reflect
 										getters:Vector.<ABCMethodInfo>,
 										setters:Vector.<ABCMethodInfo>):ABCReflectClass {
 			return new ABCReflectClass(instance, methods, getters, setters);
+		}
+		
+		public function getConstants(visbility:ABCReflectMemberVisibility=null):Vector.<ABCReflectConstant> {
+			visbility = visbility || ABCReflectMemberVisibility.ALL;
+						
+			const instances:Vector.<ABCReflectConstant> = new Vector.<ABCReflectConstant>();
+			
+			if(!_constants) {
+				populateConstants();
+			}
+			
+			const total:uint = _constants.length;
+			for(var i:uint=0; i<total; i++) {
+				const constant:ABCReflectConstant = _constants[i];
+				if(constant.multiname && constant.multiname is ABCQualifiedName) {
+					const qname:ABCQualifiedName = ABCQualifiedName(constant.multiname);
+					if(qname.ns) {
+						const constVisbility:ABCReflectMemberVisibility = ABCReflectMemberVisibility.getType(qname.ns.kind);
+						if(ABCReflectMemberVisibility.isType(constVisbility, visbility)) {
+							instances.push(constant);
+						}
+					}
+				}
+			}
+			return instances;
+		}
+		
+		public function getVariables(visbility:ABCReflectMemberVisibility=null):Vector.<ABCReflectVariable> {
+			visbility = visbility || ABCReflectMemberVisibility.ALL;
+						
+			const instances:Vector.<ABCReflectVariable> = new Vector.<ABCReflectVariable>();
+			
+			if(!_variables) {
+				populateVariables();
+			}
+			
+			const total:uint = _variables.length;
+			for(var i:uint=0; i<total; i++) {
+				const variable:ABCReflectVariable = _variables[i];
+				if(variable.multiname && variable.multiname is ABCQualifiedName) {
+					const qname:ABCQualifiedName = ABCQualifiedName(variable.multiname);
+					if(qname.ns) {
+						const constVisbility:ABCReflectMemberVisibility = ABCReflectMemberVisibility.getType(qname.ns.kind);
+						if(ABCReflectMemberVisibility.isType(constVisbility, visbility)) {
+							instances.push(variable);
+						}
+					}
+				}
+			}
+			return instances;
 		}
 				
 		public function getMethods(visbility:ABCReflectMemberVisibility=null):Vector.<ABCReflectMethod> {
@@ -79,8 +134,8 @@ package com.codeazur.as3swf.data.abc.reflect
 				if(getter.multiname && getter.multiname is ABCQualifiedName) {
 					const qname:ABCQualifiedName = ABCQualifiedName(getter.multiname);
 					if(qname.ns) {
-						const methodVisbility:ABCReflectMemberVisibility = ABCReflectMemberVisibility.getType(qname.ns.kind);
-						if(ABCReflectMemberVisibility.isType(methodVisbility, visbility)) {
+						const getterVisbility:ABCReflectMemberVisibility = ABCReflectMemberVisibility.getType(qname.ns.kind);
+						if(ABCReflectMemberVisibility.isType(getterVisbility, visbility)) {
 							instances.push(getter);
 						}
 					}
@@ -104,14 +159,48 @@ package com.codeazur.as3swf.data.abc.reflect
 				if(setter.multiname && setter.multiname is ABCQualifiedName) {
 					const qname:ABCQualifiedName = ABCQualifiedName(setter.multiname);
 					if(qname.ns) {
-						const methodVisbility:ABCReflectMemberVisibility = ABCReflectMemberVisibility.getType(qname.ns.kind);
-						if(ABCReflectMemberVisibility.isType(methodVisbility, visbility)) {
+						const setterVisbility:ABCReflectMemberVisibility = ABCReflectMemberVisibility.getType(qname.ns.kind);
+						if(ABCReflectMemberVisibility.isType(setterVisbility, visbility)) {
 							instances.push(setter);
 						}
 					}
 				}
 			}
 			return instances;
+		}
+		
+		private function populateConstants():void {
+			_constants = new Vector.<ABCReflectConstant>();
+			
+			const total:uint = _instanceTraits.length;
+			for(var i:uint=0; i<total; i++) {
+				const traitInfo:ABCTraitInfo = _instanceTraits[i];
+				if(ABCTraitInfoKind.isType(traitInfo.kind, ABCTraitInfoKind.CONST)) {
+					const constInfo:ABCTraitConstInfo = ABCTraitConstInfo(traitInfo);
+					if(constInfo.multiname) {
+						_constants.push(ABCReflectConstant.create(constInfo));
+					} else {
+						throw new Error("Invalid const name (multiname: " + constInfo.multiname + ")");
+					}
+				}
+			}
+		}
+		
+		private function populateVariables():void {
+			_variables = new Vector.<ABCReflectVariable>();
+			
+			const total:uint = _instanceTraits.length;
+			for(var i:uint=0; i<total; i++) {
+				const traitInfo:ABCTraitInfo = _instanceTraits[i];
+				if(ABCTraitInfoKind.isType(traitInfo.kind, ABCTraitInfoKind.SLOT)) {
+					const slotInfo:ABCTraitSlotInfo = ABCTraitSlotInfo(traitInfo);
+					if(slotInfo.multiname) {
+						_variables.push(ABCReflectVariable.create(slotInfo));
+					} else {
+						throw new Error("Invalid variable name (multiname: " + slotInfo.multiname + ")");
+					}
+				}
+			}
 		}
 		
 		private function populateMethods():void {

@@ -24,6 +24,8 @@ package com.codeazur.as3swf.data.abc.reflect
 		public static function create(methodInfo:ABCMethodInfo):ABCReflectGetter {
 			return new ABCReflectGetter(methodInfo);
 		}
+		
+		public function get returnType():IABCMultiname { return _methodInfo.returnType; }
 				
 		public function get opcodes():Vector.<ABCOpcode> { return _opcodes; }
 		public function get numOpcodes():int { return _opcodes.length; }
@@ -37,6 +39,9 @@ package com.codeazur.as3swf.data.abc.reflect
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "Multiname:";
 			str += "\n" + StringUtils.repeat(indent + 4) + multiname.fullPath;
+			
+			str += "\n" + StringUtils.repeat(indent + 2) + "ReturnType:";
+			str += "\n" + returnType.toString(indent + 4);
 			
 			str += "\n" + StringUtils.repeat(indent + 2) + "numOpcodes: " + numOpcodes;
 			
