@@ -7,11 +7,14 @@ package com.codeazur.as3swf.data.abc.reflect
 	 */
 	public class ABCReflectInstanceFactory {
 		
-		public static function create(instance:ABCInstanceInfo, methods:Vector.<ABCMethodInfo>):IABCReflectInstance {
+		public static function create(instance:ABCInstanceInfo, 
+									  methods:Vector.<ABCMethodInfo>,
+									  getters:Vector.<ABCMethodInfo>,
+									  setters:Vector.<ABCMethodInfo>):IABCReflectInstance {
 			if(instance.isInterface) {
 				return ABCReflectInterface.create(instance.multiname);
 			} else {
-				return ABCReflectClass.create(instance, methods);
+				return ABCReflectClass.create(instance, methods, getters, setters);
 			}
 		}
 	}

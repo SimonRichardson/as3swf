@@ -66,6 +66,8 @@ package com.codeazur.as3swf.data.abc.bytecode
 			scopeName = getScopeName(label);
 			methodName = getMethodName(label);
 			methodNamespace = getMethodNamespace(label);
+			
+			trace(">>", label, methodName);
 									
 			flags = data.readUI8();
 						

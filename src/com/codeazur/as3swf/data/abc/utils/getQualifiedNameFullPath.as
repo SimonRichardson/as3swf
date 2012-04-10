@@ -1,5 +1,6 @@
 package com.codeazur.as3swf.data.abc.utils
 {
+	import com.codeazur.as3swf.data.abc.abc_namespace;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceType;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespace;
 	import com.codeazur.as3swf.data.abc.bytecode.multiname.ABCNamespaceKind;
@@ -7,7 +8,9 @@ package com.codeazur.as3swf.data.abc.utils
 	/**
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
-	public function getQualifiedNameFullPath(ns:ABCNamespace, methodName:String):String {
+	public function getQualifiedNameFullPath(ns : ABCNamespace, name : String) : String {
+		use namespace abc_namespace;
+		
 		var result:String = "";
 		if(!StringUtils.isEmpty(ns.value)) {
 			result = ns.value.replace(ABCNamespaceType.BUILTIN.ns.value, "");
@@ -48,6 +51,8 @@ package com.codeazur.as3swf.data.abc.utils
 				throw new Error("Unknown namespace kind (" + ns.kind + ")");
 		}
 		
-		return result + methodNamespace + methodName;
+		// Add getters and setters
+		const post:String = StringUtils.isNotEmpty(ns.type) ? NAMESPACE_METHOD_SEPARATOR + ns.type : "";
+		return result + methodNamespace + name + post;
 	}
 }

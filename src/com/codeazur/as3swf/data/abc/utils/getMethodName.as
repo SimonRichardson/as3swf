@@ -4,6 +4,12 @@ package com.codeazur.as3swf.data.abc.utils
 	 * @author Simon Richardson - simon@ustwo.co.uk
 	 */
 	public function getMethodName(value:String):String {
+		// Remove get and set if found
+		const regexp:RegExp = new RegExp(NAMESPACE_GET_OR_SET);
+		if(regexp.exec(value)) {
+			value = value.substr(0, -4);
+		}
+		// Extract name
 		const nsMethodIndex:int = value.lastIndexOf(NAMESPACE_METHOD_SEPARATOR);
 		if(nsMethodIndex > 0) {
 			const partial:String = value.substr(nsMethodIndex + 1);

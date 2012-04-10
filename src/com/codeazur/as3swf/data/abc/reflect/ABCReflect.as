@@ -128,35 +128,48 @@ package com.codeazur.as3swf.data.abc.reflect
 				const classesTotal:uint = data.instanceInfoSet.length;
 				for(var j:uint=0; j<classesTotal; j++) {
 					const instance:ABCInstanceInfo = data.instanceInfoSet.getAt(j);
-					const methods:Vector.<ABCMethodInfo> = getMethodInfos(data, instance);
+					const methods:Vector.<ABCMethodInfo> = getMethodInfos(ABCTraitInfoKind.METHOD, 
+																		  data, 
+																		  instance);
+					const getters:Vector.<ABCMethodInfo> = getMethodInfos(ABCTraitInfoKind.GETTER, 
+																		  data, 
+																		  instance);
+					const setters:Vector.<ABCMethodInfo> = getMethodInfos(ABCTraitInfoKind.SETTER, 
+																		  data, 
+																		  instance);																		  
 					
-					_instances.push(ABCReflectInstanceFactory.create(instance, methods));
+					_instances.push(ABCReflectInstanceFactory.create(	instance, 
+																		methods, 
+																		getters, 
+																		setters));
 				}
 			}	
 		}
 		
-		private function getMethodInfos(data:ABCData, instance:ABCInstanceInfo):Vector.<ABCMethodInfo> {
-			const methods:Vector.<ABCMethodInfo> = new Vector.<ABCMethodInfo>();
+		private function getMethodInfos(kind:ABCTraitInfoKind, 
+										data:ABCData, 
+										instance:ABCInstanceInfo):Vector.<ABCMethodInfo> {
+			const methodInfos:Vector.<ABCMethodInfo> = new Vector.<ABCMethodInfo>();
 			
 			const total:uint = instance.traits.length;
 			for(var i:uint=0; i<total; i++) {
 				const trait:ABCTraitInfo = instance.traits[i];
 				const traitMethodName:String = getMethodName(trait.multiname.fullPath);
-				if(ABCTraitInfoKind.isType(trait.kind, ABCTraitInfoKind.METHOD)){
+				if(ABCTraitInfoKind.isType(trait.kind, kind)){
 					const methodsTotal:uint = data.methodInfoSet.length;
 					for(var j:uint=0; j<methodsTotal; j++) {
-						const method:ABCMethodInfo = data.methodInfoSet.getAt(j);
-						if((method.multiname && method.methodName) && 
-							traitMethodName == method.methodName && 
-							method.multiname.fullName.indexOf(instance.multiname.fullName) == 0) {
+						const methodInfo:ABCMethodInfo = data.methodInfoSet.getAt(j);
+						if((methodInfo.multiname && methodInfo.methodName) && 
+							traitMethodName == methodInfo.methodName && 
+							methodInfo.multiname.fullName.indexOf(instance.multiname.fullName)== 0){
 							// Add method to the instance
-							methods.push(method);
+							methodInfos.push(methodInfo);
 						}
 					}
 				}
 			}
 			
-			return methods;
+			return methodInfos;
 		}
 		
 		public function get swf():SWF { return _swf; }

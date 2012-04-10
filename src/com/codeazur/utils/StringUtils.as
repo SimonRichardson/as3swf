@@ -8,6 +8,10 @@
 			return null == input || input.length < 1;
 		}
 		
+		public static function isNotEmpty(input:String):Boolean {
+			return !isEmpty(input);
+		}
+		
 		public static function clean(input:String):String {
 			var result:String = "";
 			if (input != null) {
